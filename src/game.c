@@ -3,6 +3,7 @@
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
+#include "gfc_audio.h"
 
 int main(int argc, char * argv[])
 {
@@ -15,6 +16,8 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
     GFC_Color mouseGFC_Color = gfc_color8(0,204,255,200);
+
+    GFC_Sound *bgm;
     
     /*program initializtion*/
     init_logger("gf2d.log",0);
@@ -29,11 +32,16 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+    gfc_audio_init(32, 4, 1, 4, true, false);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_test.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
+    bgm = gfc_sound_load("audio/song_test.wav", -1, -1);
+
+    gfc_sound_play(bgm, -1, -1, -1, -1);
+
     slog("press [escape] to quit");
     /*main game loop*/
     while(!done)
@@ -66,6 +74,7 @@ int main(int argc, char * argv[])
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
+    gfc_sound_clear_all();
     slog("---==== END ====---");
     return 0;
 }
