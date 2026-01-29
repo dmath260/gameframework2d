@@ -1,9 +1,13 @@
 #include <SDL.h>
 #include "simple_logger.h"
 
+#include "gfc_audio.h"
+
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
-#include "gfc_audio.h"
+
+#include "entity.h"
+#include "player.h"
 
 int main(int argc, char * argv[])
 {
@@ -32,6 +36,7 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+    entity_manager_init(1024);
     gfc_audio_init(32, 4, 1, 4, true, false);
     SDL_ShowCursor(SDL_DISABLE);
     
@@ -41,6 +46,9 @@ int main(int argc, char * argv[])
     bgm = gfc_sound_load("audio/song_test.wav", -1, -1);
 
     gfc_sound_play(bgm, -1, -1, -1, -1);
+
+    // draw player here and figure out why entity system isn't being destroyed
+    Entity *player = player_entity_new(gfc_vector2d(100, 100));
 
     slog("press [escape] to quit");
     /*main game loop*/
@@ -57,6 +65,8 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,gfc_vector2d(0,0));
+
+            entity_manager_draw_all();
             
             //UI elements last
             gf2d_sprite_draw(

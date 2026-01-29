@@ -26,7 +26,9 @@ C:\Users\escdr\git\gameframework2d\gfc\src\gfc_text.c;C:\Users\escdr\git\gamefra
 C:\Users\escdr\git\gameframework2d\gfc\src\gfc_types.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gfc_types.obj
 C:\Users\escdr\git\gameframework2d\gfc\src\gfc_vector.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gfc_vector.obj
 C:\Users\escdr\git\gameframework2d\gfc\src\miniz.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\miniz.obj
+C:\Users\escdr\git\gameframework2d\src\entity.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\entity.obj
 C:\Users\escdr\git\gameframework2d\src\game.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\game.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_draw.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_draw.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_graphics.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_graphics.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_sprite.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_sprite.obj
+C:\Users\escdr\git\gameframework2d\src\player.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\player.obj
