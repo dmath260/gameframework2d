@@ -65,6 +65,7 @@ Entity* entity_new()
 void entity_free(Entity* self)
 {
 	if (!self) return;
+	if (self->free) self->free(self);
 	if (self->sprite) gf2d_sprite_free(self->sprite);
 	memset(self, 0, sizeof(Entity));
 }
@@ -75,7 +76,7 @@ void entity_draw(Entity *self)
 		self->sprite,
 		self->position,
 		&self->scale,
-		NULL,
+		&self->rotationCenter,
 		&self->rotation,
 		NULL,
 		NULL,
@@ -94,4 +95,69 @@ void entity_manager_draw_all()
 		if (!entityManager.entityList[i]._inuse) continue;
 		entity_draw(&entityManager.entityList[i]);
 	}
+}
+
+void entity_manager_think_all()
+{
+	Uint32 i;
+	if (!entityManager.entityList) {
+		slog("entity system has not been initialized");
+		return;
+	}
+	for (i = 0; i < entityManager.entityMax; i++)
+	{
+		if (!entityManager.entityList[i]._inuse) continue;
+		if (!entityManager.entityList[i].think) continue;
+		entityManager.entityList[i].think(&entityManager.entityList[i]);
+	}
+}
+
+void entity_update(Entity *self) {
+	if (!self) return;
+
+	if (self->update) self->update(self);
+
+	gfc_vector2d_add(self->position, self->position, self->velocity);
+	if (gfc_vector2d_magnitude(self->velocity) > GFC_EPSILON)
+	{
+		gfc_vector2d_scale(self->velocity, self->velocity, 0.5);
+	}
+	else gfc_vector2d_clear(self->velocity);
+}
+
+void entity_manager_update_all()
+{
+	Uint32 i;
+	if (!entityManager.entityList) {
+		slog("entity system has not been initialized");
+		return;
+	}
+	for (i = 0; i < entityManager.entityMax; i++)
+	{
+		if (!entityManager.entityList[i]._inuse) continue;
+		if (!entityManager.entityList[i].update) continue;
+		entity_update(&entityManager.entityList[i]);
+	}
+}
+
+void entity_manager_kill_random()
+{
+	int i;
+	// check if entities other than the player can be freed; if not, return
+	for (i = 1; i < entityManager.entityMax; i++)
+	{
+		if (entityManager.entityList[i]._inuse) i = entityManager.entityMax + 1;
+	}
+	if (i <= entityManager.entityMax) {
+		slog("Couldn't free any entities other than the player.");
+		return;
+	}
+
+	// keep guessing until an entity in use is found
+	while (1) {
+		i = (gfc_crandom() + 1) * entityManager.entityMax / 2;
+		if (i == 0 || !entityManager.entityList[i]._inuse) continue;
+		break;
+	}
+	entity_free(&entityManager.entityList[i]);
 }

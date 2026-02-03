@@ -2,17 +2,21 @@
 #include "simple_logger.h"
 
 #include "gfc_audio.h"
+#include "gfc_input.h"
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
 #include "entity.h"
 #include "player.h"
+#include "monster.h"
 
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
+    GFC_Vector2D res;
+    int i;
     const Uint8 * keys;
     Sprite *sprite;
     
@@ -34,6 +38,7 @@ int main(int argc, char * argv[])
         720,
         gfc_vector4d(0,0,0,255),
         0);
+    gfc_input_init("config/input.cfg");
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
     entity_manager_init(1024);
@@ -48,18 +53,38 @@ int main(int argc, char * argv[])
     gfc_sound_play(bgm, -1, -1, -1, -1);
 
     // draw player here and figure out why entity system isn't being destroyed
-    Entity *player = player_entity_new(gfc_vector2d(100, 100));
+    Entity* player = player_entity_new(gfc_vector2d(100, 100));
+    res = gf2d_graphics_get_resolution();
+    i = 0;
 
     slog("press [escape] to quit");
     /*main game loop*/
     while(!done)
     {
-        SDL_PumpEvents();   // update SDL's internal event structures
+        gfc_input_update(); // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
+
+        // spawn a new monster every second or so (or if e pressed)
+        i++;
+        if (gfc_input_key_pressed("e") || i == 100) {
+            if (i == 100) i = 0;
+            double x = (1 + gfc_crandom()) * res.x / 2;
+            double y = (1 + gfc_crandom()) * res.y / 2;
+            monster_new(gfc_vector2d(x, y));
+        }
+
+        // randomly delete a monster every time q is pressed
+        if (gfc_input_key_pressed("q"))
+        {
+            entity_manager_kill_random();
+        }
+
+        entity_manager_think_all();
+        entity_manager_update_all();
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
@@ -67,6 +92,7 @@ int main(int argc, char * argv[])
             gf2d_sprite_draw_image(sprite,gfc_vector2d(0,0));
 
             entity_manager_draw_all();
+            entity_draw(player);
             
             //UI elements last
             gf2d_sprite_draw(

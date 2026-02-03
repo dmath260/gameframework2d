@@ -31,4 +31,5 @@ C:\Users\escdr\git\gameframework2d\src\game.c;C:\Users\escdr\git\gameframework2d
 C:\Users\escdr\git\gameframework2d\src\gf2d_draw.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_draw.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_graphics.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_graphics.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_sprite.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_sprite.obj
+C:\Users\escdr\git\gameframework2d\src\monster.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster.obj
 C:\Users\escdr\git\gameframework2d\src\player.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\player.obj

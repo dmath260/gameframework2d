@@ -7,15 +7,22 @@
 
 #include "gf2d_sprite.h"
 
-typedef struct
+typedef struct Entity_S
 {
-	Uint8			_inuse; // no touchy
-	GFC_TextLine	name;   //name of the entity for debugging purposes
+	Uint8			_inuse;						//no touchy
+	GFC_TextLine	name;						//name of the entity for debugging purposes
 	GFC_Vector2D	position;
+	GFC_Vector2D	velocity;
+	float			topSpeed;
 	GFC_Vector2D	scale;
+	GFC_Vector2D	rotationCenter;
 	float			rotation;
 	Sprite			*sprite;
 	float			frame;
+	void (* think)	(struct Entity_S *self);	//called every frame if defined for the entity
+	void (* update)	(struct Entity_S* self);	//called every frame if defined for the entity
+	void (* free)	(struct Entity_S* self);	//called when the entity is freed
+	void			*data;						//used for entity specific data
 }Entity;
 
 /**
@@ -25,9 +32,24 @@ typedef struct
 void entity_manager_init(Uint32 max);
 
 /**
+ * @brief draws an entity
+ */
+void entity_draw(Entity *self);
+
+/**
  * @brief draws all entities
  */
 void entity_manager_draw_all();
+
+/**
+ * @brief all active entities run their think
+ */
+void entity_manager_think_all();
+
+/**
+ * @brief all active entities run their update
+ */
+void entity_manager_update_all();
 
 /**
  * @brief get a pointer to a free entity
@@ -41,5 +63,10 @@ Entity* entity_new();
  * @note do not use the memory address again after calling this
  */
 void entity_free(Entity* self);
+
+/**
+ * @brief kills a random entity other than the player (assumes player is first entity initialized)
+ */
+void entity_manager_kill_random();
 
 #endif
