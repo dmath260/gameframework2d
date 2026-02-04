@@ -11,8 +11,37 @@ Entity* player_entity_get()
 	return thePlayer;
 }
 
+typedef struct
+{
+	int* animFrames;
+	int frameRow;
+	int frameCol;
+	float frameCount;
+	int framesPerRow;
+	int framesPerCol;
+} PlayerData;
+
+void player_free(Entity* self)
+{
+	PlayerData* data;
+	if ((!self) || (!self->data)) return;
+	data = (PlayerData*)self->data;
+	//clean up anything I own that I asked for
+	free(data);
+}
+
 void player_entity_think(Entity* self)
 {
+	PlayerData* data;
+	if ((!self) || (!self->data)) return;
+	data = (PlayerData*)self->data;
+	data->frameCount += 0.5;
+	if (data->frameCount >= data->animFrames[data->frameCol + 1]) data->frameCol++;
+	if (data->frameCol == data->framesPerRow) {
+		data->frameCol = 0;
+		data->frameCount = 0;
+	}
+
 	GFC_Vector2D move = {0};
 	if (!self) return;
 	// Replace these with gfc_input_command_down if you can figure out how it works
@@ -34,7 +63,11 @@ void player_entity_think(Entity* self)
 	}
 	if ((move.x) || (move.y))
 	{
-		self->rotation = gfc_vector2d_angle(move) * GFC_RADTODEG;
+		int ang = ((int)(gfc_vector2d_angle(move) * GFC_RADTODEG) % 360);  // 0 for N, 1 for NE, 2 for E...
+		if (ang % 45 > 22) ang += 45 - ang % 45; // rounding angle to nearest multiple of 45
+		if (ang % 45 != 0) ang -= ang % 45; // ensures the right row of the spritesheet is chosen
+		int dir = ang / 45;
+		data->frameRow = (12 - dir) % 8; // row 0 for S (4), row 1 for SE (3), row 2 for E (2)...
 		gfc_vector2d_normalize(&move);
 		gfc_vector2d_scale(self->velocity, move, self->topSpeed);
 	}
@@ -42,29 +75,54 @@ void player_entity_think(Entity* self)
 
 void player_entity_update(Entity* self)
 {
-	if (!self) return;
+	PlayerData* data;
+	if ((!self) || (!self->data)) return;
+	data = (PlayerData*)self->data;
 
-	self->frame += 0.04;
-	if (self->frame >= 4.0) self->frame = 0;
+	// this may seem redundant but somehow there is a frame for each loop that frameCol == framesPerCol
+	// this tries to stop that
+	self->frame = data->frameRow * data->framesPerRow + data->frameCol;
 }
 
 Entity* player_entity_new(GFC_Vector2D position)
 {
 	Entity* self;
+	int i;
+	PlayerData* data;
 	self = entity_new();
 	if (!self) return NULL;
+	data = gfc_allocate_array(sizeof(PlayerData), 1);
+	if (data)
+	{
+		data->frameCol = 0;
+		data->frameRow = 0;
+		data->frameCount = 0;
+		data->framesPerCol = 8;
+		data->framesPerRow = 7;
+		data->animFrames = malloc(sizeof(int) * (data->framesPerRow + 1));
+		if (!data->animFrames) return;
+		int frames[] = {38, 2, 2, 5, 3, 3, 2};
+		memset(data->animFrames, 0, sizeof(data->framesPerRow + 1));
+		for (i = 0; i < data->framesPerRow; i++)
+		{
+			data->animFrames[i + 1] = data->animFrames[i] + frames[i];
+		}
+	}
+	self->data = data;
 	self->sprite = gf2d_sprite_load_all(
-		"images/006s.png",
-		64,
-		64,
-		4,
+		"images/0258/Idle-Anim.png",
+		24,
+		40,
+		data->framesPerRow,
 		0
 	);
-	self->rotationCenter = gfc_vector2d(32, 32);
+	self->rotationCenter = gfc_vector2d(12, 20);
 	self->topSpeed = 3;
 	self->position = position;
 	self->think = player_entity_think;
 	self->update = player_entity_update;
+	self->scale = gfc_vector2d(2, 2);
+	self->free = player_free;
 	thePlayer = self;
 	return self;
 }
