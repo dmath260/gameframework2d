@@ -7,9 +7,11 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
+#include "camera.h"
 #include "entity.h"
 #include "player.h"
 #include "monster.h"
+#include "level.h"
 
 int main(int argc, char * argv[])
 {
@@ -18,7 +20,7 @@ int main(int argc, char * argv[])
     GFC_Vector2D res;
     int i;
     const Uint8 * keys;
-    Sprite *sprite;
+    Level *level;
     
     int mx,my;
     float mf = 0;
@@ -38,6 +40,7 @@ int main(int argc, char * argv[])
         720,
         gfc_vector4d(0,0,0,255),
         0);
+    camera_set_dimensions(gfc_vector2d(1200, 720));
     gfc_input_init("config/input.cfg");
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
@@ -46,18 +49,31 @@ int main(int argc, char * argv[])
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    sprite = gf2d_sprite_load_image("images/backgrounds/bg_test.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
     bgm = gfc_sound_load("audio/song_test.wav", -1, -1);
 
     gfc_sound_play(bgm, -1, -1, -1, -1);
 
     // draw player here and figure out why entity system isn't being destroyed
-    Entity* player = player_entity_new(gfc_vector2d(100, 100));
+    Entity* player = player_entity_new(gfc_vector2d(600, 360));
     res = gf2d_graphics_get_resolution();
     i = 0;
 
     slog("press [escape] to quit");
+
+    level = level_create(
+        "images/backgrounds/bg_flat.png",
+        "images/tilesets/tileset_flat.png",
+        32,
+        32,
+        1,
+        38,
+        23);
+    if (level)
+    {
+        level_add_border(level, 4);
+    }
+
     /*main game loop*/
     while(!done)
     {
@@ -89,7 +105,7 @@ int main(int argc, char * argv[])
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            gf2d_sprite_draw_image(sprite,gfc_vector2d(0,0));
+            level_draw(level);
 
             entity_manager_draw_all();
             entity_draw(player);

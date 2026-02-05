@@ -13,12 +13,12 @@ Entity* player_entity_get()
 
 typedef struct
 {
-	int* animFrames;
-	int frameRow;
-	int frameCol;
+	Uint16* animFrames;
+	Uint8 frameRow;
+	Uint8 frameCol;
 	float frameCount;
-	int framesPerRow;
-	int framesPerCol;
+	Uint8 framesPerRow;
+	Uint8 framesPerCol;
 } PlayerData;
 
 void player_free(Entity* self)
@@ -78,9 +78,8 @@ void player_entity_update(Entity* self)
 	PlayerData* data;
 	if ((!self) || (!self->data)) return;
 	data = (PlayerData*)self->data;
+	camera_center_on(self->position);
 
-	// this may seem redundant but somehow there is a frame for each loop that frameCol == framesPerCol
-	// this tries to stop that
 	self->frame = data->frameRow * data->framesPerRow + data->frameCol;
 }
 
@@ -99,10 +98,9 @@ Entity* player_entity_new(GFC_Vector2D position)
 		data->frameCount = 0;
 		data->framesPerCol = 8;
 		data->framesPerRow = 7;
-		data->animFrames = malloc(sizeof(int) * (data->framesPerRow + 1));
+		data->animFrames = gfc_allocate_array(sizeof(int) * (data->framesPerRow + 1), 1);
 		if (!data->animFrames) return;
 		int frames[] = {38, 2, 2, 5, 3, 3, 2};
-		memset(data->animFrames, 0, sizeof(data->framesPerRow + 1));
 		for (i = 0; i < data->framesPerRow; i++)
 		{
 			data->animFrames[i + 1] = data->animFrames[i] + frames[i];

@@ -3,25 +3,25 @@
   "WorkspaceRootPath": "C:\\Users\\escdr\\git\\gameframework2d\\win\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\level.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\monster.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\monster.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\level.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\entity.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\camera.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,17 +31,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "game.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeDocumentMoniker": "..\\src\\game.c",
               "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeToolTip": "..\\src\\game.c",
-              "ViewState": "AgIAADkAAAAAAAAAAAAmwEkAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAAAEUAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-01-25T17:39:52.502Z",
               "IsPinned": true,
@@ -49,79 +49,80 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "monster.c",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\monster.c",
-              "RelativeDocumentMoniker": "..\\src\\monster.c",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\monster.c",
-              "RelativeToolTip": "..\\src\\monster.c",
-              "ViewState": "AgIAADsAAAAAAAAAAAAAAEUAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-03T20:03:11.345Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "player.c",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
-              "RelativeDocumentMoniker": "..\\src\\player.c",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
-              "RelativeToolTip": "..\\src\\player.c",
-              "ViewState": "AgIAADEAAAAAAAAAAAAAAEUAAABbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-01-29T21:08:59.976Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "entity.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
               "RelativeDocumentMoniker": "..\\src\\entity.c",
               "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
               "RelativeToolTip": "..\\src\\entity.c",
-              "ViewState": "AgIAABwAAAAAAAAAAAAWwCkAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAAAE4AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-01-29T21:07:00.871Z",
+              "WhenOpened": "2026-02-05T19:04:17.375Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "monster.h",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\include\\monster.h",
-              "RelativeDocumentMoniker": "..\\include\\monster.h",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\include\\monster.h",
-              "RelativeToolTip": "..\\include\\monster.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-02-03T20:03:34.086Z",
+              "Title": "camera.c",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\camera.c",
+              "RelativeDocumentMoniker": "..\\src\\camera.c",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\camera.c",
+              "RelativeToolTip": "..\\src\\camera.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-02-05T19:00:36.794Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "player.h",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\include\\player.h",
-              "RelativeDocumentMoniker": "..\\include\\player.h",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\include\\player.h",
-              "RelativeToolTip": "..\\include\\player.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAxAAAAAAAAAA==",
+              "Title": "camera.h",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\include\\camera.h",
+              "RelativeDocumentMoniker": "..\\include\\camera.h",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\include\\camera.h",
+              "RelativeToolTip": "..\\include\\camera.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-02-03T18:55:16.452Z"
+              "WhenOpened": "2026-02-05T18:57:44.134Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "entity.h",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\include\\entity.h",
-              "RelativeDocumentMoniker": "..\\include\\entity.h",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\include\\entity.h",
-              "RelativeToolTip": "..\\include\\entity.h",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAEUAAAAiAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "player.c",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
+              "RelativeDocumentMoniker": "..\\src\\player.c",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
+              "RelativeToolTip": "..\\src\\player.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAG8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-02-05T18:31:05.781Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "level.c",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\level.c",
+              "RelativeDocumentMoniker": "..\\src\\level.c",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\level.c",
+              "RelativeToolTip": "..\\src\\level.c",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAGwAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-02-05T18:55:58.068Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "level.h",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\include\\level.h",
+              "RelativeDocumentMoniker": "..\\include\\level.h",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\include\\level.h",
+              "RelativeToolTip": "..\\include\\level.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-29T21:14:03.19Z"
+              "WhenOpened": "2026-02-05T18:56:38.844Z",
+              "EditorCaption": ""
             }
           ]
         }
