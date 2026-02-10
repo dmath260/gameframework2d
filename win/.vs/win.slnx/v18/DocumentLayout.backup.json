@@ -3,13 +3,13 @@
   "WorkspaceRootPath": "C:\\Users\\escdr\\git\\gameframework2d\\win\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\level.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\level.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
@@ -31,11 +31,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "game.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeDocumentMoniker": "..\\src\\game.c",
@@ -87,7 +87,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "player.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
               "RelativeDocumentMoniker": "..\\src\\player.c",
@@ -100,7 +100,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "level.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\level.c",
               "RelativeDocumentMoniker": "..\\src\\level.c",

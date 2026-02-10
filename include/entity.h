@@ -33,6 +33,7 @@ void entity_manager_init(Uint32 max);
 
 /**
  * @brief draws an entity
+ * @param self the entity to draw
  */
 void entity_draw(Entity *self);
 
