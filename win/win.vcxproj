@@ -57,6 +57,7 @@
     <ClInclude Include="..\include\monster.h" />
     <ClInclude Include="..\include\player.h" />
     <ClInclude Include="..\include\level.h" />
+    <ClInclude Include="..\include\tiledef.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_json\src\simple_json.c" />
@@ -96,6 +97,10 @@
     <ClCompile Include="..\src\monster.c" />
     <ClCompile Include="..\src\player.c" />
     <ClCompile Include="..\src\level.c" />
+    <ClCompile Include="..\src\tiledef.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\level\testlevel.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
@@ -224,4 +229,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

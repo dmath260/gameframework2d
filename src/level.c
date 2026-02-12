@@ -5,6 +5,8 @@
 #include "level.h"
 #include "camera.h"
 
+void level_setup_camera_bounds(Level* level);
+
 Level* level_new()
 {
 	Level* level;
@@ -13,42 +15,95 @@ Level* level_new()
 	return level;
 }
 
-Level* level_create(
-	const char* background,
-	const char* tileSet,
-	Uint32 tileWidth,
-	Uint32 tileHeight,
-	Uint32 tilesPerLine,
-	Uint32 width,
-	Uint32 height)
+Level* level_load(const char* filepath)
 {
-	if (!width || !height)
+	int i, j, index;
+	const char* str;
+	Level* level;
+	SJson* json;
+	SJson* config;
+	SJson *rows, *tiles, *tile;
+	if (!filepath) return NULL;
+	json = sj_load(filepath);
+	if (!json) return NULL;
+
+	config = sj_object_get_value(json, "level");
+	if (!config)
 	{
-		slog("cannot create a level with a zero dimension");
+		slog("failed to load level file %s, missing level information", filepath);
+		sj_free(json);
 		return NULL;
 	}
-	Level* level;
-	level = level_new();
-	if (!level) return NULL;
-	if (background)
-	{
-		level->background = gf2d_sprite_load_image(background);
-	}
-	if (tileSet)
-	{
-		level->tileSet = gf2d_sprite_load_all(
-			tileSet,
-			tileWidth,
-			tileHeight,
-			tilesPerLine,
-			1);
-	}
-	level->tileMap = gfc_allocate_array(sizeof(Uint8), width * height);
-	level->width = width;
-	level->height = height;
-	level->tileWidth = tileWidth;
-	level->tileHeight = tileHeight;
 
+	level = level_new();
+	if (!level)
+	{
+		slog("failed to allocate level data for level %s", filepath);
+		sj_free(json);
+		return NULL;
+	}
+
+	str = sj_object_get_string(config, "background");
+	if (str)
+	{
+		level->background = gf2d_sprite_load_image(str);
+	}
+
+	level->tileDef = tiledef_parse(sj_object_get_value(config, "tileDef"));
+	if (!level->tileDef)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("failed to parse tiledef data from level %s", filepath);
+		return NULL;
+	}
+
+	rows = sj_object_get_value(config, "tileMap");
+	level->height = sj_array_count(rows);
+	if (!level->height)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined tilemap in level %s (no height)", filepath);
+		return NULL;
+	}
+
+	tiles = sj_array_nth(rows, 0);
+	level->width = sj_array_count(tiles);
+	if (!level->width)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined tilemap in level %s (no width)", filepath);
+		return NULL;
+	}
+
+	level->tileMap = gfc_allocate_array(sizeof(Uint8), level->width * level->height);
+	if (!level->tileMap)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined tilemap in level %s (no tilemap)", filepath);
+		return NULL;
+	}
+
+	for (j = 0; j < level->height; j++)
+	{
+		tiles = sj_array_get_nth(rows, j);
+		if (!tiles) continue;
+		for (i = 0; i < level->width; i++)
+		{
+			tile = sj_array_get_nth(tiles, i);
+			if (!tile) continue;
+			index = level_get_tile_index(level, i, j);
+			if (index == -1) continue;
+			sj_get_uint8_value(tile, &level->tileMap[index]);
+		}
+	}
+
+	level_setup_camera_bounds(level);
+
+	sj_free(json);
 	return level;
 }
 
@@ -83,9 +138,15 @@ void level_free(Level* level)
 {
 	if (!level) return;
 	gf2d_sprite_free(level->background);
-	gf2d_sprite_free(level->tileSet);
+	gf2d_sprite_free(level->tileDef->sheet);
 	if (level->tileMap) free(level->tileMap);
 	free(level);
+}
+
+void level_setup_camera_bounds(Level* level)
+{
+	if (!level) return;
+	camera_set_bounds(gfc_rect(0, 0, level->tileDef->width * level->width, level->tileDef->height * level->height));
 }
 
 void level_draw(Level* level)
@@ -99,7 +160,7 @@ void level_draw(Level* level)
 	{
 		gf2d_sprite_draw_image(level->background, offset);
 	}
-	if (level->tileSet) {
+	if (level->tileDef->sheet) {
 		for (j = 0; j < level->height; j++)
 		{
 			for (i = 0; i < level->width; i++)
@@ -109,8 +170,8 @@ void level_draw(Level* level)
 				tile = level->tileMap[index];
 				if (!tile) continue;
 				gf2d_sprite_draw(
-					level->tileSet,
-					gfc_vector2d((i * level->tileWidth) + offset.x, (j * level->tileHeight) + offset.y),
+					level->tileDef->sheet,
+					gfc_vector2d((i * level->tileDef->width) + offset.x, (j * level->tileDef->height) + offset.y),
 					NULL,
 					NULL,
 					NULL,

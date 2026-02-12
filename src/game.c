@@ -17,7 +17,6 @@ int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
-    GFC_Vector2D res;
     int i;
     const Uint8 * keys;
     Level *level;
@@ -54,25 +53,18 @@ int main(int argc, char * argv[])
 
     gfc_sound_play(bgm, -1, -1, -1, -1);
 
-    // draw player here and figure out why entity system isn't being destroyed
-    Entity* player = player_entity_new(gfc_vector2d(600, 360));
-    res = gf2d_graphics_get_resolution();
-    i = 0;
-
     slog("press [escape] to quit");
 
-    level = level_create(
-        "images/backgrounds/bg_flat.png",
-        "images/tilesets/tileset_flat.png",
-        32,
-        32,
-        1,
-        38,
-        23);
+    level = level_load("level/testlevel.json");
     if (level)
     {
         level_add_border(level, 4);
     }
+
+    Entity* player = player_entity_new(gfc_vector2d(
+        level->width * level->tileDef->width / 2,
+        level->height * level->tileDef->height / 2));
+    i = 0;
 
     /*main game loop*/
     while(!done)
@@ -88,8 +80,8 @@ int main(int argc, char * argv[])
         i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
-            double x = (1 + gfc_crandom()) * res.x / 2;
-            double y = (1 + gfc_crandom()) * res.y / 2;
+            double x = (1 + gfc_crandom()) * level->width * level->tileDef->width / 2;
+            double y = (1 + gfc_crandom()) * level->height * level->tileDef->height / 2;
             monster_new(gfc_vector2d(x, y));
         }
 

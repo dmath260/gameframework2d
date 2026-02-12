@@ -6,7 +6,14 @@
 typedef struct
 {
 	GFC_Rect bounds;
+	GFC_Rect view;
 }Camera;
+
+/**
+ * @brief lorem ipsum
+ * @param bounds lorem ipsum
+ */
+void camera_set_bounds(GFC_Rect bounds);
 
 /**
  * @brief gets the current position of the camera

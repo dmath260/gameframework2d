@@ -1,15 +1,14 @@
 #ifndef __LEVEL_H__
 #define __LEVEL_H__
 
-#include "gf2d_sprite.h"
+#include "tiledef.h"
 
 typedef struct
 {
 	Sprite* background;				//background sprite
-	Sprite* tileSet;				//sprite containing the tiles to draw with
 	Uint8* tileMap;					//pointer to the tile map data
 	Uint32 width, height;			//size of the tileMap
-	Uint32 tileWidth, tileHeight;	//size of each tile
+	TileDef* tileDef;
 }Level;
 
 /**
@@ -19,27 +18,14 @@ typedef struct
 Level* level_new();
 
 /**
-* @brief allocate and build a level from the parameters
-* @param background the filepath to the background image
-* @param tileMap the filepath to the tile sprite sheet
-* @param tileWidth how wide a tile is in pixels
-* @param tileHeight how tall a tile is in pixels
-* @param tilesPerLine how many tiles per line in the sprite sheet
-* @param width how many tiles wide the map is
-* @param width how many tiles tall the map is
-* @return NULL on error or nonsensical parameters, a pointer to a level otherwise
-* @note the tilemap still needs to be set
+* @brief lorem ipsum
+* @param filepath lorem ipsum
+* @return lorem ipsum
 */
-Level* level_create(
-	const char* background,
-	const char* tileSet,
-	Uint32 tileWidth,
-	Uint32 tileHeight,
-	Uint32 tilesPerLine,
-	Uint32 width,
-	Uint32 height);
+Level* level_load(const char* filepath);
+
 /**
-* @brief given a leve, get the index of the tileMap for a tile's coordinates
+* @brief given a level, get the index of the tileMap for a tile's coordinates
 * @param level to check
 * @param x the x coordinate
 * @param y the y coordinate
