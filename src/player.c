@@ -114,7 +114,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 		data->framesPerRow,
 		0
 	);
-	self->rotationCenter = gfc_vector2d(12, 20);
+	self->rotationCenter = gfc_vector2d(12, 16);
 	self->topSpeed = 3;
 	self->position = position;
 	self->think = player_entity_think;

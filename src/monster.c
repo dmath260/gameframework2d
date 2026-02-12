@@ -36,7 +36,7 @@ void monster_free(Entity* self)
 
 void monster_think(Entity* self)
 {
-	GFC_Vector2D toPlayer = {0};
+	GFC_Vector2D toPlayer = {0}, playerCenter = {0}, selfCenter = {0};
 	MonsterData* data;
 	if ((!self) || (!self->data)) return;
 	data = (MonsterData*)self->data;
@@ -48,7 +48,9 @@ void monster_think(Entity* self)
 	}
 
 	if (!data->player) return;
-	gfc_vector2d_sub(toPlayer, data->player->position, self->position);
+	gfc_vector2d_add(playerCenter, data->player->position, data->player->rotationCenter);
+	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
+	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);
 	gfc_vector2d_normalize(&toPlayer);
 	int ang = ((int)(gfc_vector2d_angle(toPlayer) * GFC_RADTODEG) % 360);  // 0 for N, 1 for NE, 2 for E...
 	if (ang % 45 > 22) ang += 45 - ang % 45; // rounding angle to nearest multiple of 45
@@ -99,7 +101,7 @@ Entity* monster_new(GFC_Vector2D position)
 	);
 	self->scale = gfc_vector2d(2, 2);
 	self->data = data;
-	self->rotationCenter = gfc_vector2d(32, 32);
+	self->rotationCenter = gfc_vector2d(16, 16);
 	self->topSpeed = 3;
 	self->position = position;
 	self->think = monster_think;

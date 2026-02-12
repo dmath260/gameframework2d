@@ -1,7 +1,7 @@
 {
   "level":
   {
-    "background": "images/backgrounds/bg_flat.png",
+    "background": "images/backgrounds/lava_cave.png",
     "tileDef": {
       "sheet": "images/tilesets/tileset_flat.png",
       "width": 32,
