@@ -7,6 +7,8 @@
 
 #include "gf2d_sprite.h"
 
+#include "animation.h"
+
 typedef struct Entity_S
 {
 	Uint8			_inuse;						//no touchy
@@ -17,12 +19,13 @@ typedef struct Entity_S
 	GFC_Vector2D	scale;
 	GFC_Vector2D	rotationCenter;
 	float			rotation;
-	Sprite			*sprite;
 	float			frame;
 	void (* think)	(struct Entity_S *self);	//called every frame if defined for the entity
-	void (* update)	(struct Entity_S* self);	//called every frame if defined for the entity
-	void (* free)	(struct Entity_S* self);	//called when the entity is freed
+	void (* update)	(struct Entity_S *self);	//called every frame if defined for the entity
+	void (* free)	(struct Entity_S *self);	//called when the entity is freed
 	void			*data;						//used for entity specific data
+	AnimData		*animationData;				//data for animating the entity
+	char			*animDataFilePath;			//file path to JSON for animation data
 }Entity;
 
 /**
@@ -64,6 +67,13 @@ Entity* entity_new();
  * @note do not use the memory address again after calling this
  */
 void entity_free(Entity* self);
+
+/**
+* @brief load animation data from a JSON file to an existing entity
+* @param ent the entity to load the animation data to
+* @param state the state of the entity for loading animations
+*/
+void entity_load(Entity* ent, char* state);
 
 /**
  * @brief kills a random entity other than the player (assumes player is first entity initialized)

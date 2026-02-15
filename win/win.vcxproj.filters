@@ -132,6 +132,9 @@
     <ClInclude Include="..\include\tiledef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_logger\src\simple_logger.c">
@@ -248,9 +251,18 @@
     <ClCompile Include="..\src\tiledef.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\animation.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\level\testlevel.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\images\0258\0258AnimData.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\images\0399\0399AnimData.json">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

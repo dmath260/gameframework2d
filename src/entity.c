@@ -11,7 +11,7 @@ typedef struct
 
 static EntityManager entityManager = {0};
 
-void entity_manager_close();
+void entity_manager_close(void);
 
 void entity_manager_init(Uint32 max)
 {
@@ -67,7 +67,10 @@ void entity_free(Entity* self)
 {
 	if (!self) return;
 	if (self->free) self->free(self);
-	if (self->sprite) gf2d_sprite_free(self->sprite);
+	if (self->animationData) {
+		animdata_free(self->animationData);
+		self->animationData = NULL;
+	}
 	memset(self, 0, sizeof(Entity));
 }
 
@@ -78,7 +81,7 @@ void entity_draw(Entity *self)
 	offset = camera_get_offset();
 	gfc_vector2d_add(position, self->position, offset);
 	gf2d_sprite_draw(
-		self->sprite,
+		self->animationData->Sprite,
 		position,
 		&self->scale,
 		&self->rotationCenter,
@@ -102,6 +105,23 @@ void entity_manager_draw_all()
 	}
 }
 
+void entity_think(Entity* self) {
+	if (!self) return;
+
+	if (self->think) self->think(self);
+
+	// Animation stuff, might want to move this into the animation class
+	if (!self->animationData) return;
+	AnimData *data;
+	data = self->animationData;
+	data->FrameCount += 0.5;
+	if (data->FrameCount >= data->AnimFrames[data->FrameCol + 1]) data->FrameCol++;
+	if (data->FrameCol == data->FramesPerRow) {
+		data->FrameCol = 0;
+		data->FrameCount = 0;
+	}
+}
+
 void entity_manager_think_all()
 {
 	Uint32 i;
@@ -113,7 +133,7 @@ void entity_manager_think_all()
 	{
 		if (!entityManager.entityList[i]._inuse) continue;
 		if (!entityManager.entityList[i].think) continue;
-		entityManager.entityList[i].think(&entityManager.entityList[i]);
+		entity_think(&entityManager.entityList[i]);
 	}
 }
 
@@ -125,9 +145,15 @@ void entity_update(Entity *self) {
 	gfc_vector2d_add(self->position, self->position, self->velocity);
 	if (gfc_vector2d_magnitude(self->velocity) > GFC_EPSILON)
 	{
-		gfc_vector2d_scale(self->velocity, self->velocity, 0.5);
+		gfc_vector2d_scale(self->velocity, self->velocity, (float)0.5);
 	}
 	else gfc_vector2d_clear(self->velocity);
+	
+	// Animation stuff, might want to move this into the animation class
+	if (!self->animationData) return;
+	AnimData* data;
+	data = self->animationData;
+	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
 }
 
 void entity_manager_update_all()
@@ -145,9 +171,58 @@ void entity_manager_update_all()
 	}
 }
 
+void entity_load(Entity* ent, char* state)
+{
+	SJson* json, * config;
+	AnimData* animationData;
+
+	if (!ent)
+	{
+		slog("Invalid entity");
+		return;
+	}
+	if (!state)
+	{
+		slog("Invalid state");
+		return;
+	}
+	if (!ent->animDataFilePath)
+	{
+		slog("JSON filepath invalid");
+		return;
+	}
+	json = sj_load(ent->animDataFilePath);
+	if (!json)
+	{
+		slog("JSON data invalid");
+		return;
+	}
+
+	config = sj_object_get_value(json, "AnimData");
+	if (!config)
+	{
+		slog("Failed to load animation data for %s", ent->animDataFilePath);
+		sj_free(json);
+		return;
+	}
+
+	animationData = animdata_parse(config, state, ent->animationData);
+	if (!animationData)
+	{
+		slog("Failed to parse animation data for %s", ent->animDataFilePath);
+		sj_free(json);
+		return;
+	}
+
+	ent->animationData = animationData;
+
+	sj_free(json);
+	return;
+}
+
 void entity_manager_kill_random()
 {
-	int i;
+	Uint32 i;
 	// check if entities other than the player can be freed; if not, return
 	for (i = 1; i < entityManager.entityMax; i++)
 	{
@@ -160,7 +235,7 @@ void entity_manager_kill_random()
 
 	// keep guessing until an entity in use is found
 	while (1) {
-		i = (gfc_crandom() + 1) * entityManager.entityMax / 2;
+		i = (Uint32) (gfc_crandom() + 1) * entityManager.entityMax / 2;
 		if (i == 0 || !entityManager.entityList[i]._inuse) continue;
 		break;
 	}

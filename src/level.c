@@ -23,9 +23,17 @@ Level* level_load(const char* filepath)
 	SJson* json;
 	SJson* config;
 	SJson *rows, *tiles, *tile;
-	if (!filepath) return NULL;
+	if (!filepath)
+	{
+		slog("JSON filepath invalid");
+		return NULL;
+	}
 	json = sj_load(filepath);
-	if (!json) return NULL;
+	if (!json)
+	{
+		slog("JSON data invalid");
+		return NULL;
+	}
 
 	config = sj_object_get_value(json, "level");
 	if (!config)

@@ -49,6 +49,7 @@
     <ClInclude Include="..\gfc\simple_json\include\simple_json_types.h" />
     <ClInclude Include="..\gfc\simple_json\include\simple_json_value.h" />
     <ClInclude Include="..\gfc\simple_logger\include\simple_logger.h" />
+    <ClInclude Include="..\include\animation.h" />
     <ClInclude Include="..\include\camera.h" />
     <ClInclude Include="..\include\entity.h" />
     <ClInclude Include="..\include\gf2d_draw.h" />
@@ -88,6 +89,7 @@
     <ClCompile Include="..\gfc\src\gfc_types.c" />
     <ClCompile Include="..\gfc\src\gfc_vector.c" />
     <ClCompile Include="..\gfc\src\miniz.c" />
+    <ClCompile Include="..\src\animation.c" />
     <ClCompile Include="..\src\camera.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\game.c" />
@@ -100,6 +102,8 @@
     <ClCompile Include="..\src\tiledef.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\images\0258\0258AnimData.json" />
+    <None Include="..\images\0399\0399AnimData.json" />
     <None Include="..\level\testlevel.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -155,13 +159,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..</OutDir>
+    <OutDir>..\</OutDir>
     <TargetName>gf2d</TargetName>
     <IncludePath>C:\Users\escdr\git\libs\SDL2-2.32.10\include;C:\Users\escdr\git\libs\SDL2_ttf-2.24.0\include;C:\Users\escdr\git\libs\SDL2_mixer-2.8.1\include;C:\Users\escdr\git\libs\SDL2_image-2.8.8\include;C:\Users\escdr\git\gameframework2d\gfc\simple_logger\include;C:\Users\escdr\git\gameframework2d\gfc\simple_json\include;C:\Users\escdr\git\gameframework2d\gfc\include;C:\Users\escdr\git\gameframework2d\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\escdr\git\libs\SDL2-2.32.10\lib\x64;C:\Users\escdr\git\libs\SDL2_ttf-2.24.0\lib\x64;C:\Users\escdr\git\libs\SDL2_mixer-2.8.1\lib\x64;C:\Users\escdr\git\libs\SDL2_image-2.8.8\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..</OutDir>
+    <OutDir>..\</OutDir>
     <TargetName>gf2d</TargetName>
     <IncludePath>C:\Users\escdr\git\libs\SDL2-2.32.10\include;C:\Users\escdr\git\libs\SDL2_ttf-2.24.0\include;C:\Users\escdr\git\libs\SDL2_mixer-2.8.1\include;C:\Users\escdr\git\libs\SDL2_image-2.8.8\include;C:\Users\escdr\git\gameframework2d\gfc\simple_logger\include;C:\Users\escdr\git\gameframework2d\gfc\simple_json\include;C:\Users\escdr\git\gameframework2d\gfc\include;C:\Users\escdr\git\gameframework2d\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\escdr\git\libs\SDL2-2.32.10\lib\x64;C:\Users\escdr\git\libs\SDL2_ttf-2.24.0\lib\x64;C:\Users\escdr\git\libs\SDL2_mixer-2.8.1\lib\x64;C:\Users\escdr\git\libs\SDL2_image-2.8.8\lib\x64;$(LibraryPath)</LibraryPath>

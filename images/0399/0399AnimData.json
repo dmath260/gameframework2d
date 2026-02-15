@@ -1,0 +1,683 @@
+{
+  "AnimData": {
+    "ShadowSize": 1,
+    "Anims": {
+      "Anim": [
+        {
+          "Name": "Walk",
+          "Filepath": "images/0399/Walk-Anim.png",
+          "Index": 0,
+          "FrameWidth": 32,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              8,
+              10,
+              8,
+              10
+            ]
+          }
+        },
+        {
+          "Name": "Attack",
+          "Filepath": "images/0399/Attack-Anim.png",
+          "Index": 1,
+          "FrameWidth": 64,
+          "FrameHeight": 64,
+          "HitFrame": 1,
+          "ReturnFrame": 6,
+          "Durations": {
+            "Duration": [
+              2,
+              6,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Strike",
+          "Index": 2,
+          "CopyOf": "Attack"
+        },
+        {
+          "Name": "Shoot",
+          "Filepath": "images/0399/Shoot-Anim.png",
+          "Index": 3,
+          "FrameWidth": 32,
+          "FrameHeight": 32,
+          "HitFrame": 2,
+          "ReturnFrame": 5,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              6,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Withdraw",
+          "Filepath": "images/0399/Withdraw-Anim.png",
+          "Index": 4,
+          "FrameWidth": 32,
+          "FrameHeight": 40,
+          "HitFrame": 0,
+          "ReturnFrame": 7,
+          "Durations": {
+            "Duration": [
+              2,
+              1,
+              2,
+              2,
+              1,
+              2,
+              4,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Sleep",
+          "Filepath": "images/0399/Sleep-Anim.png",
+          "Index": 5,
+          "FrameWidth": 24,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              30,
+              35
+            ]
+          }
+        },
+        {
+          "Name": "Hurt",
+          "Filepath": "images/0399/Hurt-Anim.png",
+          "Index": 6,
+          "FrameWidth": 40,
+          "FrameHeight": 48,
+          "Durations": {
+            "Duration": [
+              2,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "Idle",
+          "Filepath": "images/0399/Idle-Anim.png",
+          "Index": 7,
+          "FrameWidth": 32,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              20,
+              14,
+              20,
+              14
+            ]
+          }
+        },
+        {
+          "Name": "Swing",
+          "Filepath": "images/0399/Swing-Anim.png",
+          "Index": 8,
+          "FrameWidth": 72,
+          "FrameHeight": 72,
+          "HitFrame": 5,
+          "ReturnFrame": 5,
+          "Durations": {
+            "Duration": [
+              2,
+              1,
+              2,
+              2,
+              3,
+              2,
+              2,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "Name": "Double",
+          "Filepath": "images/0399/Double-Anim.png",
+          "Index": 9,
+          "FrameWidth": 56,
+          "FrameHeight": 64,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              3,
+              3,
+              3,
+              2,
+              3,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Hop",
+          "Filepath": "images/0399/Hop-Anim.png",
+          "Index": 10,
+          "FrameWidth": 32,
+          "FrameHeight": 80,
+          "HitFrame": 9,
+          "Durations": {
+            "Duration": [
+              2,
+              1,
+              2,
+              3,
+              4,
+              4,
+              3,
+              2,
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Charge",
+          "Filepath": "images/0399/Charge-Anim.png",
+          "Index": 11,
+          "FrameWidth": 32,
+          "FrameHeight": 32,
+          "HitFrame": 5,
+          "ReturnFrame": 9,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Rotate",
+          "Filepath": "images/0399/Rotate-Anim.png",
+          "Index": 12,
+          "FrameWidth": 32,
+          "FrameHeight": 32,
+          "HitFrame": 8,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Eat",
+          "Filepath": "images/0399/Eat-Anim.png",
+          "Index": 13,
+          "FrameWidth": 24,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              6,
+              8,
+              6,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "Special1",
+          "Filepath": "images/0399/Special1-Anim.png",
+          "Index": 14,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              8,
+              4,
+              4,
+              4,
+              4,
+              4,
+              4
+            ]
+          }
+        },
+        {
+          "Name": "Pose",
+          "Filepath": "images/0399/Pose-Anim.png",
+          "Index": 15,
+          "FrameWidth": 24,
+          "FrameHeight": 40,
+          "Durations": {
+            "Duration": [
+              8,
+              1,
+              3,
+              2,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "Special0",
+          "Filepath": "images/0399/Special0-Anim.png",
+          "Index": 16,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              4,
+              6,
+              4
+            ]
+          }
+        },
+        {
+          "Name": "EventSleep",
+          "Filepath": "images/0399/EventSleep-Anim.png",
+          "Index": 17,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              30,
+              35
+            ]
+          }
+        },
+        {
+          "Name": "Fainted",
+          "Filepath": "images/0399/Fainted-Anim.png",
+          "Index": 18,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": 4
+          }
+        },
+        {
+          "Name": "StandingUp",
+          "Filepath": "images/0399/StandingUp-Anim.png",
+          "Index": 19,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              4,
+              8,
+              4
+            ]
+          }
+        },
+        {
+          "Name": "Nod",
+          "Filepath": "images/0399/Nod-Anim.png",
+          "Index": 20,
+          "FrameWidth": 32,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              4,
+              8,
+              10,
+              8,
+              4
+            ]
+          }
+        },
+        {
+          "Name": "Laying",
+          "Filepath": "images/0399/Laying-Anim.png",
+          "Index": 21,
+          "FrameWidth": 24,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": 4
+          }
+        },
+        {
+          "Name": "Wave",
+          "Filepath": "images/0399/Wave-Anim.png",
+          "Index": 22,
+          "FrameWidth": 24,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              6,
+              6
+            ]
+          }
+        },
+        {
+          "Name": "Wake",
+          "Filepath": "images/0399/Wake-Anim.png",
+          "Index": 35,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              8,
+              6,
+              14,
+              4,
+              10
+            ]
+          }
+        },
+        {
+          "Name": "Tumble",
+          "Filepath": "images/0399/Tumble-Anim.png",
+          "Index": 36,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ]
+          }
+        },
+        {
+          "Name": "Pull",
+          "Filepath": "images/0399/Pull-Anim.png",
+          "Index": 37,
+          "FrameWidth": 32,
+          "FrameHeight": 48,
+          "Durations": {
+            "Duration": [
+              10,
+              12,
+              10,
+              12,
+              10,
+              12,
+              10
+            ]
+          }
+        },
+        {
+          "Name": "Pain",
+          "Filepath": "images/0399/Pain-Anim.png",
+          "Index": 38,
+          "FrameWidth": 32,
+          "FrameHeight": 40,
+          "Durations": {
+            "Duration": [
+              4,
+              1,
+              1,
+              1,
+              2,
+              1,
+              4,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Float",
+          "Filepath": "images/0399/Float-Anim.png",
+          "Index": 39,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              9,
+              18,
+              9,
+              14
+            ]
+          }
+        },
+        {
+          "Name": "DeepBreath",
+          "Filepath": "images/0399/DeepBreath-Anim.png",
+          "Index": 40,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              12,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              10,
+              4
+            ]
+          }
+        },
+        {
+          "Name": "Sit",
+          "Filepath": "images/0399/Sit-Anim.png",
+          "Index": 23,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              8,
+              8,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "LookUp",
+          "Filepath": "images/0399/LookUp-Anim.png",
+          "Index": 24,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              6,
+              6
+            ]
+          }
+        },
+        {
+          "Name": "Sink",
+          "Filepath": "images/0399/Sink-Anim.png",
+          "Index": 25,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ]
+          }
+        },
+        {
+          "Name": "Trip",
+          "Filepath": "images/0399/Trip-Anim.png",
+          "Index": 26,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              4,
+              6,
+              4,
+              4,
+              4
+            ]
+          }
+        },
+        {
+          "Name": "LeapForth",
+          "Filepath": "images/0399/LeapForth-Anim.png",
+          "Index": 28,
+          "FrameWidth": 24,
+          "FrameHeight": 72,
+          "Durations": {
+            "Duration": [
+              6,
+              1,
+              1,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Head",
+          "Filepath": "images/0399/Head-Anim.png",
+          "Index": 29,
+          "FrameWidth": 24,
+          "FrameHeight": 40,
+          "Durations": {
+            "Duration": 4
+          }
+        },
+        {
+          "Name": "Cringe",
+          "Filepath": "images/0399/Cringe-Anim.png",
+          "Index": 30,
+          "FrameWidth": 24,
+          "FrameHeight": 56,
+          "Durations": {
+            "Duration": [
+              2,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "LostBalance",
+          "Filepath": "images/0399/LostBalance-Anim.png",
+          "Index": 31,
+          "FrameWidth": 24,
+          "FrameHeight": 40,
+          "Durations": {
+            "Duration": [
+              8,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "TumbleBack",
+          "Filepath": "images/0399/TumbleBack-Anim.png",
+          "Index": 32,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ]
+          }
+        },
+        {
+          "Name": "Faint",
+          "Filepath": "images/0399/Faint-Anim.png",
+          "Index": 33,
+          "FrameWidth": 32,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              8,
+              12,
+              4,
+              10
+            ]
+          }
+        },
+        {
+          "Name": "HitGround",
+          "Filepath": "images/0399/HitGround-Anim.png",
+          "Index": 34,
+          "FrameWidth": 32,
+          "FrameHeight": 40,
+          "Durations": {
+            "Duration": [
+              4,
+              4,
+              4,
+              2,
+              4,
+              4,
+              6,
+              4,
+              4
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

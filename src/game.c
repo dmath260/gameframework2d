@@ -62,8 +62,8 @@ int main(int argc, char * argv[])
     }
 
     Entity* player = player_entity_new(gfc_vector2d(
-        level->width * level->tileDef->width / 2,
-        level->height * level->tileDef->height / 2));
+        (float) level->width * level->tileDef->width / 2,
+        (float) level->height * level->tileDef->height / 2));
     i = 0;
 
     /*main game loop*/
@@ -73,15 +73,15 @@ int main(int argc, char * argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
         SDL_GetMouseState(&mx,&my);
-        mf+=0.1;
+        mf += 0.1f;
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
         i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
-            double x = (1 + gfc_crandom()) * level->width * level->tileDef->width / 2;
-            double y = (1 + gfc_crandom()) * level->height * level->tileDef->height / 2;
+            float x = (float) (1 + gfc_crandom()) * level->width * level->tileDef->width / 2;
+            float y = (float) (1 + gfc_crandom()) * level->height * level->tileDef->height / 2;
             monster_new(gfc_vector2d(x, y));
         }
 
@@ -95,7 +95,7 @@ int main(int argc, char * argv[])
         entity_manager_update_all();
         
         gf2d_graphics_clear_screen();// clears drawing buffers
-        // all drawing should happen betweem clear_screen and next_frame
+        // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
             level_draw(level);
 
@@ -105,7 +105,7 @@ int main(int argc, char * argv[])
             //UI elements last
             gf2d_sprite_draw(
                 mouse,
-                gfc_vector2d(mx,my),
+                gfc_vector2d((float) mx, (float) my),
                 NULL,
                 NULL,
                 NULL,
