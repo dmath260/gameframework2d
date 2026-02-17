@@ -74,6 +74,7 @@ void player_entity_think(Entity* self)
 
 void player_entity_update(Entity* self)
 {
+	if (!self) return;
 	camera_center_on(self->position);
 }
 
@@ -85,6 +86,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->animDataFilePath = "images/0258/0258AnimData.json";
 	entity_load(self, "Idle");
 	self->rotationCenter = gfc_vector2d(12, 16);
+	self->bounds = gfc_rect(-24, -32, 48, 64); // change these values later
 	self->topSpeed = 3;
 	self->position = position;
 	self->think = player_entity_think;

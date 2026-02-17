@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gf2d_draw.h"
+
 #include "entity.h"
 #include "camera.h"
 
@@ -76,6 +78,7 @@ void entity_free(Entity* self)
 
 void entity_draw(Entity *self)
 {
+	GFC_Rect bounds;
 	GFC_Vector2D position, offset;
 	if (!self) return;
 	offset = camera_get_offset();
@@ -89,6 +92,9 @@ void entity_draw(Entity *self)
 		NULL,
 		NULL,
 		(Uint32)self->frame);
+	bounds = self->bounds;
+	gfc_vector2d_add(bounds, bounds, position);
+	gf2d_draw_rect(bounds, GFC_COLOR_RED);
 }
 
 void entity_manager_draw_all()
@@ -103,6 +109,34 @@ void entity_manager_draw_all()
 		if (!entityManager.entityList[i]._inuse) continue;
 		entity_draw(&entityManager.entityList[i]);
 	}
+}
+
+Uint8 entity_collision_test(Entity* self, Entity *other)
+{
+	GFC_Rect bounds1, bounds2;
+	if (!self || !other || self == other) return;
+	bounds1 = self->bounds;
+	bounds2 = other->bounds;
+	gfc_vector2d_add(bounds1, self->bounds, self->position);
+	gfc_vector2d_add(bounds2, other->bounds, other->position);
+	// now in same space frame of reference
+	return gfc_rect_overlap(bounds1, bounds2);
+}
+
+Uint8 entity_collision_test_world(Entity* self)
+{
+	int i;
+	if (!self) return;
+	for (i = 0; i < entityManager.entityMax; i++)
+	{
+		if (!entityManager.entityList[i]._inuse) continue;
+		if (entity_collision_test(self, &entityManager.entityList[i]))
+		{
+			if (self->touch) self->touch(self, &entityManager.entityList[i]);
+			return 1;
+		}
+	}
+	return 0;
 }
 
 void entity_think(Entity* self) {

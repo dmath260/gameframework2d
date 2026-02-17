@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include "gfc_text.h"
+#include "gfc_shape.h"
 
 #include "gf2d_sprite.h"
 
@@ -19,10 +20,13 @@ typedef struct Entity_S
 	GFC_Vector2D	scale;
 	GFC_Vector2D	rotationCenter;
 	float			rotation;
+	GFC_Rect		bounds;						//bounding box
 	float			frame;
 	void (* think)	(struct Entity_S *self);	//called every frame if defined for the entity
 	void (* update)	(struct Entity_S *self);	//called every frame if defined for the entity
 	void (* free)	(struct Entity_S *self);	//called when the entity is freed
+	Uint8 (* touch)	(struct Entity_S *self, struct Entity_S *other);
+	// return 1 if you want to stop movement
 	void			*data;						//used for entity specific data
 	AnimData		*animationData;				//data for animating the entity
 	char			*animDataFilePath;			//file path to JSON for animation data
@@ -44,6 +48,12 @@ void entity_draw(Entity *self);
  * @brief draws all entities
  */
 void entity_manager_draw_all();
+
+/**
+* @brief check if an entity is colliding with any other entity
+* @param self the entity to check
+*/
+Uint8 entity_collision_test_world(Entity* self);
 
 /**
  * @brief all active entities run their think

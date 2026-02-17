@@ -49,7 +49,7 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
-    bgm = gfc_sound_load("audio/song_test.wav", -1, -1);
+    bgm = gfc_sound_load("audio/song_test2.wav", -1, -1);
 
     gfc_sound_play(bgm, -1, -1, -1, -1);
 
@@ -59,6 +59,7 @@ int main(int argc, char * argv[])
     if (level)
     {
         level_add_border(level, 4);
+        level_bake_tiles(level);
     }
 
     Entity* player = player_entity_new(gfc_vector2d(
@@ -80,8 +81,8 @@ int main(int argc, char * argv[])
         i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
-            float x = (float) (1 + gfc_crandom()) * level->width * level->tileDef->width / 2;
-            float y = (float) (1 + gfc_crandom()) * level->height * level->tileDef->height / 2;
+            float x = (float) (1 + gfc_crandom()) * level->size.x / 2;
+            float y = (float) (1 + gfc_crandom()) * level->size.y / 2;
             monster_new(gfc_vector2d(x, y));
         }
 

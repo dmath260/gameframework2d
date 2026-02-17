@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "gf2d_sprite.h"
+#include "gf2d_graphics.h"
 
 #include "level.h"
 #include "camera.h"
@@ -146,6 +147,7 @@ void level_free(Level* level)
 {
 	if (!level) return;
 	gf2d_sprite_free(level->background);
+	gf2d_sprite_free(level->tileLayer);
 	gf2d_sprite_free(level->tileDef->sheet);
 	if (level->tileMap) free(level->tileMap);
 	free(level);
@@ -157,37 +159,62 @@ void level_setup_camera_bounds(Level* level)
 	camera_set_bounds(gfc_rect(0, 0, level->tileDef->width * level->width, level->tileDef->height * level->height));
 }
 
+void level_bake_tiles(Level* level)
+{
+	// SOMETHING IS BROKEN HERE, FIND OUT WHAT
+	// PROBABLY WITH gf2d_sprite_draw_to_surface
+	SDL_Surface* tileSurface;
+	Uint8 tile;
+	Uint32 i, j;
+	int index;
+	if (!level) return;
+	if (!level->width || !level->height) return;
+	if (!level->tileDef->width || !level->tileDef->height) return;
+	level->size.x = level->tileDef->width * level->width;
+	level->size.y = level->tileDef->height * level->height;
+	tileSurface = gf2d_graphics_create_surface(level->size.x, level->size.y);
+	if (!tileSurface)
+	{
+		slog("failed to allocate a surface for the size of the image requested");
+		return;
+	}
+	for (j = 0; j < level->height; j++)
+	{
+		for (i = 0; i < level->width; i++)
+		{
+			index = level_get_tile_index(level, i, j);
+			if (index < 0) continue;
+			tile = level->tileMap[index];
+			if (!tile) continue;
+			gf2d_sprite_draw_to_surface(
+				level->tileDef->sheet,
+				gfc_vector2d((i * level->tileDef->width), (j * level->tileDef->height)),
+				NULL,
+				NULL,
+				tile - 1,
+				tileSurface
+			);
+		}
+	}
+	if (level->tileLayer) { // free old layer before assigning new layer
+		gf2d_sprite_free(level->tileLayer);
+		level->tileLayer = NULL;
+	}
+	level->tileLayer = gf2d_sprite_from_surface(
+		tileSurface,
+		-1,
+		-1,
+		0,
+		0
+	);
+	//SDL_FreeSurface(tileSurface); Not necessary, the surface is freed in gf2d_sprite_from_surface
+}
+
 void level_draw(Level* level)
 {
 	GFC_Vector2D offset;
-	Uint8 tile;
-	Uint32 i, j, index;
 	if (!level) return;
 	offset = camera_get_offset();
-	if (level->background)
-	{
-		gf2d_sprite_draw_image(level->background, offset);
-	}
-	if (level->tileDef->sheet) {
-		for (j = 0; j < level->height; j++)
-		{
-			for (i = 0; i < level->width; i++)
-			{
-				index = level_get_tile_index(level, i, j);
-				if (index < 0) continue;
-				tile = level->tileMap[index];
-				if (!tile) continue;
-				gf2d_sprite_draw(
-					level->tileDef->sheet,
-					gfc_vector2d((i * level->tileDef->width) + offset.x, (j * level->tileDef->height) + offset.y),
-					NULL,
-					NULL,
-					NULL,
-					NULL,
-					NULL,
-					tile - 1
-				);
-			}
-		}
-	}
+	if (level->background) gf2d_sprite_draw_image(level->background, offset);
+	if (level->tileLayer) gf2d_sprite_draw_image(level->tileLayer, offset);
 }

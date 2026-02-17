@@ -6,8 +6,10 @@
 typedef struct
 {
 	Sprite* background;				//background sprite
+	Sprite* tileLayer;				//static tile layer for fast rendering
 	Uint8* tileMap;					//pointer to the tile map data
 	Uint32 width, height;			//size of the tileMap
+	GFC_Vector2D size;				//size of the tileMap in pixels
 	TileDef* tileDef;
 }Level;
 

@@ -49,11 +49,22 @@ void monster_think(Entity* self)
 
 void monster_update(Entity* self)
 {
-	/*
 	MonsterData* data;
 	if ((!self) || (!self->data)) return;
 	data = (MonsterData*)self->data;
-	*/
+	entity_collision_test_world(self);
+}
+
+Uint8 monster_touch(Entity* self, Entity* other)
+{
+	MonsterData* data;
+	if (!self | !other) return;
+	data = (MonsterData*) self->data;
+	if (other == data->player)
+	{
+		entity_free(self);
+		return;
+	}
 }
 
 Entity* monster_new(GFC_Vector2D position)
@@ -69,6 +80,7 @@ Entity* monster_new(GFC_Vector2D position)
 	}
 	self->animDataFilePath = "images/0399/0399AnimData.json";
 	entity_load(self, "Idle");
+	self->bounds = gfc_rect(-32, -32, 64, 64); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->data = data;
 	self->rotationCenter = gfc_vector2d(16, 16);
@@ -76,5 +88,6 @@ Entity* monster_new(GFC_Vector2D position)
 	self->position = position;
 	self->think = monster_think;
 	self->update = monster_update;
+	self->touch = monster_touch;
 	return self;
 }
