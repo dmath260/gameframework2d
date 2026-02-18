@@ -265,5 +265,17 @@
     <None Include="..\images\0399\0399AnimData.json">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\images\0041\0041AnimData.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\images\0069\0069AnimData.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\images\0403\0403AnimData.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\images\0423\0423AnimData.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

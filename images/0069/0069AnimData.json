@@ -1,0 +1,255 @@
+{
+  "AnimData": {
+    "ShadowSize": 0,
+    "Anims": {
+      "Anim": [
+        {
+          "Name": "Walk",
+          "Filepath": "images/0069/Walk-Anim.png",
+          "Index": 0,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              8,
+              10,
+              8,
+              10
+            ]
+          }
+        },
+        {
+          "Name": "Attack",
+          "Filepath": "images/0069/Attack-Anim.png",
+          "Index": 1,
+          "FrameWidth": 72,
+          "FrameHeight": 72,
+          "RushFrame": 1,
+          "HitFrame": 3,
+          "ReturnFrame": 6,
+          "Durations": {
+            "Duration": [
+              2,
+              4,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Strike",
+          "Filepath": "images/0069/Strike-Anim.png",
+          "Index": 2,
+          "FrameWidth": 72,
+          "FrameHeight": 88,
+          "RushFrame": 1,
+          "HitFrame": 2,
+          "ReturnFrame": 5,
+          "Durations": {
+            "Duration": [
+              2,
+              6,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Shoot",
+          "Filepath": "images/0069/Shoot-Anim.png",
+          "Index": 3,
+          "FrameWidth": 40,
+          "FrameHeight": 48,
+          "HitFrame": 2,
+          "ReturnFrame": 6,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              4,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Twirl",
+          "Index": 4,
+          "CopyOf": "Rotate"
+        },
+        {
+          "Name": "Sleep",
+          "Filepath": "images/0069/Sleep-Anim.png",
+          "Index": 5,
+          "FrameWidth": 24,
+          "FrameHeight": 24,
+          "Durations": {
+            "Duration": [
+              30,
+              35
+            ]
+          }
+        },
+        {
+          "Name": "Hurt",
+          "Filepath": "images/0069/Hurt-Anim.png",
+          "Index": 6,
+          "FrameWidth": 48,
+          "FrameHeight": 48,
+          "Durations": {
+            "Duration": [
+              2,
+              8
+            ]
+          }
+        },
+        {
+          "Name": "Idle",
+          "Filepath": "images/0069/Idle-Anim.png",
+          "Index": 7,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "Durations": {
+            "Duration": [
+              20,
+              22
+            ]
+          }
+        },
+        {
+          "Name": "Swing",
+          "Filepath": "images/0069/Swing-Anim.png",
+          "Index": 8,
+          "FrameWidth": 72,
+          "FrameHeight": 80,
+          "HitFrame": 5,
+          "ReturnFrame": 5,
+          "Durations": {
+            "Duration": [
+              2,
+              1,
+              2,
+              2,
+              3,
+              2,
+              2,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "Name": "Double",
+          "Filepath": "images/0069/Double-Anim.png",
+          "Index": 9,
+          "FrameWidth": 48,
+          "FrameHeight": 64,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              3,
+              3,
+              3,
+              2,
+              3,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Hop",
+          "Filepath": "images/0069/Hop-Anim.png",
+          "Index": 10,
+          "FrameWidth": 32,
+          "FrameHeight": 80,
+          "HitFrame": 9,
+          "Durations": {
+            "Duration": [
+              2,
+              1,
+              2,
+              3,
+              4,
+              4,
+              3,
+              2,
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Charge",
+          "Filepath": "images/0069/Charge-Anim.png",
+          "Index": 11,
+          "FrameWidth": 32,
+          "FrameHeight": 40,
+          "HitFrame": 5,
+          "ReturnFrame": 9,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        },
+        {
+          "Name": "Rotate",
+          "Filepath": "images/0069/Rotate-Anim.png",
+          "Index": 12,
+          "FrameWidth": 24,
+          "FrameHeight": 32,
+          "HitFrame": 8,
+          "Durations": {
+            "Duration": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ]
+          }
+        }
+      ]
+    }
+  }
+}							

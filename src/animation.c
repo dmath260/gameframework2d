@@ -27,12 +27,10 @@ AnimData* animdata_parse(SJson* config, char* state, AnimData* animationData)
 
 	temp = sj_object_get_value(config, "Anims");
 	if (!temp) {
-		slog("1");
 		return NULL;
 	}
 	array = sj_object_get_value(temp, "Anim");
 	if (!array) {
-		slog("2");
 		return NULL;
 	}
 	count = sj_array_count(array);
@@ -42,7 +40,6 @@ AnimData* animdata_parse(SJson* config, char* state, AnimData* animationData)
 		if (!strcmp(str, state)) break;
 	}
 	if (i == count) {
-		slog("3");
 		return NULL;
 	}
 
@@ -56,19 +53,16 @@ AnimData* animdata_parse(SJson* config, char* state, AnimData* animationData)
 
 	temp = sj_object_get_value(data, "Durations");
 	if (!temp) {
-		slog("4");
 		return NULL;
 	}
 	duration = sj_object_get_value(temp, "Duration");
 	if (!duration) {
-		slog("5");
 		return NULL;
 	}
 	count = sj_array_count(duration);
 	animationData->FramesPerRow = count;
 	animationData->AnimFrames = gfc_allocate_array(sizeof(Uint32), count + 1);
 	if (!animationData->AnimFrames) {
-		slog("6");
 		return NULL;
 	}
 	value = 0;
@@ -89,7 +83,6 @@ AnimData* animdata_parse(SJson* config, char* state, AnimData* animationData)
 		0
 	);
 	if (!animationData->Sprite) {
-		slog("7");
 		return NULL;
 	}
 

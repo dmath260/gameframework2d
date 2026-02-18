@@ -102,8 +102,12 @@
     <ClCompile Include="..\src\tiledef.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\images\0041\0041AnimData.json" />
+    <None Include="..\images\0069\0069AnimData.json" />
     <None Include="..\images\0258\0258AnimData.json" />
     <None Include="..\images\0399\0399AnimData.json" />
+    <None Include="..\images\0403\0403AnimData.json" />
+    <None Include="..\images\0423\0423AnimData.json" />
     <None Include="..\level\testlevel.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
