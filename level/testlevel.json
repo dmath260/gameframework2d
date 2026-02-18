@@ -1,7 +1,7 @@
 {
   "level":
   {
-    "background": "images/backgrounds/bg_temp.png",
+    "background": "images/backgrounds/bg_green_1600x1600.png",
     "tileDef": {
       "sheet": "images/tilesets/tileset_flat.png",
       "width": 32,
