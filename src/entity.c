@@ -173,7 +173,8 @@ void entity_manager_think_all()
 
 void entity_update(Entity *self) {
 	if (!self) return;
-
+	GFC_Rect bounds;
+	
 	if (self->update) self->update(self);
 
 	gfc_vector2d_add(self->position, self->position, self->velocity);
@@ -188,6 +189,16 @@ void entity_update(Entity *self) {
 	AnimData* data;
 	data = self->animationData;
 	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
+
+	bounds = camera_get_bounds();
+	if (self->position.x < bounds.x) self->position.x = bounds.x;
+	if (self->position.y < bounds.y) self->position.y = bounds.y;
+	if (self->position.x /*+ self->animationData->FrameWidth*/ > bounds.w)
+		self->position.x = bounds.w /*- self->animationData->FrameWidth*/;
+	if (self->position.y /*+ self->animationData->FrameHeight*/ > bounds.h)
+		self->position.y = bounds.h /*- self->animationData->FrameHeight*/;
+
+	//slog("%f %f", self->position.x, self->position.y);
 }
 
 void entity_manager_update_all()

@@ -10,10 +10,16 @@ typedef struct
 }Camera;
 
 /**
- * @brief lorem ipsum
- * @param bounds lorem ipsum
+ * @brief sets the camera bounds
+ * @param bounds the bounds to set
  */
 void camera_set_bounds(GFC_Rect bounds);
+
+/**
+ * @brief gets the camera bounds
+ * @return the camera's current bounds
+ */
+GFC_Rect camera_get_bounds();
 
 /**
  * @brief gets the current position of the camera

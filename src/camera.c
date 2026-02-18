@@ -9,6 +9,11 @@ void camera_set_bounds(GFC_Rect bounds)
 	camera.bounds = bounds;
 }
 
+GFC_Rect camera_get_bounds()
+{
+	return camera.bounds;
+}
+
 void camera_snap_to_bounds()
 {
 	if (camera.view.x < camera.bounds.x) camera.view.x = camera.bounds.x;
