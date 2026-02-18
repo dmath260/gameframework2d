@@ -43,6 +43,12 @@ int level_get_tile_index(Level* level, Uint32 x, Uint32 y);
 void level_add_border(Level* level, Uint8 tile);
 
 /**
+* @brief bake tiles into the level;
+* @param level the level to bake tiles into
+*/
+void level_bake_tiles(Level* level);
+
+/**
 * @brief free a level;
 * @param level the level to free
 */

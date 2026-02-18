@@ -161,8 +161,6 @@ void level_setup_camera_bounds(Level* level)
 
 void level_bake_tiles(Level* level)
 {
-	// SOMETHING IS BROKEN HERE, FIND OUT WHAT
-	// PROBABLY WITH gf2d_sprite_draw_to_surface
 	SDL_Surface* tileSurface;
 	Uint8 tile;
 	Uint32 i, j;

@@ -58,7 +58,6 @@ int main(int argc, char * argv[])
     level = level_load("level/testlevel.json");
     if (level)
     {
-        level_add_border(level, 4);
         level_bake_tiles(level);
     }
 
