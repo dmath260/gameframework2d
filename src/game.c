@@ -49,7 +49,7 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
-    bgm = gfc_sound_load("audio/song_test2.wav", -1, -1);
+    bgm = gfc_sound_load("audio/song_test2a.wav", -1, -1);
 
     gfc_sound_play(bgm, -1, -1, -1, -1);
 
