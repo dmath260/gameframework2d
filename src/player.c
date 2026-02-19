@@ -105,11 +105,11 @@ void player_entity_think(Entity* self)
 		adata->FrameRow = (12 - dir) % 8; // row 0 for S (4), row 1 for SE (3), row 2 for E (2)...
 		gfc_vector2d_normalize(&move);
 		gfc_vector2d_scale(self->velocity, move, self->topSpeed);
-		//set_player_state(self, PL_Walk);
+		set_player_state(self, PL_Walk);
 	}
 	else
 	{
-		//set_player_state(self, PL_Idle);
+		set_player_state(self, PL_Idle);
 	}
 }
 
@@ -128,7 +128,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	self->data = data;
 	self->animDataFilePath = "images/0258/0258AnimData.json";
-	set_player_state(self, PL_Jump);
+	set_player_state(self, PL_Idle);
 	self->rotationCenter = gfc_vector2d(12, 16);
 	self->bounds = gfc_rect(-24, -40, 64, 80); // change these values later AND move to set_player_state
 	self->topSpeed = 3;
