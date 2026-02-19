@@ -5,6 +5,22 @@
 #include "player.h"
 #include "camera.h"
 
+typedef enum
+{
+	PL_Null,
+	PL_Idle,
+	PL_Walk,
+	PL_Attack,
+	PL_Pain,
+	PL_Die,
+	PL_MAX
+}PlayerStates;
+
+typedef struct
+{
+	PlayerStates state;
+} PlayerData;
+
 static Entity* thePlayer = NULL;
 
 Entity* player_entity_get()
@@ -12,34 +28,52 @@ Entity* player_entity_get()
 	return thePlayer;
 }
 
-/*
-typedef struct
-{
-	int temp;
-} PlayerData;
-*/
-
 void player_free(Entity* self)
 {
-	/*
 	PlayerData* data;
 	if ((!self) || (!self->data)) return;
 	data = (PlayerData*)self->data;
 	//clean up anything I own that I asked for
 	free(data);
-	*/
+}
+
+char* state_to_str(Entity* self)
+{
+	if (!self || !self->data) return;
+	PlayerStates state;
+	PlayerData* data;
+	data = (PlayerData*)self->data;
+	state = data->state;
+	switch (state)
+	{
+	case PL_Idle: return "Idle";
+	case PL_Walk: return "Walk";
+	case PL_Attack: return "Attack";
+	case PL_Pain: return "Pain";
+	case PL_Die: return "Faint";
+	default: return "Idle";
+	}
+}
+
+void set_player_state(Entity* self, PlayerStates state)
+{
+	if (!self || !self->data) return;
+	PlayerData* data;
+	data = (PlayerData*)self->data;
+	if (data->state == state) return;
+	data->state = state;
+	self->data = data;
+	entity_load(self, state_to_str(self));
 }
 
 void player_entity_think(Entity* self)
 {
-	/*
-	PlayerData* data;
+	PlayerData* pdata;
 	if ((!self) || (!self->data)) return;
-	data = (PlayerData*)self->data;
-	*/
+	pdata = (PlayerData*)self->data;
 	if (!self->animationData) return;
-	AnimData* data;
-	data = self->animationData;
+	AnimData* adata;
+	adata = (AnimData*)self->animationData;
 
 	GFC_Vector2D move = {0};
 	if (!self) return;
@@ -66,9 +100,14 @@ void player_entity_think(Entity* self)
 		if (ang % 45 > 22) ang += 45 - ang % 45; // rounding angle to nearest multiple of 45
 		if (ang % 45 != 0) ang -= ang % 45; // ensures the right row of the spritesheet is chosen
 		int dir = ang / 45;
-		data->FrameRow = (12 - dir) % 8; // row 0 for S (4), row 1 for SE (3), row 2 for E (2)...
+		adata->FrameRow = (12 - dir) % 8; // row 0 for S (4), row 1 for SE (3), row 2 for E (2)...
 		gfc_vector2d_normalize(&move);
 		gfc_vector2d_scale(self->velocity, move, self->topSpeed);
+		set_player_state(self, PL_Walk);
+	}
+	else
+	{
+		set_player_state(self, PL_Idle);
 	}
 }
 
@@ -83,10 +122,13 @@ Entity* player_entity_new(GFC_Vector2D position)
 	Entity* self;
 	self = entity_new();
 	if (!self) return NULL;
+	PlayerData* data;
+	data = gfc_allocate_array(sizeof(PlayerData), 1);
+	self->data = data;
 	self->animDataFilePath = "images/0258/0258AnimData.json";
-	entity_load(self, "Idle");
+	set_player_state(self, PL_Idle);
 	self->rotationCenter = gfc_vector2d(12, 16);
-	self->bounds = gfc_rect(-24, -32, 48, 64); // change these values later
+	self->bounds = gfc_rect(-32, -40, 64, 80); // change these values later AND move to set_player_state
 	self->topSpeed = 3;
 	self->position = position;
 	self->think = player_entity_think;

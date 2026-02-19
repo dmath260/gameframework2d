@@ -47,7 +47,6 @@ AnimData* animdata_parse(SJson* config, char* state, AnimData* animationData)
 	animationData->Name = state;
 	sj_object_get_uint8(data, "FrameWidth", &animationData->FrameWidth);
 	sj_object_get_uint8(data, "FrameHeight", &animationData->FrameHeight);
-	animationData->FrameRow = 0;
 	animationData->FrameCol = 0;
 	animationData->FrameCount = 0;
 
