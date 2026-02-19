@@ -131,7 +131,7 @@
           "Name": "Idle",
           "Filepath": "images/0258/Idle-Anim.png",
           "Index": 7,
-          "FrameWidth": 24,
+          "FrameWidth": 32,
           "FrameHeight": 40,
           "Durations": {
             "Duration": [
@@ -198,7 +198,7 @@
           "Name": "Hop",
           "Filepath": "images/0258/Hop-Anim.png",
           "Index": 10,
-          "FrameWidth": 24,
+          "FrameWidth": 32,
           "FrameHeight": 80,
           "HitFrame": 9,
           "Durations": {

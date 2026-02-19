@@ -6,6 +6,9 @@
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\animation.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
@@ -13,9 +16,6 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -29,21 +29,20 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "game.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeDocumentMoniker": "..\\src\\game.c",
               "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeToolTip": "..\\src\\game.c",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAAAE8AAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE8AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-01-25T17:39:52.502Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "animation.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\animation.c",
               "RelativeDocumentMoniker": "..\\src\\animation.c",
@@ -51,12 +50,11 @@
               "RelativeToolTip": "..\\src\\animation.c",
               "ViewState": "AgIAABgAAAAAAAAAAAAAADEAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-19T18:41:11.42Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T18:41:11.42Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "entity.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
               "RelativeDocumentMoniker": "..\\src\\entity.c",
@@ -64,8 +62,7 @@
               "RelativeToolTip": "..\\src\\entity.c",
               "ViewState": "AgIAAPEAAAAAAAAAAAAAAP0AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-19T18:34:07.272Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T18:34:07.272Z"
             },
             {
               "$type": "Document",
@@ -75,14 +72,14 @@
               "RelativeDocumentMoniker": "..\\src\\player.c",
               "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
               "RelativeToolTip": "..\\src\\player.c",
-              "ViewState": "AgIAAHMAAAAAAAAAAAAAAIIAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAAAG8AAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-02-19T18:09:34.915Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "0258AnimData.json",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\images\\0258\\0258AnimData.json",
               "RelativeDocumentMoniker": "..\\images\\0258\\0258AnimData.json",
@@ -90,8 +87,7 @@
               "RelativeToolTip": "..\\images\\0258\\0258AnimData.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgCAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-19T18:16:49.719Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T18:16:49.719Z"
             }
           ]
         }
