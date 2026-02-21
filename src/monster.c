@@ -40,11 +40,8 @@ void monster_think(Entity* self)
 	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
 	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);
 	gfc_vector2d_normalize(&toPlayer);
-	int ang = ((int)(gfc_vector2d_angle(toPlayer) * GFC_RADTODEG) % 360);  // 0 for N, 1 for NE, 2 for E...
-	if (ang % 45 > 22) ang += 45 - ang % 45; // rounding angle to nearest multiple of 45
-	if (ang % 45 != 0) ang -= ang % 45; // ensures the right row of the spritesheet is chosen
-	int dir = ang / 45;
-	self->animationData->FrameRow = (12 - dir) % 8; // row 0 for S (4), row 1 for SE (3), row 2 for E (2)...
+	if (toPlayer.x >= 0) self->animationData->FrameRow = 2;
+	else self->animationData->FrameRow = 6;
 }
 
 void monster_update(Entity* self)

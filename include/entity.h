@@ -22,6 +22,8 @@ typedef struct Entity_S
 	float			rotation;
 	GFC_Rect		bounds;						//bounding box
 	float			frame;
+	Uint8			isGrounded;
+	float			speedMult;
 	void (* think)	(struct Entity_S *self);	//called every frame if defined for the entity
 	void (* update)	(struct Entity_S *self);	//called every frame if defined for the entity
 	void (* free)	(struct Entity_S *self);	//called when the entity is freed

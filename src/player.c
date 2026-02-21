@@ -70,12 +70,7 @@ void set_player_state(Entity* self, PlayerStates state)
 
 void player_entity_think(Entity* self)
 {
-	PlayerData* pdata;
-	if ((!self) || (!self->data)) return;
-	pdata = (PlayerData*)self->data;
-	if (!self->animationData) return;
-	AnimData* adata;
-	adata = (AnimData*)self->animationData;
+	if (!self || !self->data) return;
 
 	GFC_Vector2D move = {0};
 	if (!self) return;
@@ -88,23 +83,27 @@ void player_entity_think(Entity* self)
 	{
 		move.x -= 1;
 	}
-	if (gfc_input_key_down("s"))
+	if (gfc_input_key_down("w") && self->isGrounded)
 	{
-		move.y += 1;
+		self->velocity.y -= 10;
+		self->isGrounded = 0;
 	}
-	if (gfc_input_key_down("w"))
+	if ((gfc_input_key_down("LSHIFT") || gfc_input_key_down("RSHIFT")) && self->isGrounded)
 	{
-		move.y -= 1;
+		// Has to be grounded because sprinting in midair makes no sense
+		self->speedMult = 2.0;
 	}
-	if ((move.x) || (move.y))
+	else if (!gfc_input_key_down("LSHIFT") && !gfc_input_key_down("RSHIFT"))
 	{
-		int ang = ((int)(gfc_vector2d_angle(move) * GFC_RADTODEG) % 360);  // 0 for N, 1 for NE, 2 for E...
-		if (ang % 45 > 22) ang += 45 - ang % 45; // rounding angle to nearest multiple of 45
-		if (ang % 45 != 0) ang -= ang % 45; // ensures the right row of the spritesheet is chosen
-		int dir = ang / 45;
-		adata->FrameRow = (12 - dir) % 8; // row 0 for S (4), row 1 for SE (3), row 2 for E (2)...
+		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
+		self->speedMult = 1.0;
+	}
+	if (move.x)
+	{
 		gfc_vector2d_normalize(&move);
-		gfc_vector2d_scale(self->velocity, move, self->topSpeed);
+		self->velocity.x = move.x * self->topSpeed * self->speedMult;
+		if (move.x >= 0) self->animationData->FrameRow = 2;
+		else self->animationData->FrameRow = 6;
 		set_player_state(self, PL_Walk);
 	}
 	else
@@ -132,6 +131,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->rotationCenter = gfc_vector2d(12, 16);
 	self->bounds = gfc_rect(-24, -40, 64, 80); // change these values later AND move to set_player_state
 	self->topSpeed = 3;
+	self->speedMult = 1;
 	self->position = position;
 	self->think = player_entity_think;
 	self->update = player_entity_update;

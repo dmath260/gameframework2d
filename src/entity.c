@@ -143,6 +143,9 @@ Uint8 entity_collision_test_world(Entity* self)
 void entity_think(Entity* self) {
 	if (!self) return;
 
+	//downward velocity
+	self->velocity.y += 0.25;
+
 	if (self->think) self->think(self);
 
 	// Animation stuff, might want to move this into the animation class
@@ -219,6 +222,7 @@ void check_bounds(Entity *self, Uint8 axis)
 		if (current_level->tileMap[i] > 1) {
 			self->position.y = th * (indices.h) - (self->bounds.y + self->bounds.h);
 			self->velocity.y = 0;
+			self->isGrounded = 1;
 		}
 	}
 }
@@ -232,18 +236,16 @@ void entity_update(Entity *self)
 	
 	if (self->update) self->update(self);
 
-	//gfc_vector2d_add(self->position, self->position, self->velocity);
-
 	self->position.x += self->velocity.x;
 	check_bounds(self, 0);
 	self->position.y += self->velocity.y;
 	check_bounds(self, 1);
 
-	if (gfc_vector2d_magnitude(self->velocity) > GFC_EPSILON)
+	if (self->velocity.x > GFC_EPSILON)
 	{
-		gfc_vector2d_scale(self->velocity, self->velocity, (float)0.5);
+		self->velocity.x *= 0.5;
 	}
-	else gfc_vector2d_clear(self->velocity);
+	else self->velocity.x = 0;
 	
 	// Animation stuff, might want to move this into the animation class
 	if (!self->animationData) return;
