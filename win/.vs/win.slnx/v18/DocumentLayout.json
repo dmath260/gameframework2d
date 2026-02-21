@@ -38,8 +38,7 @@
               "ViewState": "AgIAAEEAAAAAAAAAAAAAAFIAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-01-25T17:39:52.502Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -51,8 +50,7 @@
               "RelativeToolTip": "..\\include\\entity.h",
               "ViewState": "AgIAAA0AAAAAAAAAAAAAABkAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-02-21T19:51:53.58Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T19:51:53.58Z"
             },
             {
               "$type": "Document",
@@ -64,8 +62,7 @@
               "RelativeToolTip": "..\\src\\monster.c",
               "ViewState": "AgIAABsAAAAAAAAAAAAAACsAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-21T19:14:49.554Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T19:14:49.554Z"
             },
             {
               "$type": "Document",
@@ -75,7 +72,7 @@
               "RelativeDocumentMoniker": "..\\src\\player.c",
               "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
               "RelativeToolTip": "..\\src\\player.c",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAmwGEAAABeAAAAAAAAAA==",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAAAIQAAABlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-02-21T19:14:14.418Z",
               "EditorCaption": ""
@@ -90,8 +87,7 @@
               "RelativeToolTip": "..\\src\\entity.c",
               "ViewState": "AgIAAMgAAAAAAAAAAAAAAOAAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-21T18:29:53.9Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T18:29:53.9Z"
             }
           ]
         }

@@ -98,15 +98,16 @@ void player_entity_think(Entity* self)
 		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
 		self->speedMult = 1.0;
 	}
+	if (!self->isGrounded) set_player_state(self, PL_Jump);
 	if (move.x)
 	{
 		gfc_vector2d_normalize(&move);
 		self->velocity.x = move.x * self->topSpeed * self->speedMult;
 		if (move.x >= 0) self->animationData->FrameRow = 2;
 		else self->animationData->FrameRow = 6;
-		set_player_state(self, PL_Walk);
+		if (self->isGrounded) set_player_state(self, PL_Walk);
 	}
-	else
+	if (!move.x && self->isGrounded)
 	{
 		set_player_state(self, PL_Idle);
 	}
