@@ -85,9 +85,4 @@ void entity_free(Entity* self);
 */
 void entity_load(Entity* ent, char* state);
 
-/**
- * @brief kills a random entity other than the player (assumes player is first entity initialized)
- */
-void entity_manager_kill_random();
-
 #endif

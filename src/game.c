@@ -58,6 +58,7 @@ int main(int argc, char * argv[])
     level = level_load("level/testlevel.json");
     if (level)
     {
+        set_current_level(level);
         level_bake_tiles(level);
     }
 
@@ -83,12 +84,6 @@ int main(int argc, char * argv[])
             float x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             float y = (float) (1 + gfc_crandom()) * level->size.y / 2;
             monster_new(gfc_vector2d(x, y));
-        }
-
-        // randomly delete a monster every time q is pressed
-        if (gfc_input_key_pressed("q"))
-        {
-            entity_manager_kill_random();
         }
 
         entity_manager_think_all();

@@ -20,11 +20,23 @@ typedef struct
 Level* level_new();
 
 /**
-* @brief lorem ipsum
-* @param filepath lorem ipsum
-* @return lorem ipsum
+* @brief load a level from JSON
+* @param filepath the path to the JSON
+* @return the newly allocated level (or a NULL pointer if allocation fails)
 */
 Level* level_load(const char* filepath);
+
+/**
+* @brief get the current level
+* @return a pointer to the current level
+*/
+Level* get_current_level();
+
+/**
+* @brief set the current level (used in files other than level.c and game.c)
+* @param level the level to set as the current level
+*/
+void set_current_level(Level* level);
 
 /**
 * @brief given a level, get the index of the tileMap for a tile's coordinates

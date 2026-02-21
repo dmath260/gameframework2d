@@ -4,6 +4,7 @@
 
 #include "entity.h"
 #include "camera.h"
+#include "level.h"
 
 typedef struct
 {
@@ -171,13 +172,73 @@ void entity_manager_think_all()
 	}
 }
 
-void entity_update(Entity *self) {
+void check_bounds(Entity *self, Uint8 axis)
+{
+	// axis: 0 for x, anything else for y
 	if (!self) return;
-	GFC_Rect bounds;
+	GFC_Rect bounds, indices;
+	Level* current_level;
+	int i, tw, th;
+
+	bounds = self->bounds;
+	gfc_vector2d_add(bounds, bounds, self->position);
+	current_level = get_current_level();
+	tw = current_level->tileDef->width;
+	th = current_level->tileDef->height;
+	indices = gfc_rect(
+		(int)(bounds.x / tw),
+		(int)(bounds.y / th),
+		(int)((bounds.x + bounds.w - 1) / tw),
+		(int)((bounds.y + bounds.h - 1) / th)
+	);
+
+	i = level_get_tile_index(current_level, indices.x, indices.y);
+	if (current_level->tileMap[i] > 1) {
+		if (!axis)
+		{
+			self->position.x = tw * (indices.x + 1) - self->bounds.x;
+			self->velocity.x = 0;
+		}
+		else
+		{
+			self->position.y = th * (indices.y + 1) - self->bounds.y;
+			self->velocity.y = 0;
+		}
+	}
+	if (!axis)
+	{
+		i = level_get_tile_index(current_level, indices.w, indices.y);
+		if (current_level->tileMap[i] > 1) {
+			self->position.x = tw * (indices.w) - (self->bounds.x + self->bounds.w);
+			self->velocity.x = 0;
+		}
+	}
+	else
+	{
+		i = level_get_tile_index(current_level, indices.x, indices.h);
+		if (current_level->tileMap[i] > 1) {
+			self->position.y = th * (indices.h) - (self->bounds.y + self->bounds.h);
+			self->velocity.y = 0;
+		}
+	}
+}
+
+void entity_update(Entity *self)
+{
+	if (!self) return;
+	GFC_Rect bounds, indices;
+	Level* current_level;
+	int i, tw, th;
 	
 	if (self->update) self->update(self);
 
-	gfc_vector2d_add(self->position, self->position, self->velocity);
+	//gfc_vector2d_add(self->position, self->position, self->velocity);
+
+	self->position.x += self->velocity.x;
+	check_bounds(self, 0);
+	self->position.y += self->velocity.y;
+	check_bounds(self, 1);
+
 	if (gfc_vector2d_magnitude(self->velocity) > GFC_EPSILON)
 	{
 		gfc_vector2d_scale(self->velocity, self->velocity, (float)0.5);
@@ -189,16 +250,6 @@ void entity_update(Entity *self) {
 	AnimData* data;
 	data = self->animationData;
 	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
-
-	bounds = camera_get_bounds();
-	if (self->position.x < bounds.x) self->position.x = bounds.x;
-	if (self->position.y < bounds.y) self->position.y = bounds.y;
-	if (self->position.x /*+ self->animationData->FrameWidth*/ > bounds.w)
-		self->position.x = bounds.w /*- self->animationData->FrameWidth*/;
-	if (self->position.y /*+ self->animationData->FrameHeight*/ > bounds.h)
-		self->position.y = bounds.h /*- self->animationData->FrameHeight*/;
-
-	//slog("%f %f", self->position.x, self->position.y);
 }
 
 void entity_manager_update_all()
@@ -263,26 +314,4 @@ void entity_load(Entity* ent, char* state)
 
 	sj_free(json);
 	return;
-}
-
-void entity_manager_kill_random()
-{
-	Uint32 i;
-	// check if entities other than the player can be freed; if not, return
-	for (i = 1; i < entityManager.entityMax; i++)
-	{
-		if (entityManager.entityList[i]._inuse) i = entityManager.entityMax + 1;
-	}
-	if (i <= entityManager.entityMax) {
-		slog("Couldn't free any entities other than the player.");
-		return;
-	}
-
-	// keep guessing until an entity in use is found
-	while (1) {
-		i = (Uint32) (gfc_crandom() + 1) * entityManager.entityMax / 2;
-		if (i == 0 || !entityManager.entityList[i]._inuse) continue;
-		break;
-	}
-	entity_free(&entityManager.entityList[i]);
 }

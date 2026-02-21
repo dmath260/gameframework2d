@@ -8,6 +8,8 @@
 
 void level_setup_camera_bounds(Level* level);
 
+Level* current_level;
+
 Level* level_new()
 {
 	Level* level;
@@ -114,6 +116,16 @@ Level* level_load(const char* filepath)
 
 	sj_free(json);
 	return level;
+}
+
+Level* get_current_level()
+{
+	return current_level;
+}
+
+void set_current_level(Level* level)
+{
+	current_level = level;
 }
 
 int level_get_tile_index(Level *level, Uint32 x, Uint32 y)
