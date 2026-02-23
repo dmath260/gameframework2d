@@ -85,7 +85,8 @@ int main(int argc, char * argv[])
             if (i == 100) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            //t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            t = MT_Seeker;
             monster_new(gfc_vector2d(x, y), t);
         }
 

@@ -57,13 +57,12 @@ void monster_gunner_populate(Entity *self)
 {
 	if (!self) return;
 	self->animDataFilePath = "images/0069/0069AnimData.json";
-	self->bounds = gfc_rect(-24, -32, 48, 64); // change these values later
+	self->bounds = gfc_rect(-16, -29, 32, 42); // change these values later
 	self->scale = gfc_vector2d(2, 2);
-	self->rotationCenter = gfc_vector2d(12, 16);
+	self->rotationCenter = gfc_vector2d(12, 17);
 	self->topSpeed = 3;
 	self->think = monster_gunner_think;
 	self->update = monster_gunner_update;
 	self->touch = monster_gunner_touch;
 	self->free = monster_gunner_free;
-	return self;
 }
