@@ -3,19 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\escdr\\git\\gameframework2d\\win\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\include\\entity.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\monster.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF7AAA89-09D3-493E-A6DD-FC4C31BFE94C}|win.vcxproj|C:\\Users\\escdr\\git\\gameframework2d\\src\\monster_gunner.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,69 +16,34 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "game.c",
               "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeDocumentMoniker": "..\\src\\game.c",
               "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\game.c",
               "RelativeToolTip": "..\\src\\game.c",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAAAFIAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAWwFcAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-01-25T17:39:52.502Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "entity.h",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\include\\entity.h",
-              "RelativeDocumentMoniker": "..\\include\\entity.h",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\include\\entity.h",
-              "RelativeToolTip": "..\\include\\entity.h",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAAABkAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-02-21T19:51:53.58Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "monster.c",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\monster.c",
-              "RelativeDocumentMoniker": "..\\src\\monster.c",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\monster.c",
-              "RelativeToolTip": "..\\src\\monster.c",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAACsAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-21T19:14:49.554Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "player.c",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
-              "RelativeDocumentMoniker": "..\\src\\player.c",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\player.c",
-              "RelativeToolTip": "..\\src\\player.c",
-              "ViewState": "AgIAAG0AAAAAAAAAAAAAAIQAAABlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-21T19:14:14.418Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "entity.c",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
-              "RelativeDocumentMoniker": "..\\src\\entity.c",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
-              "RelativeToolTip": "..\\src\\entity.c",
-              "ViewState": "AgIAAMgAAAAAAAAAAAAAAOAAAAAYAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "monster_gunner.c",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\monster_gunner.c",
+              "RelativeDocumentMoniker": "..\\src\\monster_gunner.c",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\monster_gunner.c",
+              "RelativeToolTip": "..\\src\\monster_gunner.c",
+              "ViewState": "AgIAADIAAAAAAAAAAAAAAD0AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-21T18:29:53.9Z"
+              "WhenOpened": "2026-02-23T14:55:26.114Z",
+              "EditorCaption": ""
             }
           ]
         }

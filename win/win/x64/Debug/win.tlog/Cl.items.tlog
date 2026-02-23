@@ -34,6 +34,11 @@ C:\Users\escdr\git\gameframework2d\src\gf2d_draw.c;C:\Users\escdr\git\gameframew
 C:\Users\escdr\git\gameframework2d\src\gf2d_graphics.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_graphics.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_sprite.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_sprite.obj
 C:\Users\escdr\git\gameframework2d\src\monster.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster.obj
+C:\Users\escdr\git\gameframework2d\src\monster_flier.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster_flier.obj
+C:\Users\escdr\git\gameframework2d\src\monster_grunt.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster_grunt.obj
+C:\Users\escdr\git\gameframework2d\src\monster_gunner.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster_gunner.obj
+C:\Users\escdr\git\gameframework2d\src\monster_immortal_snail.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster_immortal_snail.obj
+C:\Users\escdr\git\gameframework2d\src\monster_seeker.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\monster_seeker.obj
 C:\Users\escdr\git\gameframework2d\src\player.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\player.obj
 C:\Users\escdr\git\gameframework2d\src\level.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\level.obj
 C:\Users\escdr\git\gameframework2d\src\tiledef.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\tiledef.obj

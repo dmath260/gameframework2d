@@ -66,6 +66,8 @@ int main(int argc, char * argv[])
         (float) level->width * level->tileDef->width / 2,
         (float) level->height * level->tileDef->height / 2));
     i = 0;
+    float x, y;
+    MonsterTypes t;
 
     /*main game loop*/
     while(!done)
@@ -81,9 +83,10 @@ int main(int argc, char * argv[])
         i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
-            float x = (float) (1 + gfc_crandom()) * level->size.x / 2;
-            float y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            monster_new(gfc_vector2d(x, y));
+            x = (float) (1 + gfc_crandom()) * level->size.x / 2;
+            y = (float) (1 + gfc_crandom()) * level->size.y / 2;
+            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            monster_new(gfc_vector2d(x, y), t);
         }
 
         entity_manager_think_all();

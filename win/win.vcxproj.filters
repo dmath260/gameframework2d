@@ -135,6 +135,21 @@
     <ClInclude Include="..\include\animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\monster_grunt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\monster_gunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\monster_immortalsnail.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\monster_seeker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\monster_flier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_logger\src\simple_logger.c">
@@ -252,6 +267,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\animation.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\monster_grunt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\monster_seeker.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\monster_flier.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\monster_gunner.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\monster_immortal_snail.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

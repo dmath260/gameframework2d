@@ -7,14 +7,14 @@
 
 typedef enum
 {
-	PL_Null,
-	PL_Idle,
-	PL_Walk,
-	PL_Jump,
-	PL_Attack,
-	PL_Pain,
-	PL_Die,
-	PL_MAX
+	PS_Null,
+	PS_Idle,
+	PS_Walk,
+	PS_Jump,
+	PS_Attack,
+	PS_Pain,
+	PS_Die,
+	PS_MAX
 }PlayerStates;
 
 typedef struct
@@ -47,12 +47,12 @@ char* state_to_str(Entity* self)
 	state = data->state;
 	switch (state)
 	{
-	case PL_Idle: return "Idle";
-	case PL_Walk: return "Walk";
-	case PL_Jump: return "Hop";
-	case PL_Attack: return "Attack";
-	case PL_Pain: return "Pain";
-	case PL_Die: return "Faint";
+	case PS_Idle: return "Idle";
+	case PS_Walk: return "Walk";
+	case PS_Jump: return "Hop";
+	case PS_Attack: return "Attack";
+	case PS_Pain: return "Pain";
+	case PS_Die: return "Faint";
 	default: return "Idle";
 	}
 }
@@ -98,18 +98,18 @@ void player_entity_think(Entity* self)
 		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
 		self->speedMult = 1.0;
 	}
-	if (!self->isGrounded) set_player_state(self, PL_Jump);
+	if (!self->isGrounded) set_player_state(self, PS_Jump);
 	if (move.x)
 	{
 		gfc_vector2d_normalize(&move);
 		self->velocity.x = move.x * self->topSpeed * self->speedMult;
 		if (move.x >= 0) self->animationData->FrameRow = 2;
 		else self->animationData->FrameRow = 6;
-		if (self->isGrounded) set_player_state(self, PL_Walk);
+		if (self->isGrounded) set_player_state(self, PS_Walk);
 	}
 	if (!move.x && self->isGrounded)
 	{
-		set_player_state(self, PL_Idle);
+		set_player_state(self, PS_Idle);
 	}
 }
 
@@ -128,7 +128,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	self->data = data;
 	self->animDataFilePath = "images/0258/0258AnimData.json";
-	set_player_state(self, PL_Idle);
+	set_player_state(self, PS_Idle);
 	self->rotationCenter = gfc_vector2d(12, 16);
 	self->bounds = gfc_rect(-24, -40, 64, 80); // change these values later AND move to set_player_state
 	self->topSpeed = 3;

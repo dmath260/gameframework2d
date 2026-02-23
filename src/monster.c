@@ -3,21 +3,11 @@
 #include "monster.h"
 #include "player.h"
 
-typedef enum
-{
-	MS_Idle,
-	MS_Hunt,
-	MS_Attack,
-	MS_Pain,
-	MS_Die,
-	MS_MAX
-}MonsterStates;
-
-typedef struct
-{
-	Entity* player;
-	MonsterStates state;
-} MonsterData;
+#include "monster_grunt.h"
+#include "monster_seeker.h"
+#include "monster_gunner.h"
+#include "monster_flier.h"
+#include "monster_immortalsnail.h"
 
 void monster_free(Entity* self)
 {
@@ -30,18 +20,9 @@ void monster_free(Entity* self)
 
 void monster_think(Entity* self)
 {
-	GFC_Vector2D toPlayer = {0}, playerCenter = {0}, selfCenter = {0};
 	MonsterData* data;
 	if ((!self) || (!self->data)) return;
 	data = (MonsterData*)self->data;
-
-	if (!data->player) return;
-	gfc_vector2d_add(playerCenter, data->player->position, data->player->rotationCenter);
-	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
-	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);
-	gfc_vector2d_normalize(&toPlayer);
-	if (toPlayer.x >= 0) self->animationData->FrameRow = 2;
-	else self->animationData->FrameRow = 6;
 }
 
 void monster_update(Entity* self)
@@ -55,16 +36,17 @@ void monster_update(Entity* self)
 Uint8 monster_touch(Entity* self, Entity* other)
 {
 	MonsterData* data;
-	if (!self | !other) return;
+	if (!self | !other) return 0;
 	data = (MonsterData*) self->data;
 	if (other == data->player)
 	{
 		entity_free(self);
-		return;
+		return 1;
 	}
+	return 1;
 }
 
-Entity* monster_new(GFC_Vector2D position)
+Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 {
 	Entity* self;
 	MonsterData* data;
@@ -75,16 +57,28 @@ Entity* monster_new(GFC_Vector2D position)
 	{
 		data->player = player_entity_get();
 	}
-	self->animDataFilePath = "images/0399/0399AnimData.json";
-	entity_load(self, "Idle");
-	self->bounds = gfc_rect(-32, -32, 64, 64); // change these values later
-	self->scale = gfc_vector2d(2, 2);
 	self->data = data;
-	self->rotationCenter = gfc_vector2d(16, 16);
-	self->topSpeed = 3;
 	self->position = position;
-	self->think = monster_think;
-	self->update = monster_update;
-	self->touch = monster_touch;
+	switch (type) {
+		case MT_Grunt:
+			monster_grunt_populate(self);
+			break;
+		case MT_Seeker:
+			monster_seeker_populate(self);
+			break;
+		case MT_Gunner:
+			monster_gunner_populate(self);
+			break;
+		case MT_Flier:
+			monster_flier_populate(self);
+			break;
+		case MT_ImmortalSnail:
+			monster_immortalsnail_populate(self);
+			break;
+		default:
+			monster_grunt_populate(self);
+			break;
+	}
+	entity_load(self, "Idle");
 	return self;
 }
