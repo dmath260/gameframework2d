@@ -57,7 +57,7 @@ void monster_immortalsnail_populate(Entity *self)
 {
 	if (!self) return;
 	self->animDataFilePath = "images/0423/0423AnimData.json";
-	self->bounds = gfc_rect(-32, -40, 64, 80); // change these values later
+	self->bounds = gfc_rect(-28, -40, 56, 56); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 20);
 	self->topSpeed = 3;
@@ -65,5 +65,4 @@ void monster_immortalsnail_populate(Entity *self)
 	self->update = monster_immortalsnail_update;
 	self->touch = monster_immortalsnail_touch;
 	self->free = monster_immortalsnail_free;
-	return self;
 }

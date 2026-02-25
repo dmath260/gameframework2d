@@ -57,7 +57,7 @@ void monster_flier_populate(Entity *self)
 {
 	if (!self) return;
 	self->animDataFilePath = "images/0041/0041AnimData.json";
-	self->bounds = gfc_rect(-32, -56, 64, 112); // change these values later
+	self->bounds = gfc_rect(-22, -32, 44, 64); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 19);
 	self->topSpeed = 3;
@@ -65,5 +65,4 @@ void monster_flier_populate(Entity *self)
 	self->update = monster_flier_update;
 	self->touch = monster_flier_touch;
 	self->free = monster_flier_free;
-	return self;
 }

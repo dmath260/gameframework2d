@@ -40,7 +40,7 @@ void player_free(Entity* self)
 
 char* state_to_str(Entity* self)
 {
-	if (!self || !self->data) return;
+	if (!self || !self->data) return "Idle";
 	PlayerStates state;
 	PlayerData* data;
 	data = (PlayerData*)self->data;
@@ -88,14 +88,16 @@ void player_entity_think(Entity* self)
 		self->velocity.y -= 10;
 		self->isGrounded = 0;
 	}
-	if ((gfc_input_key_down("LSHIFT") || gfc_input_key_down("RSHIFT")) && self->isGrounded)
+	if ((gfc_input_key_down("LSHIFT") || gfc_input_key_down("RSHIFT")) && self->isGrounded && move.x)
 	{
 		// Has to be grounded because sprinting in midair makes no sense
+		// Also makes no sense to start sprinting before moving (matters when jumping)
 		self->speedMult = 2.0;
 	}
-	else if (!gfc_input_key_down("LSHIFT") && !gfc_input_key_down("RSHIFT"))
+	else if (!gfc_input_key_down("LSHIFT") && !gfc_input_key_down("RSHIFT") || !move.x)
 	{
 		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
+		// If the player stops moving horizontally, they have no momentum, so reduce their speed
 		self->speedMult = 1.0;
 	}
 	if (!self->isGrounded) set_player_state(self, PS_Jump);
@@ -129,8 +131,9 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->data = data;
 	self->animDataFilePath = "images/0258/0258AnimData.json";
 	set_player_state(self, PS_Idle);
+	self->animationData->FrameRow = 2;
 	self->rotationCenter = gfc_vector2d(12, 16);
-	self->bounds = gfc_rect(-24, -40, 64, 80); // change these values later AND move to set_player_state
+	self->bounds = gfc_rect(-18, -30, 52, 52); // change these values later AND move to set_player_state
 	self->topSpeed = 3;
 	self->speedMult = 1;
 	self->position = position;

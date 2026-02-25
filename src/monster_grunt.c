@@ -57,7 +57,7 @@ void monster_grunt_populate(Entity *self)
 {
 	if (!self) return;
 	self->animDataFilePath = "images/0399/0399AnimData.json";
-	self->bounds = gfc_rect(-32, -32, 64, 64); // change these values later
+	self->bounds = gfc_rect(-26, -23, 52, 36); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 16);
 	self->topSpeed = 3;
@@ -65,5 +65,4 @@ void monster_grunt_populate(Entity *self)
 	self->update = monster_grunt_update;
 	self->touch = monster_grunt_touch;
 	self->free = monster_grunt_free;
-	return self;
 }
