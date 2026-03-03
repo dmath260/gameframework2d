@@ -136,7 +136,7 @@ void check_bounds(Entity* self, Uint8 axis)
 	if (!self) return;
 	GFC_Rect bounds, indices;
 	Level* current_level;
-	int i, tw, th;
+	int i, tw, th, x, y;
 
 	bounds = self->bounds;
 	gfc_vector2d_add(bounds, bounds, self->thinkPos);
@@ -150,34 +150,56 @@ void check_bounds(Entity* self, Uint8 axis)
 		(int)((bounds.y + bounds.h - 1) / th)
 	);
 
-	i = level_get_tile_index(current_level, indices.x, indices.y);
-	if (current_level->tileMap[i] > 1) {
-		if (!axis)
-		{
-			self->thinkPos.x = tw * (indices.x + 1) - self->bounds.x;
-			self->velocity.x = 0;
-		}
-		else
-		{
-			self->thinkPos.y = th * (indices.y + 1) - self->bounds.y;
-			self->velocity.y = 0;
-		}
-	}
 	if (!axis)
 	{
-		i = level_get_tile_index(current_level, indices.w, indices.y);
-		if (current_level->tileMap[i] > 1) {
-			self->thinkPos.x = tw * (indices.w) - (self->bounds.x + self->bounds.w);
-			self->velocity.x = 0;
+		// x-axis
+		for (y = indices.y; y <= indices.h; y++)
+		{
+			if (self->velocity.x < 0)
+			{
+				i = level_get_tile_index(current_level, indices.x, y);
+				if (current_level->tileMap[i] > 0)
+				{
+					self->thinkPos.x = tw * (indices.x + 1) - self->bounds.x;
+					self->velocity.x = 0;
+					break;
+				}
+			}
+			else if (self->velocity.x > 0)
+			{
+				i = level_get_tile_index(current_level, indices.w, y);
+				if (current_level->tileMap[i] > 0)
+				{
+					self->thinkPos.x = tw * indices.w - self->bounds.x - self->bounds.w;
+					self->velocity.x = 0;
+					break;
+				}
+			}
 		}
 	}
 	else
 	{
-		i = level_get_tile_index(current_level, indices.x, indices.h);
-		if (current_level->tileMap[i] > 1) {
-			self->thinkPos.y = th * (indices.h) - (self->bounds.y + self->bounds.h);
-			self->velocity.y = 0;
-			self->isGrounded = 1;
+		// y-axis
+		self->isGrounded = 0;
+
+		for (x = indices.x; x <= indices.w; x++)
+		{
+			i = level_get_tile_index(current_level, x, indices.h);
+			if (current_level->tileMap[i] > 0)
+			{
+				self->thinkPos.y = th * indices.h - self->bounds.y - self->bounds.h;
+				self->velocity.y = 0;
+				self->isGrounded = 1;
+				break;
+			}
+
+			i = level_get_tile_index(current_level, x, indices.y);
+			if (current_level->tileMap[i] > 0)
+			{
+				self->thinkPos.y = th * (indices.y + 1) - self->bounds.y;
+				if (self->velocity.y < 0) self->velocity.y = 0;
+				break;
+			}
 		}
 	}
 }

@@ -28,7 +28,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -41,7 +41,19 @@
               "ViewState": "AgIAAEcAAAAAAAAAAAAAAFIAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-02-25T21:06:31.13Z",
-              "IsPinned": true,
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "entity.c",
+              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
+              "RelativeDocumentMoniker": "..\\src\\entity.c",
+              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
+              "RelativeToolTip": "..\\src\\entity.c",
+              "ViewState": "AgIAAKQAAAAAAAAAAAAmwL4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-02-26T18:10:36.54Z",
               "EditorCaption": ""
             },
             {
@@ -54,8 +66,7 @@
               "RelativeToolTip": "..\\src\\level.c",
               "ViewState": "AgIAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-03-03T18:17:54.883Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-03T18:17:54.883Z"
             },
             {
               "$type": "Document",
@@ -67,8 +78,7 @@
               "RelativeToolTip": "..\\level\\testlevel.json",
               "ViewState": "AgIAACIAAAAAAAAAAAAAADIAAABeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-03T18:11:38.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-03T18:11:38.018Z"
             },
             {
               "$type": "Document",
@@ -80,21 +90,7 @@
               "RelativeToolTip": "..\\include\\entity.h",
               "ViewState": "AgIAABUAAAAAAAAAAAAAACAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-02-26T18:10:38.989Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "entity.c",
-              "DocumentMoniker": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
-              "RelativeDocumentMoniker": "..\\src\\entity.c",
-              "ToolTip": "C:\\Users\\escdr\\git\\gameframework2d\\src\\entity.c",
-              "RelativeToolTip": "..\\src\\entity.c",
-              "ViewState": "AgIAAIQAAAAAAAAAAAAAAJYAAAADAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-02-26T18:10:36.54Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T18:10:38.989Z"
             },
             {
               "$type": "Document",
@@ -106,8 +102,7 @@
               "RelativeToolTip": "..\\src\\player.c",
               "ViewState": "AgIAAHoAAAAAAAAAAAAAAIsAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-03-03T18:49:15.049Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-03T18:49:15.049Z"
             }
           ]
         }
