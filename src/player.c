@@ -137,6 +137,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->topSpeed = 3;
 	self->speedMult = 1;
 	self->position = position;
+	self->thinkPos = position;
 	self->think = player_entity_think;
 	self->update = player_entity_update;
 	self->scale = gfc_vector2d(2, 2);

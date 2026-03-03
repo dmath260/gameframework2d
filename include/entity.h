@@ -10,11 +10,27 @@
 
 #include "animation.h"
 
+typedef enum
+{
+	EL_NONE = 0,
+	EL_Player = 1,
+	EL_Monster = 2,
+	EL_Item = 4,
+	EL_World = 8,
+	EL_Projectiles = 16,
+	EL_ALL = 31
+}EntityLayers;
+
 typedef struct Entity_S
 {
 	Uint8			_inuse;						//no touchy
+	Uint8			team;						//same team no touchy
+	Uint32			layer;						//which layer am I on
+	Uint32			id;							//unique ID for entity
+	GFC_Color		color;						//mod ourselves by this color
 	GFC_TextLine	name;						//name of the entity for debugging purposes
 	GFC_Vector2D	position;
+	GFC_Vector2D	thinkPos;
 	GFC_Vector2D	velocity;
 	float			topSpeed;
 	GFC_Vector2D	scale;
@@ -72,6 +88,13 @@ void entity_manager_update_all();
  * @return NULL if out of entities, a pointer to a blank entity otherwise
  */
 Entity* entity_new();
+
+/**
+ * @brief get a pointer to an entity with the corresponding ID
+ * @param id the ID of the entity to search for
+ * @return NULL if no entity in use has that ID, a pointer to the corresponding entity otherwise
+ */
+Entity* entity_get_by_id(Uint32 id);
 
 /**
  * @brief free an entity

@@ -10,6 +10,7 @@ typedef struct
 {
 	Entity	*entityList;
 	Uint32	entityMax;
+	Uint32	entityPool;
 }EntityManager;
 
 static EntityManager entityManager = {0};
@@ -58,10 +59,27 @@ Entity* entity_new()
 	{
 		if (entityManager.entityList[i]._inuse) continue;
 		entityManager.entityList[i]._inuse = true;
+		entityManager.entityList[i].id = ++entityManager.entityPool;
+		entityManager.entityList[i].color = GFC_COLOR_WHITE;
 		//set defaults
 		entityManager.entityList[i].scale.x = 1;
 		entityManager.entityList[i].scale.y = 1;
 		return &entityManager.entityList[i];
+	}
+	return NULL;
+}
+
+Entity* entity_get_by_id(Uint32 id)
+{
+	Uint32 i;
+	if (!entityManager.entityList) {
+		slog("entity system has not been initialized");
+		return NULL;
+	}
+	for (i = 0; i < entityManager.entityMax; i++)
+	{
+		if (entityManager.entityList[i]._inuse) continue;
+		if (entityManager.entityList[i].id == id) return &entityManager.entityList[i];
 	}
 	return NULL;
 }
@@ -91,7 +109,7 @@ void entity_draw(Entity *self)
 		&self->rotationCenter,
 		&self->rotation,
 		NULL,
-		NULL,
+		&self->color,
 		(Uint32)self->frame);
 	bounds = self->bounds;
 	gfc_vector2d_add(bounds, bounds, position);
@@ -112,10 +130,62 @@ void entity_manager_draw_all()
 	}
 }
 
+void check_bounds(Entity* self, Uint8 axis)
+{
+	// axis: 0 for x, anything else for y
+	if (!self) return;
+	GFC_Rect bounds, indices;
+	Level* current_level;
+	int i, tw, th;
+
+	bounds = self->bounds;
+	gfc_vector2d_add(bounds, bounds, self->thinkPos);
+	current_level = get_current_level();
+	tw = current_level->tileDef->width;
+	th = current_level->tileDef->height;
+	indices = gfc_rect(
+		(int)(bounds.x / tw),
+		(int)(bounds.y / th),
+		(int)((bounds.x + bounds.w - 1) / tw),
+		(int)((bounds.y + bounds.h - 1) / th)
+	);
+
+	i = level_get_tile_index(current_level, indices.x, indices.y);
+	if (current_level->tileMap[i] > 1) {
+		if (!axis)
+		{
+			self->thinkPos.x = tw * (indices.x + 1) - self->bounds.x;
+			self->velocity.x = 0;
+		}
+		else
+		{
+			self->thinkPos.y = th * (indices.y + 1) - self->bounds.y;
+			self->velocity.y = 0;
+		}
+	}
+	if (!axis)
+	{
+		i = level_get_tile_index(current_level, indices.w, indices.y);
+		if (current_level->tileMap[i] > 1) {
+			self->thinkPos.x = tw * (indices.w) - (self->bounds.x + self->bounds.w);
+			self->velocity.x = 0;
+		}
+	}
+	else
+	{
+		i = level_get_tile_index(current_level, indices.x, indices.h);
+		if (current_level->tileMap[i] > 1) {
+			self->thinkPos.y = th * (indices.h) - (self->bounds.y + self->bounds.h);
+			self->velocity.y = 0;
+			self->isGrounded = 1;
+		}
+	}
+}
+
 Uint8 entity_collision_test(Entity* self, Entity *other)
 {
 	GFC_Rect bounds1, bounds2;
-	if (!self || !other || self == other) return;
+	if (!self || !other || self == other) return 0;
 	bounds1 = self->bounds;
 	bounds2 = other->bounds;
 	gfc_vector2d_add(bounds1, self->bounds, self->position);
@@ -126,8 +196,8 @@ Uint8 entity_collision_test(Entity* self, Entity *other)
 
 Uint8 entity_collision_test_world(Entity* self)
 {
-	int i;
-	if (!self) return;
+	Uint32 i;
+	if (!self) return 0;
 	for (i = 0; i < entityManager.entityMax; i++)
 	{
 		if (!entityManager.entityList[i]._inuse) continue;
@@ -147,6 +217,11 @@ void entity_think(Entity* self) {
 	self->velocity.y += 0.25;
 
 	if (self->think) self->think(self);
+
+	self->thinkPos.x += self->velocity.x;
+	check_bounds(self, 0);
+	self->thinkPos.y += self->velocity.y;
+	check_bounds(self, 1);
 
 	// Animation stuff, might want to move this into the animation class
 	if (!self->animationData) return;
@@ -175,71 +250,14 @@ void entity_manager_think_all()
 	}
 }
 
-void check_bounds(Entity *self, Uint8 axis)
-{
-	// axis: 0 for x, anything else for y
-	if (!self) return;
-	GFC_Rect bounds, indices;
-	Level* current_level;
-	int i, tw, th;
-
-	bounds = self->bounds;
-	gfc_vector2d_add(bounds, bounds, self->position);
-	current_level = get_current_level();
-	tw = current_level->tileDef->width;
-	th = current_level->tileDef->height;
-	indices = gfc_rect(
-		(int)(bounds.x / tw),
-		(int)(bounds.y / th),
-		(int)((bounds.x + bounds.w - 1) / tw),
-		(int)((bounds.y + bounds.h - 1) / th)
-	);
-
-	i = level_get_tile_index(current_level, indices.x, indices.y);
-	if (current_level->tileMap[i] > 1) {
-		if (!axis)
-		{
-			self->position.x = tw * (indices.x + 1) - self->bounds.x;
-			self->velocity.x = 0;
-		}
-		else
-		{
-			self->position.y = th * (indices.y + 1) - self->bounds.y;
-			self->velocity.y = 0;
-		}
-	}
-	if (!axis)
-	{
-		i = level_get_tile_index(current_level, indices.w, indices.y);
-		if (current_level->tileMap[i] > 1) {
-			self->position.x = tw * (indices.w) - (self->bounds.x + self->bounds.w);
-			self->velocity.x = 0;
-		}
-	}
-	else
-	{
-		i = level_get_tile_index(current_level, indices.x, indices.h);
-		if (current_level->tileMap[i] > 1) {
-			self->position.y = th * (indices.h) - (self->bounds.y + self->bounds.h);
-			self->velocity.y = 0;
-			self->isGrounded = 1;
-		}
-	}
-}
-
 void entity_update(Entity *self)
 {
 	if (!self) return;
-	GFC_Rect bounds, indices;
-	Level* current_level;
-	int i, tw, th;
 	
 	if (self->update) self->update(self);
 
-	self->position.x += self->velocity.x;
-	check_bounds(self, 0);
-	self->position.y += self->velocity.y;
-	check_bounds(self, 1);
+	self->position.x = self->thinkPos.x;
+	self->position.y = self->thinkPos.y;
 
 	if (self->velocity.x > GFC_EPSILON)
 	{

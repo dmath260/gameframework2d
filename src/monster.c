@@ -59,6 +59,7 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	}
 	self->data = data;
 	self->position = position;
+	self->thinkPos = position;
 	switch (type) {
 		case MT_Grunt:
 			monster_grunt_populate(self);
