@@ -130,6 +130,65 @@ void entity_manager_draw_all()
 	}
 }
 
+float binary_search_position(Entity *self, Uint8 axis, int start, int end)
+{
+	float start_pos, target_pos, mid, offset, lower, upper;
+	int i, j, index, tw, th, coll;
+	Level* current_level;
+
+	current_level = get_current_level();
+	if (!self || !current_level) return NAN;
+	if (axis)
+	{
+		offset = (self->velocity.y > 0) ? self->bounds.h : 0;
+		start_pos = self->position.y + offset;
+		target_pos = self->thinkPos.y + offset;
+	}
+	else
+	{
+		offset = (self->velocity.x > 0) ? self->bounds.w : 0;
+		start_pos = self->position.x + offset;
+		target_pos = self->thinkPos.x + offset;
+	}
+	
+	if (start_pos == target_pos) return (target_pos - offset);
+	tw = current_level->tileDef->width;
+	th = current_level->tileDef->height;
+
+	lower = (start_pos < target_pos) ? start_pos : target_pos;
+	upper = (start_pos < target_pos) ? target_pos : start_pos;
+
+	for (i = 0; i < 20; i++)
+	{
+		mid = (upper + lower) / 2;
+		coll = 0;
+		for (j = start; j <= end; j++)
+		{
+			if (axis) index = level_get_tile_index(current_level, j * tw + (tw / 2), (Uint32)(mid / th));
+			else index = level_get_tile_index(current_level, mid / tw, j * th + (th / 2));
+			if (current_level->tileMap[index] > 0) {
+				coll = 1;
+				break;
+			}
+		}
+		if (coll)
+		{
+			if (target_pos > start_pos) upper = mid;
+			else lower = mid;
+		}
+		else
+		{
+			if (target_pos > start_pos) lower = mid;
+			else upper = mid;
+		}
+	}
+
+	mid = (upper + lower) / 2;
+	if (target_pos > start_pos) mid -= 0.001;
+	else mid += 0.001;
+	return mid - offset;
+}
+
 void check_bounds(Entity* self, Uint8 axis)
 {
 	// axis: 0 for x, anything else for y
@@ -152,25 +211,29 @@ void check_bounds(Entity* self, Uint8 axis)
 
 	if (!axis)
 	{
+		// go back to this point if everything breaks :P
 		// x-axis
-		for (y = indices.y; y <= indices.h; y++)
+		if (self->velocity.x < 0)
 		{
-			if (self->velocity.x < 0)
+			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.x, y);
 				if (current_level->tileMap[i] > 0)
 				{
-					self->thinkPos.x = tw * (indices.x + 1) - self->bounds.x;
+					self->thinkPos.x = binary_search_position(self, axis, indices.y, indices.h);
 					self->velocity.x = 0;
 					break;
 				}
 			}
-			else if (self->velocity.x > 0)
+		}
+		else if (self->velocity.x > 0)
+		{
+			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.w, y);
 				if (current_level->tileMap[i] > 0)
 				{
-					self->thinkPos.x = tw * indices.w - self->bounds.x - self->bounds.w;
+					self->thinkPos.x = binary_search_position(self, axis, indices.y, indices.h);
 					self->velocity.x = 0;
 					break;
 				}
@@ -180,25 +243,30 @@ void check_bounds(Entity* self, Uint8 axis)
 	else
 	{
 		// y-axis
-		self->isGrounded = 0;
+		//self->isGrounded = 0;
 
 		for (x = indices.x; x <= indices.w; x++)
 		{
-			i = level_get_tile_index(current_level, x, indices.h);
-			if (current_level->tileMap[i] > 0)
+			if (self->velocity.y > 0)
 			{
-				self->thinkPos.y = th * indices.h - self->bounds.y - self->bounds.h;
-				self->velocity.y = 0;
-				self->isGrounded = 1;
-				break;
+				i = level_get_tile_index(current_level, x, indices.h);
+				if (current_level->tileMap[i] > 0)
+				{
+					self->thinkPos.y = binary_search_position(self, axis, indices.x, indices.w);
+					self->velocity.y = 0;
+					self->isGrounded = 1;
+					break;
+				}
 			}
-
-			i = level_get_tile_index(current_level, x, indices.y);
-			if (current_level->tileMap[i] > 0)
+			else if (self->velocity.y < 0)
 			{
-				self->thinkPos.y = th * (indices.y + 1) - self->bounds.y;
-				if (self->velocity.y < 0) self->velocity.y = 0;
-				break;
+				i = level_get_tile_index(current_level, x, indices.y);
+				if (current_level->tileMap[i] > 0)
+				{
+					self->thinkPos.y = binary_search_position(self, axis, indices.x, indices.w);
+					self->velocity.y = 0;
+					break;
+				}
 			}
 		}
 	}
