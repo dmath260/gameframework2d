@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "simple_logger.h"
 
 #include "gf2d_sprite.h"
@@ -219,6 +221,100 @@ void level_bake_tiles(Level* level)
 	);
 	//SDL_FreeSurface(tileSurface); Not necessary, the surface is freed in gf2d_sprite_from_surface
 }
+
+void level_save_bin(Level* level, const char* filename)
+{
+	FILE *file;
+	GFC_TextLine blank = {0};
+	if (!level || !filename) return;
+	file = fopen(filename, "wb");
+	if (!file)
+	{
+		slog("Failed to save level to file %s", filename);
+		return;
+	}
+
+	// update this every time you update the level structure
+	if (level->background)
+	{
+		fwrite(level->background->filepath, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
+	fwrite(&level->width, sizeof(Uint32), 1, file);
+	fwrite(&level->height, sizeof(Uint32), 1, file);
+	fwrite(level->tileMap, sizeof(Uint8), level->width * level->height, file);
+	tiledef_save_to_file(level->tileDef, file);
+	fclose(file);
+}
+
+Level *level_load_bin(const char* filename)
+{
+	static GFC_TextLine buffer = {0};
+	FILE* file;
+	if (!filename) return NULL;
+	Level* level;
+	file = fopen(filename, "rb");
+	if (!file)
+	{
+		slog("Failed to open level file %s", filename);
+		return NULL;
+	}
+
+	// update this every time you update the level structure
+	level = level_new();
+	if (!level)
+	{
+		fclose(file);
+		slog("Failed to allocate a new level");
+		return NULL;
+	}
+
+	fread(buffer, sizeof(GFC_TextLine), 1, file);
+	// somehow everything corrupts when loading the sprite
+	level->background = gf2d_sprite_load_image(buffer);
+	fread(&level->width, sizeof(Uint32), 1, file);
+	fread(&level->height, sizeof(Uint32), 1, file);
+	slog("Level tile width: %i, height %i", level->width, level->height);
+	if (!level->width || !level->height)
+	{
+		slog("Level file %s is bad: width: %i, height: %i", filename, level->width, level->height);
+		level_free(level);
+		fclose(file);
+		return NULL;
+	}
+
+	level->tileMap = gfc_allocate_array(sizeof(Uint8), level->width * level->height);
+	if (!level->tileMap)
+	{
+		slog("Failed to allocate tilemap for %s: width: %i, height: %i", filename, level->width, level->height);
+		level_free(level);
+		fclose(file);
+		return NULL;
+	}
+
+	Uint32 total = level->width * level->height;
+	fread(level->tileMap, sizeof(Uint8), total, file);
+	level->tileDef = tiledef_load_from_file(file);
+	level_setup_camera_bounds(level);
+
+	fclose(file);
+	return level;
+}
+
+/*
+WIP function
+
+void level_slog(Level* level)
+{
+	if (!level) return;
+	if (level->background) slog("Level background: %s", level->background->filepath);
+	slog("Level tile width: %i, height %i", level->width, level->height);
+}
+*/
 
 void level_draw(Level* level)
 {

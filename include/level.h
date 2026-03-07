@@ -55,16 +55,30 @@ int level_get_tile_index(Level* level, Uint32 x, Uint32 y);
 void level_add_border(Level* level, Uint8 tile);
 
 /**
-* @brief bake tiles into the level;
+* @brief bake tiles into the level
 * @param level the level to bake tiles into
 */
 void level_bake_tiles(Level* level);
 
 /**
-* @brief free a level;
+* @brief free a level
 * @param level the level to free
 */
 void level_free(Level* level);
+
+/**
+* @brief lorem ipsum
+* @param level lorem ipsum
+* @param filename lorem ipsum
+*/
+void level_save_bin(Level* level, const char* filename);
+
+/**
+* @brief lorem ipsum
+* @param filename lorem ipsum
+* @return lorem ipsum
+*/
+Level *level_load_bin(const char* filename);
 
 /**
 * @brief draw the current level

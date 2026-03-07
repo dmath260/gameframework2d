@@ -55,11 +55,13 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    level = level_load("level/testlevel.json");
+    //level = level_load("level/testlevel.json");
+    level = level_load_bin("level/testlevel.bin");
     if (level)
     {
         set_current_level(level);
         level_bake_tiles(level);
+        //level_save_bin(level, "level/testlevel.bin");
     }
 
     Entity* player = player_entity_new(gfc_vector2d(

@@ -1,6 +1,8 @@
 #ifndef __TILEDEF_H__
 #define __TILEDEF_H__
 
+#include <stdio.h>
+
 #include "simple_json.h"
 
 #include "gf2d_sprite.h"
@@ -10,6 +12,22 @@ typedef struct
 	Sprite* sheet;
 	Uint32 width, height, fpl;
 }TileDef;
+
+/**
+* @brief lorem ipsum
+* @param tiledef lorem ipsum
+* @param file lorem ipsum
+* @return lorem ipsum
+*/
+int tiledef_save_to_file(TileDef* tiledef, FILE *file);
+
+/**
+* @brief lorem ipsum
+* @param tiledef lorem ipsum
+* @param file lorem ipsum
+* @return lorem ipsum
+*/
+TileDef *tiledef_load_from_file(FILE* file);
 
 /**
 * @brief lorem ipsum
