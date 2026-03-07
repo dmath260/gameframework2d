@@ -211,7 +211,6 @@ void check_bounds(Entity* self, Uint8 axis)
 
 	if (!axis)
 	{
-		// go back to this point if everything breaks :P
 		// x-axis
 		if (self->velocity.x < 0)
 		{
@@ -243,14 +242,14 @@ void check_bounds(Entity* self, Uint8 axis)
 	else
 	{
 		// y-axis
-		//self->isGrounded = 0;
+		self->isGrounded = 0;
 
 		for (x = indices.x; x <= indices.w; x++)
 		{
 			if (self->velocity.y > 0)
 			{
 				i = level_get_tile_index(current_level, x, indices.h);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
 					self->thinkPos.y = binary_search_position(self, axis, indices.x, indices.w);
 					self->velocity.y = 0;
@@ -305,13 +304,13 @@ void entity_think(Entity* self) {
 
 	//downward velocity
 	self->velocity.y += 0.25;
+	self->thinkPos.y += self->velocity.y;
+	check_bounds(self, 1);
 
 	if (self->think) self->think(self);
 
 	self->thinkPos.x += self->velocity.x;
 	check_bounds(self, 0);
-	self->thinkPos.y += self->velocity.y;
-	check_bounds(self, 1);
 
 	// Animation stuff, might want to move this into the animation class
 	if (!self->animationData) return;

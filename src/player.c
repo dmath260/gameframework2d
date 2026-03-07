@@ -100,7 +100,7 @@ void player_entity_think(Entity* self)
 		// If the player stops moving horizontally, they have no momentum, so reduce their speed
 		self->speedMult = 1.0;
 	}
-	if (!self->isGrounded) set_player_state(self, PS_Jump);
+	if (!self->isGrounded && self->velocity.y) set_player_state(self, PS_Jump);
 	if (move.x)
 	{
 		gfc_vector2d_normalize(&move);
