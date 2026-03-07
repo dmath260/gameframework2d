@@ -136,6 +136,8 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->bounds = gfc_rect(-18, -30, 52, 52); // change these values later AND move to set_player_state
 	self->topSpeed = 3;
 	self->speedMult = 1;
+	self->maxHealth = 10;
+	self->health = self->maxHealth;
 	self->position = position;
 	self->thinkPos = position;
 	self->think = player_entity_think;

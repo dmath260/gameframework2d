@@ -61,6 +61,7 @@ void monster_immortalsnail_populate(Entity *self)
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 20);
 	self->topSpeed = 3;
+	self->maxHealth = 20;
 	self->think = monster_immortalsnail_think;
 	self->update = monster_immortalsnail_update;
 	self->touch = monster_immortalsnail_touch;

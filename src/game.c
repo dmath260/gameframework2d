@@ -94,6 +94,12 @@ int main(int argc, char * argv[])
         entity_manager_think_all();
         entity_manager_update_all();
         
+        if (player->position.y + player->bounds.y > level->height * level->tileDef->height)
+        {
+            slog("You died! (note: move this to entity.c later)");
+            done = 1;
+        }
+
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first

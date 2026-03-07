@@ -359,6 +359,9 @@ void entity_update(Entity *self)
 	AnimData* data;
 	data = self->animationData;
 	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
+
+	// Last thing: check if entity is still alive
+	if (self->health <= 0) entity_free(self);
 }
 
 void entity_manager_update_all()

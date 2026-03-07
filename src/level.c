@@ -278,7 +278,6 @@ Level *level_load_bin(const char* filename)
 	level->background = gf2d_sprite_load_image(buffer);
 	fread(&level->width, sizeof(Uint32), 1, file);
 	fread(&level->height, sizeof(Uint32), 1, file);
-	slog("Level tile width: %i, height %i", level->width, level->height);
 	if (!level->width || !level->height)
 	{
 		slog("Level file %s is bad: width: %i, height: %i", filename, level->width, level->height);

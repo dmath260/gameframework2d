@@ -61,6 +61,7 @@ void monster_seeker_populate(Entity *self)
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(20, 18);
 	self->topSpeed = 3;
+	self->maxHealth = 6;
 	self->think = monster_seeker_think;
 	self->update = monster_seeker_update;
 	self->touch = monster_seeker_touch;

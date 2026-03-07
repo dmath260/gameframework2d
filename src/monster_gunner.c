@@ -61,6 +61,7 @@ void monster_gunner_populate(Entity *self)
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(12, 17);
 	self->topSpeed = 3;
+	self->maxHealth = 6;
 	self->think = monster_gunner_think;
 	self->update = monster_gunner_update;
 	self->touch = monster_gunner_touch;

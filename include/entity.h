@@ -36,6 +36,8 @@ typedef struct Entity_S
 	GFC_Vector2D	scale;
 	GFC_Vector2D	rotationCenter;
 	float			rotation;
+	int				health;
+	int				maxHealth;
 	GFC_Rect		bounds;						//bounding box
 	float			frame;
 	Uint8			isGrounded;

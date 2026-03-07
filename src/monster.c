@@ -40,7 +40,7 @@ Uint8 monster_touch(Entity* self, Entity* other)
 	data = (MonsterData*) self->data;
 	if (other == data->player)
 	{
-		entity_free(self);
+		self->health -= self->maxHealth;
 		return 1;
 	}
 	return 1;
@@ -80,6 +80,7 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 			monster_grunt_populate(self);
 			break;
 	}
+	self->health = self->maxHealth;
 	entity_load(self, "Idle");
 	return self;
 }

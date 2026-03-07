@@ -61,6 +61,7 @@ void monster_flier_populate(Entity *self)
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 19);
 	self->topSpeed = 3;
+	self->maxHealth = 4;
 	self->think = monster_flier_think;
 	self->update = monster_flier_update;
 	self->touch = monster_flier_touch;

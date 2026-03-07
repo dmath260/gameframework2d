@@ -61,6 +61,7 @@ void monster_grunt_populate(Entity *self)
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 16);
 	self->topSpeed = 3;
+	self->maxHealth = 2;
 	self->think = monster_grunt_think;
 	self->update = monster_grunt_update;
 	self->touch = monster_grunt_touch;
