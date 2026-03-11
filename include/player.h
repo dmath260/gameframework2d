@@ -16,4 +16,10 @@ Entity* player_entity_get();
 */
 Entity* player_entity_new(GFC_Vector2D position);
 
+/**
+* @brief kills the player and slogs a death message
+* @message the message to slog
+*/
+void player_kill(char *message);
+
 #endif

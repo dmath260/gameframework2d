@@ -67,16 +67,16 @@ void level_bake_tiles(Level* level);
 void level_free(Level* level);
 
 /**
-* @brief lorem ipsum
-* @param level lorem ipsum
-* @param filename lorem ipsum
+* @brief save current level to binary file
+* @param level the level to save
+* @param filename the path of the file to save the level to
 */
 void level_save_bin(Level* level, const char* filename);
 
 /**
-* @brief lorem ipsum
-* @param filename lorem ipsum
-* @return lorem ipsum
+* @brief load level from binary file
+* @param filename the path of the file to load the level from
+* @return NULL if level is invalid, a pointer to the loaded level otherwise
 */
 Level *level_load_bin(const char* filename);
 

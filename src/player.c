@@ -38,6 +38,13 @@ void player_free(Entity* self)
 	free(data);
 }
 
+void player_kill(char* message)
+{
+	if (!thePlayer) return;
+	slog("%s", message);
+	entity_free(thePlayer);
+}
+
 char* state_to_str(Entity* self)
 {
 	if (!self || !self->data) return "Idle";

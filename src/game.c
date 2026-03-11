@@ -93,12 +93,6 @@ int main(int argc, char * argv[])
 
         entity_manager_think_all();
         entity_manager_update_all();
-        
-        if (player->position.y + player->bounds.y > level->height * level->tileDef->height)
-        {
-            slog("You died! (note: move this to entity.c later)");
-            done = 1;
-        }
 
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
@@ -121,7 +115,12 @@ int main(int argc, char * argv[])
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
         
-        if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
+        if (player->position.y + player->bounds.y > level->height * level->tileDef->height)
+        {
+            player_kill("Player fell from a high place");
+        }
+        
+        if (keys[SDL_SCANCODE_ESCAPE] || !player->_inuse)done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     gfc_sound_clear_all();
