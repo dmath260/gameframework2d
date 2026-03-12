@@ -2,6 +2,7 @@
 
 #include "monster.h"
 #include "player.h"
+#include "level.h"
 
 #include "monster_grunt.h"
 #include "monster_seeker.h"
@@ -28,9 +29,17 @@ void monster_think(Entity* self)
 void monster_update(Entity* self)
 {
 	MonsterData* data;
+	Level *currentLevel;
 	if ((!self) || (!self->data)) return;
 	data = (MonsterData*)self->data;
 	entity_collision_test_world(self);
+
+	currentLevel = get_current_level();
+	if (!currentLevel) return;
+	if (self->position.y + self->bounds.y > currentLevel->height * currentLevel->tileDef->height)
+	{
+		self->health = 0;
+	}
 }
 
 Uint8 monster_touch(Entity* self, Entity* other)
