@@ -320,6 +320,6 @@ void level_draw(Level* level)
 	GFC_Vector2D offset;
 	if (!level) return;
 	offset = camera_get_offset();
-	if (level->background) gf2d_sprite_draw_image(level->background, offset);
+	if (level->background) gf2d_sprite_draw_image(level->background, gfc_vector2d(0, 0));
 	if (level->tileLayer) gf2d_sprite_draw_image(level->tileLayer, offset);
 }

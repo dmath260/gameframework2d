@@ -32,6 +32,7 @@ typedef struct Entity_S
 	GFC_Vector2D	position;
 	GFC_Vector2D	thinkPos;
 	GFC_Vector2D	velocity;
+	Uint8			gravity;					//whether or not to apply gravity
 	float			topSpeed;
 	GFC_Vector2D	scale;
 	GFC_Vector2D	rotationCenter;
@@ -107,9 +108,17 @@ void entity_free(Entity* self);
 
 /**
 * @brief load animation data from a JSON file to an existing entity
-* @param ent the entity to load the animation data to
+* @param self the entity to load the animation data to
 * @param state the state of the entity for loading animations
 */
-void entity_load(Entity* ent, char* state);
+void entity_load(Entity* self, char* state);
+
+/**
+* @brief check to see if an entity would be inside a tile during the next frame
+* @param self the entity to check
+* @param axis the axis to check (0 for x, 1 for y)
+* @return 1 if would be inside a tile, 0 otherwise
+*/
+Uint8 check_bounds(Entity* self, Uint8 axis);
 
 #endif

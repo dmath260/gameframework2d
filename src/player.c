@@ -2,6 +2,7 @@
 
 #include "gfc_input.h"
 
+#include "bullet.h"
 #include "player.h"
 #include "camera.h"
 
@@ -107,6 +108,16 @@ void player_entity_think(Entity* self)
 		// If the player stops moving horizontally, they have no momentum, so reduce their speed
 		self->speedMult = 1.0;
 	}
+	if (gfc_input_key_pressed(" "))
+	{
+		bullet_new(
+			gfc_vector2d(self->position.x + 25, self->position.y),
+			gfc_color8(0, 204, 255, 255),
+			self->team,
+			(self->animationData->FrameRow - 2) / 4,
+			2
+		);
+	}
 	if (!self->isGrounded && self->velocity.y) set_player_state(self, PS_Jump);
 	if (move.x)
 	{
@@ -145,6 +156,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->speedMult = 1;
 	self->maxHealth = 10;
 	self->health = self->maxHealth;
+	self->team = 0; // team 0 for player
 	self->position = position;
 	self->thinkPos = position;
 	self->think = player_entity_think;

@@ -1,0 +1,20 @@
+{
+  "AnimData": {
+    "Anims": {
+      "Anim": [
+        {
+          "Name": "Bullet",
+          "Filepath": "images/bullet/pewpew.png",
+          "Index": 0,
+          "FrameWidth": 3,
+          "FrameHeight": 2,
+          "Durations": {
+            "Duration": [
+              1
+            ]
+          }
+        }
+      ]
+    }
+  }
+}							

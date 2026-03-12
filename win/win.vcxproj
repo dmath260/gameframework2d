@@ -50,6 +50,7 @@
     <ClInclude Include="..\gfc\simple_json\include\simple_json_value.h" />
     <ClInclude Include="..\gfc\simple_logger\include\simple_logger.h" />
     <ClInclude Include="..\include\animation.h" />
+    <ClInclude Include="..\include\bullet.h" />
     <ClInclude Include="..\include\camera.h" />
     <ClInclude Include="..\include\entity.h" />
     <ClInclude Include="..\include\gf2d_draw.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="..\gfc\src\gfc_vector.c" />
     <ClCompile Include="..\gfc\src\miniz.c" />
     <ClCompile Include="..\src\animation.c" />
+    <ClCompile Include="..\src\bullet.c" />
     <ClCompile Include="..\src\camera.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\game.c" />

@@ -69,6 +69,7 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	self->data = data;
 	self->position = position;
 	self->thinkPos = position;
+	self->team = 1; // team 1 for monsters
 	switch (type) {
 		case MT_Grunt:
 			monster_grunt_populate(self);
@@ -91,5 +92,6 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	}
 	self->health = self->maxHealth;
 	entity_load(self, "Idle");
+	self->animationData->FrameRow = 2;
 	return self;
 }

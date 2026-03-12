@@ -21,12 +21,19 @@ void monster_grunt_think(Entity* self)
 	monster_think(self);
 
 	if (!data->player) return;
-	gfc_vector2d_add(playerCenter, data->player->position, data->player->rotationCenter);
-	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
-	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);
-	gfc_vector2d_normalize(&toPlayer);
-	if (toPlayer.x >= 0) self->animationData->FrameRow = 2;
-	else self->animationData->FrameRow = 6;
+	self->velocity.x *= 2;
+	self->thinkPos.x += self->velocity.x;
+	if (check_bounds(self, 0) || (self->velocity.y > 0 && self->isGrounded))
+	{
+		self->velocity.x *= -1;
+		self->animationData->FrameRow = (self->animationData->FrameRow + 4) % 8; // 2 if left, 6 if right
+		if (self->velocity.y > 0)
+		{
+			self->velocity.y = 0;
+			self->thinkPos.y = self->position.y;
+		}
+	}
+	self->thinkPos.x -= self->velocity.x;
 }
 
 void monster_grunt_update(Entity* self)
@@ -60,7 +67,8 @@ void monster_grunt_populate(Entity *self)
 	self->bounds = gfc_rect(-26, -23, 52, 36); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 16);
-	self->topSpeed = 3;
+	self->topSpeed = 1;
+	self->velocity.x = self->topSpeed / 2;
 	self->maxHealth = 2;
 	self->think = monster_grunt_think;
 	self->update = monster_grunt_update;

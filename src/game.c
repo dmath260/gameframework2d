@@ -82,12 +82,13 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
-        i++;
+        //i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            //t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            t = MT_Grunt;
             monster_new(gfc_vector2d(x, y), t);
         }
 

@@ -64,6 +64,7 @@ Entity* entity_new()
 		//set defaults
 		entityManager.entityList[i].scale.x = 1;
 		entityManager.entityList[i].scale.y = 1;
+		entityManager.entityList[i].gravity = 1;
 		return &entityManager.entityList[i];
 	}
 	return NULL;
@@ -189,8 +190,78 @@ float binary_search_position(Entity *self, Uint8 axis, int start, int end)
 	return mid - offset;
 }
 
-void check_bounds(Entity* self, Uint8 axis)
+Uint8 check_bounds(Entity* self, Uint8 axis)
 {
+	// axis: 0 for x, anything else for y
+	if (!self) return 0;
+	GFC_Rect bounds, indices;
+	Level* current_level;
+	int i, tw, th, x, y;
+
+	bounds = self->bounds;
+	gfc_vector2d_add(bounds, bounds, self->thinkPos);
+	current_level = get_current_level();
+	tw = current_level->tileDef->width;
+	th = current_level->tileDef->height;
+	indices = gfc_rect(
+		(int)(bounds.x / tw),
+		(int)(bounds.y / th),
+		(int)((bounds.x + bounds.w - 1) / tw),
+		(int)((bounds.y + bounds.h - 1) / th)
+	);
+
+	if (!axis)
+	{
+		// x-axis
+		if (self->velocity.x < 0)
+		{
+			for (y = indices.y; y <= indices.h; y++)
+			{
+				i = level_get_tile_index(current_level, indices.x, y);
+				if (current_level->tileMap[i] > 0) return 1;
+			}
+		}
+		else if (self->velocity.x > 0)
+		{
+			for (y = indices.y; y <= indices.h; y++)
+			{
+				i = level_get_tile_index(current_level, indices.w, y);
+				if (current_level->tileMap[i] > 0) return 1;
+			}
+		}
+	}
+	else
+	{
+		//self->isGrounded = 0;
+		for (x = indices.x; x <= indices.w; x++)
+		{
+			if (self->velocity.y > 0)
+			{
+				i = level_get_tile_index(current_level, x, indices.h);
+				if (i >= 0 && current_level->tileMap[i] > 0)
+				{
+					//self->isGrounded = 1;
+					return 1;
+				}
+			}
+			else if (self->velocity.y < 0)
+			{
+				i = level_get_tile_index(current_level, x, indices.y);
+				if (current_level->tileMap[i] > 0) return 1;
+			}
+			else
+			{
+				//self->isGrounded = 1;
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+void clip_to_bounds(Entity* self, Uint8 axis)
+{
+	// basically same as check_bounds, but values are modified
 	// axis: 0 for x, anything else for y
 	if (!self) return;
 	GFC_Rect bounds, indices;
@@ -302,15 +373,18 @@ Uint8 entity_collision_test_world(Entity* self)
 void entity_think(Entity* self) {
 	if (!self) return;
 
-	//downward velocity
-	self->velocity.y += 0.25;
-	self->thinkPos.y += self->velocity.y;
-	check_bounds(self, 1);
+	//downward velocity (if entity is affected by gravity)
+	if (self->gravity)
+	{
+		self->velocity.y += 0.25;
+		self->thinkPos.y += self->velocity.y;
+		clip_to_bounds(self, 1);
+	}
 
 	if (self->think) self->think(self);
 
 	self->thinkPos.x += self->velocity.x;
-	check_bounds(self, 0);
+	clip_to_bounds(self, 0);
 
 	// Animation stuff, might want to move this into the animation class
 	if (!self->animationData) return;
@@ -341,14 +415,13 @@ void entity_manager_think_all()
 
 void entity_update(Entity *self)
 {
+	Level* current_level;
 	if (!self) return;
-	
-	if (self->update) self->update(self);
 
 	self->position.x = self->thinkPos.x;
 	self->position.y = self->thinkPos.y;
 
-	if (self->velocity.x > GFC_EPSILON)
+	if (self->velocity.x > GFC_EPSILON || self->velocity.x < GFC_EPSILON * -1)
 	{
 		self->velocity.x *= 0.5;
 	}
@@ -359,6 +432,14 @@ void entity_update(Entity *self)
 	AnimData* data;
 	data = self->animationData;
 	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
+
+	if (self->update) self->update(self);
+
+	current_level = get_current_level();
+	if (self->position.x < 0 || self->position.x > current_level->width * current_level->tileDef->width)
+	{
+		self->health = 0;
+	}
 
 	// Last thing: check if entity is still alive
 	if (self->health <= 0) entity_free(self);
@@ -379,12 +460,12 @@ void entity_manager_update_all()
 	}
 }
 
-void entity_load(Entity* ent, char* state)
+void entity_load(Entity* self, char* state)
 {
 	SJson* json, * config;
 	AnimData* animationData;
 
-	if (!ent)
+	if (!self)
 	{
 		slog("Invalid entity");
 		return;
@@ -394,12 +475,12 @@ void entity_load(Entity* ent, char* state)
 		slog("Invalid state");
 		return;
 	}
-	if (!ent->animDataFilePath)
+	if (!self->animDataFilePath)
 	{
 		slog("JSON filepath invalid");
 		return;
 	}
-	json = sj_load(ent->animDataFilePath);
+	json = sj_load(self->animDataFilePath);
 	if (!json)
 	{
 		slog("JSON data invalid");
@@ -409,20 +490,20 @@ void entity_load(Entity* ent, char* state)
 	config = sj_object_get_value(json, "AnimData");
 	if (!config)
 	{
-		slog("Failed to load animation data for %s", ent->animDataFilePath);
+		slog("Failed to load animation data for %s", self->animDataFilePath);
 		sj_free(json);
 		return;
 	}
 
-	animationData = animdata_parse(config, state, ent->animationData);
+	animationData = animdata_parse(config, state, self->animationData);
 	if (!animationData)
 	{
-		slog("Failed to parse animation data for %s", ent->animDataFilePath);
+		slog("Failed to parse animation data for %s", self->animDataFilePath);
 		sj_free(json);
 		return;
 	}
 
-	ent->animationData = animationData;
+	self->animationData = animationData;
 
 	sj_free(json);
 	return;
