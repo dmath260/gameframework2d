@@ -25,7 +25,7 @@ Uint8 bullet_touch(Entity* self, Entity* other)
 	if (other->team != self->team)
 	{
 		self->health -= self->maxHealth;
-		other->health -= self->maxHealth;
+		other->health -= self->attack;
 		return 1;
 	}
 	return 1;
@@ -46,8 +46,9 @@ Entity* bullet_new(GFC_Vector2D position, GFC_Color color, Uint8 team, Uint8 dir
 	self->topSpeed -= self->topSpeed * 2 * dir;
 	self->speedMult = 1;
 	self->gravity = 0;
-	self->maxHealth = power; // also determines how much damage the bullet will do
+	self->maxHealth = 1;
 	self->health = self->maxHealth;
+	self->attack = power;
 	self->position = position;
 	self->thinkPos = position;
 	self->think = bullet_think;

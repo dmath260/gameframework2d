@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "camera.h"
 #include "level.h"
+#include "player.h"
 
 typedef struct
 {
@@ -232,7 +233,6 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 	}
 	else
 	{
-		//self->isGrounded = 0;
 		for (x = indices.x; x <= indices.w; x++)
 		{
 			if (self->velocity.y > 0)
@@ -240,7 +240,6 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.h);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					//self->isGrounded = 1;
 					return 1;
 				}
 			}
@@ -251,7 +250,6 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			}
 			else
 			{
-				//self->isGrounded = 1;
 				return 1;
 			}
 		}
@@ -426,6 +424,8 @@ void entity_update(Entity *self)
 		self->velocity.x *= 0.5;
 	}
 	else self->velocity.x = 0;
+
+	if (self->iframes) self->iframes--;
 	
 	// Animation stuff, might want to move this into the animation class
 	if (!self->animationData) return;
@@ -442,7 +442,10 @@ void entity_update(Entity *self)
 	}
 
 	// Last thing: check if entity is still alive
-	if (self->health <= 0) entity_free(self);
+	if (self->health <= 0) {
+		if (self == player_entity_get()) player_kill("Player was killed by an enemy.");
+		else entity_free(self);
+	}
 }
 
 void entity_manager_update_all()

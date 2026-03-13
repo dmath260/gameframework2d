@@ -82,7 +82,7 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
-        //i++;
+        i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
@@ -99,9 +99,9 @@ int main(int argc, char * argv[])
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
             level_draw(level);
-
+            
             entity_manager_draw_all();
-            entity_draw(player);
+            if (player && player->_inuse) entity_draw(player);
             
             //UI elements last
             gf2d_sprite_draw(
@@ -115,13 +115,16 @@ int main(int argc, char * argv[])
                 (int)mf);
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
-        
-        if (player->position.y + player->bounds.y > level->height * level->tileDef->height)
+        if (!player || !player->_inuse)
+        {
+            done = 1;
+        }
+        else if (player->position.y + player->bounds.y > level->height * level->tileDef->height)
         {
             player_kill("Player fell from a high place");
         }
         
-        if (keys[SDL_SCANCODE_ESCAPE] || !player->_inuse)done = 1; // exit condition
+        if (keys[SDL_SCANCODE_ESCAPE] || !player || !player->_inuse)done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     gfc_sound_clear_all();

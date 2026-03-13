@@ -49,7 +49,7 @@ Uint8 monster_touch(Entity* self, Entity* other)
 	data = (MonsterData*) self->data;
 	if (other == data->player)
 	{
-		self->health -= self->maxHealth;
+		//self->health -= self->maxHealth;
 		return 1;
 	}
 	return 1;
@@ -73,25 +73,30 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	switch (type) {
 		case MT_Grunt:
 			monster_grunt_populate(self);
+			entity_load(self, "Walk");
 			break;
 		case MT_Seeker:
 			monster_seeker_populate(self);
+			entity_load(self, "Idle");
 			break;
 		case MT_Gunner:
 			monster_gunner_populate(self);
+			entity_load(self, "Idle");
 			break;
 		case MT_Flier:
 			monster_flier_populate(self);
+			entity_load(self, "Idle");
 			break;
 		case MT_ImmortalSnail:
 			monster_immortalsnail_populate(self);
+			entity_load(self, "Idle");
 			break;
 		default:
 			monster_grunt_populate(self);
+			entity_load(self, "Walk");
 			break;
 	}
 	self->health = self->maxHealth;
-	entity_load(self, "Idle");
 	self->animationData->FrameRow = 2;
 	return self;
 }

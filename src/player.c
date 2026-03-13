@@ -115,7 +115,7 @@ void player_entity_think(Entity* self)
 			gfc_color8(0, 204, 255, 255),
 			self->team,
 			(self->animationData->FrameRow - 2) / 4,
-			2
+			self->attack
 		);
 	}
 	if (!self->isGrounded && self->velocity.y) set_player_state(self, PS_Jump);
@@ -137,6 +137,19 @@ void player_entity_update(Entity* self)
 {
 	if (!self) return;
 	camera_center_on(self->position);
+	entity_collision_test_world(self);
+}
+
+Uint8 player_entity_touch(Entity* self, Entity* other)
+{
+	if (!self || !other) return 0;
+	if (self->iframes || self->team == other->team) return 1;
+	self->health -= other->attack;
+	self->position.x -= self->velocity.x - other->velocity.x;
+	self->thinkPos.x = self->position.x;
+	self->iframes = 120;
+	slog("Ouch! Current health: %i", self->health);
+	return 1;
 }
 
 Entity* player_entity_new(GFC_Vector2D position)
@@ -156,11 +169,13 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->speedMult = 1;
 	self->maxHealth = 10;
 	self->health = self->maxHealth;
+	self->attack = 2;
 	self->team = 0; // team 0 for player
 	self->position = position;
 	self->thinkPos = position;
 	self->think = player_entity_think;
 	self->update = player_entity_update;
+	self->touch = player_entity_touch;
 	self->scale = gfc_vector2d(2, 2);
 	self->free = player_free;
 	thePlayer = self;

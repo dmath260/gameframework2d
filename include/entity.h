@@ -39,6 +39,8 @@ typedef struct Entity_S
 	float			rotation;
 	int				health;
 	int				maxHealth;
+	Uint8			iframes;
+	Uint8			attack;
 	GFC_Rect		bounds;						//bounding box
 	float			frame;
 	Uint8			isGrounded;
