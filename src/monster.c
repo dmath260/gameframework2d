@@ -10,6 +10,26 @@
 #include "monster_flier.h"
 #include "monster_immortalsnail.h"
 
+
+
+char* monster_state_to_str(Entity* self)
+{
+	if (!self || !self->data) return "Idle";
+	MonsterStates state;
+	MonsterData* data;
+	data = (MonsterData*)self->data;
+	state = data->state;
+	switch (state)
+	{
+		case MS_Idle: return "Idle";
+		case MS_Walk: return "Walk";
+		case MS_Attack: return "Shoot";
+		case MS_Pain: return "Pain";
+		case MS_Die: return "Faint";
+		default: return "Idle";
+	}
+}
+
 void monster_free(Entity* self)
 {
 	MonsterData* data;
@@ -59,6 +79,7 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 {
 	Entity* self;
 	MonsterData* data;
+	char* state;
 	self = entity_new();
 	if (!self) return NULL;
 	data = gfc_allocate_array(sizeof(MonsterData), 1);
@@ -70,32 +91,31 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	self->position = position;
 	self->thinkPos = position;
 	self->team = 1; // team 1 for monsters
+	state = "Idle";
 	switch (type) {
 		case MT_Grunt:
 			monster_grunt_populate(self);
-			entity_load(self, "Walk");
+			state = "Walk";
 			break;
 		case MT_Seeker:
 			monster_seeker_populate(self);
-			entity_load(self, "Idle");
 			break;
 		case MT_Gunner:
 			monster_gunner_populate(self);
-			entity_load(self, "Idle");
 			break;
 		case MT_Flier:
 			monster_flier_populate(self);
-			entity_load(self, "Idle");
+			state = "Shoot";
 			break;
 		case MT_ImmortalSnail:
 			monster_immortalsnail_populate(self);
-			entity_load(self, "Idle");
 			break;
 		default:
 			monster_grunt_populate(self);
-			entity_load(self, "Walk");
+			state = "Walk";
 			break;
 	}
+	entity_load(self, state);
 	self->health = self->maxHealth;
 	self->animationData->FrameRow = 2;
 	return self;

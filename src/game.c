@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
     bgm = gfc_sound_load("audio/song_test2a.wav", -1, -1);
 
-    gfc_sound_play(bgm, -1, -1, -1, -1);
+    //gfc_sound_play(bgm, -1, -1, -1, -1);
 
     slog("press [escape] to quit");
 
@@ -82,13 +82,13 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
-        i++;
+        //i++;
         if (gfc_input_key_pressed("e") || i == 100) {
             if (i == 100) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             y = (float) (1 + gfc_crandom()) * level->size.y / 2;
             //t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
-            t = MT_Grunt;
+            t = MT_Seeker;
             monster_new(gfc_vector2d(x, y), t);
         }
 

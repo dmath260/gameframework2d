@@ -46,7 +46,7 @@ void player_kill(char* message)
 	entity_free(thePlayer);
 }
 
-char* state_to_str(Entity* self)
+char* player_state_to_str(Entity* self)
 {
 	if (!self || !self->data) return "Idle";
 	PlayerStates state;
@@ -73,7 +73,7 @@ void set_player_state(Entity* self, PlayerStates state)
 	if (data->state == state) return;
 	data->state = state;
 	self->data = data;
-	entity_load(self, state_to_str(self));
+	entity_load(self, player_state_to_str(self));
 }
 
 void player_entity_think(Entity* self)
@@ -147,7 +147,8 @@ Uint8 player_entity_touch(Entity* self, Entity* other)
 	self->health -= other->attack;
 	self->position.x -= self->velocity.x - other->velocity.x;
 	self->thinkPos.x = self->position.x;
-	self->iframes = 120;
+	self->iframes = 90;
+	self->color = GFC_COLOR_GREY; // replace this w/ pain animation later
 	slog("Ouch! Current health: %i", self->health);
 	return 1;
 }

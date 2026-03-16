@@ -41,6 +41,8 @@ typedef struct Entity_S
 	int				maxHealth;
 	Uint8			iframes;
 	Uint8			attack;
+	int				cooldown;					//cooldown until next attack
+	int				maxCooldown;
 	GFC_Rect		bounds;						//bounding box
 	float			frame;
 	Uint8			isGrounded;
@@ -122,5 +124,12 @@ void entity_load(Entity* self, char* state);
 * @return 1 if would be inside a tile, 0 otherwise
 */
 Uint8 check_bounds(Entity* self, Uint8 axis);
+
+/**
+* @brief ensures that an entity will not be inside a tile during the next frame
+* @param self the entity to check
+* @param axis the axis to check (0 for x, 1 for y)
+*/
+void clip_to_bounds(Entity* self, Uint8 axis);
 
 #endif

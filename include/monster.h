@@ -6,7 +6,7 @@
 typedef enum
 {
 	MS_Idle,
-	MS_Hunt,
+	MS_Walk,
 	MS_Attack,
 	MS_Pain,
 	MS_Die,

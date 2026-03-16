@@ -21,11 +21,20 @@ void bullet_update(Entity* self)
 
 Uint8 bullet_touch(Entity* self, Entity* other)
 {
+	int otherHealth;
 	if (!self | !other) return 0;
 	if (other->team != self->team)
 	{
-		self->health -= self->maxHealth;
-		other->health -= self->attack;
+		self->health = 0;
+		otherHealth = other->health;
+		if (other->touch && (self->maxHealth > 1 || other->maxHealth > 1))
+		{
+			other->touch(other, self); // condition prevents crash for two bullets
+		}
+		if (other->health == otherHealth && !other->iframes)
+		{
+			other->health -= self->attack; // don't do damage twice
+		}
 		return 1;
 	}
 	return 1;

@@ -13,13 +13,13 @@ void monster_grunt_free(Entity* self)
 
 void monster_grunt_think(Entity* self)
 {
-	MonsterData* data;
+	//MonsterData* data;
 	Level* current_level;
 	Uint32 tw, th, x_check, y_check, tile;
 
 	current_level = get_current_level();
 	if ((!self) || (!self->data) || !current_level) return;
-	data = (MonsterData*)self->data;
+	//data = (MonsterData*)self->data;
 
 	// do general monster thinking first
 	monster_think(self);
@@ -45,12 +45,6 @@ void monster_grunt_think(Entity* self)
 
 void monster_grunt_update(Entity* self)
 {
-	/*
-	MonsterData* data;
-	if ((!self) || (!self->data)) return;
-	data = (MonsterData*)self->data;
-	*/
-
 	// do general monster updating first
 	monster_update(self);
 }

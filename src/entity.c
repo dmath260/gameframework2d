@@ -259,7 +259,6 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 
 void clip_to_bounds(Entity* self, Uint8 axis)
 {
-	// basically same as check_bounds, but values are modified
 	// axis: 0 for x, anything else for y
 	if (!self) return;
 	GFC_Rect bounds, indices;
@@ -355,13 +354,16 @@ Uint8 entity_collision_test(Entity* self, Entity *other)
 Uint8 entity_collision_test_world(Entity* self)
 {
 	Uint32 i;
+	Entity* other;
 	if (!self) return 0;
 	for (i = 0; i < entityManager.entityMax; i++)
 	{
 		if (!entityManager.entityList[i]._inuse) continue;
 		if (entity_collision_test(self, &entityManager.entityList[i]))
 		{
-			if (self->touch) self->touch(self, &entityManager.entityList[i]);
+			other = &entityManager.entityList[i];
+			if (self->touch) self->touch(self, other);
+			//if (other->touch) other->touch(other, self);
 			return 1;
 		}
 	}
@@ -425,7 +427,10 @@ void entity_update(Entity *self)
 	}
 	else self->velocity.x = 0;
 
-	if (self->iframes) self->iframes--;
+	if (self->iframes) {
+		if (self->iframes == 1) self->color = GFC_COLOR_WHITE;
+		self->iframes--;
+	}
 	
 	// Animation stuff, might want to move this into the animation class
 	if (!self->animationData) return;
