@@ -33,6 +33,7 @@ typedef struct Entity_S
 	GFC_Vector2D	thinkPos;
 	GFC_Vector2D	velocity;
 	Uint8			gravity;					//whether or not to apply gravity
+	float			impulse;					//initial velocity when jumping		
 	float			topSpeed;
 	GFC_Vector2D	scale;
 	GFC_Vector2D	rotationCenter;

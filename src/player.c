@@ -93,7 +93,7 @@ void player_entity_think(Entity* self)
 	}
 	if (gfc_input_key_down("w") && self->isGrounded)
 	{
-		self->velocity.y -= 10;
+		self->velocity.y += self->impulse;
 		self->isGrounded = 0;
 	}
 	if ((gfc_input_key_down("LSHIFT") || gfc_input_key_down("RSHIFT")) && self->isGrounded && move.x)
@@ -138,6 +138,12 @@ void player_entity_update(Entity* self)
 	if (!self) return;
 	camera_center_on(self->position);
 	entity_collision_test_world(self);
+	/*
+	if (player_state_to_str(self) == "Hop")
+	{
+		slog("%f %f", self->velocity.y, self->position.y);
+	}
+	*/
 }
 
 Uint8 player_entity_touch(Entity* self, Entity* other)
@@ -149,7 +155,8 @@ Uint8 player_entity_touch(Entity* self, Entity* other)
 	self->thinkPos.x = self->position.x;
 	self->iframes = 90;
 	self->color = GFC_COLOR_GREY; // replace this w/ pain animation later
-	slog("Ouch! Current health: %i", self->health);
+	if (other->attack != 255u) slog("Ouch! Current health: %i", self->health);
+	else slog("THE IMMORTAL SNAIL FOUND YOU");
 	return 1;
 }
 
@@ -166,6 +173,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->animationData->FrameRow = 2;
 	self->rotationCenter = gfc_vector2d(12, 16);
 	self->bounds = gfc_rect(-18, -30, 52, 52); // change these values later AND move to set_player_state
+	self->impulse = -10;
 	self->topSpeed = 3;
 	self->speedMult = 1;
 	self->maxHealth = 10;

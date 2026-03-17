@@ -27,6 +27,13 @@ void monster_immortalsnail_think(Entity* self)
 	gfc_vector2d_normalize(&toPlayer);
 	if (toPlayer.x >= 0) self->animationData->FrameRow = 2;
 	else self->animationData->FrameRow = 6;
+	self->velocity.x = self->topSpeed * (4 - self->animationData->FrameRow) / 2;
+
+	if (toPlayer.y > 0) self->velocity.y = self->topSpeed;
+	else if (toPlayer.y < 0) self->velocity.y = -1 * self->topSpeed;
+	else self->velocity.y = 0;
+	self->thinkPos.y += self->velocity.y;
+	clip_to_bounds(self, 1);
 }
 
 void monster_immortalsnail_update(Entity* self)
@@ -60,8 +67,10 @@ void monster_immortalsnail_populate(Entity *self)
 	self->bounds = gfc_rect(-28, -40, 56, 56); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 20);
-	self->topSpeed = 3;
-	self->maxHealth = 20;
+	self->gravity = 0;
+	self->topSpeed = 0.1;
+	self->maxHealth = 0x7FFFFFFF; // good luck killing this thing lol
+	self->attack = 255;
 	self->think = monster_immortalsnail_think;
 	self->update = monster_immortalsnail_update;
 	self->touch = monster_immortalsnail_touch;

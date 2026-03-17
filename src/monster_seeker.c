@@ -13,11 +13,12 @@ void monster_seeker_free(Entity* self)
 
 void monster_seeker_think(Entity* self)
 {
+	// jump height for velocity.y -= 10: 195 px (~6 blocks)
 	GFC_Vector2D toPlayer = {0}, playerCenter = {0}, selfCenter = {0};
 	MonsterData* data;
 	Level* current_level;
 	Uint32 tw, th, x_check, y_check, tile;
-	Uint8 dir;
+	Uint8 dir, close;
 
 	current_level = get_current_level();
 	if ((!self) || (!self->data) || !current_level) return;
@@ -27,12 +28,18 @@ void monster_seeker_think(Entity* self)
 	monster_think(self);
 
 	if (!data->player) return;
-	gfc_vector2d_add(playerCenter, data->player->position, data->player->rotationCenter);
-	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
-	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);
-	gfc_vector2d_normalize(&toPlayer);
-	if (toPlayer.x >= 0) self->animationData->FrameRow = 2;
-	else self->animationData->FrameRow = 6;
+	if (data->player->position.x - self->position.x > self->velocity.x
+		|| data->player->position.x - self->position.x < -1 * self->velocity.x)
+	{
+		if (data->player->position.x >= self->position.x) self->animationData->FrameRow = 2;
+		else self->animationData->FrameRow = 6;
+		close = 0;
+	}
+	else
+	{
+		self->thinkPos.x -= self->velocity.x;
+		close = 1;
+	}
 
 	tw = current_level->tileDef->width;
 	th = current_level->tileDef->height;
@@ -53,8 +60,17 @@ void monster_seeker_think(Entity* self)
 
 	if (tile != -1 && (check_bounds(self, 0) || current_level->tileMap[tile] <= 0))
 	{
-		self->velocity.x = 0;
-		self->thinkPos.x = self->position.x;
+		if (self->thinkPos.y + 8 >= data->player->position.y && self->isGrounded)
+		{
+			self->velocity.y += self->impulse;
+			self->isGrounded = 0;
+		}
+	}
+	else if (close && self->thinkPos.y - 8 > data->player->position.y && self->isGrounded)
+	{
+		self->velocity.y += self->impulse;
+		self->isGrounded = 0;
+		self->thinkPos.x -= self->velocity.x;
 	}
 	else self->thinkPos.x -= self->velocity.x;
 }
@@ -90,6 +106,7 @@ void monster_seeker_populate(Entity *self)
 	self->bounds = gfc_rect(-37, -31, 66, 56); // change these values later
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(20, 18);
+	self->impulse = -10;
 	self->topSpeed = 2;
 	self->maxHealth = 6;
 	self->attack = 2;

@@ -67,7 +67,7 @@ int main(int argc, char * argv[])
     Entity* player = player_entity_new(gfc_vector2d(
         (float) level->width * level->tileDef->width / 2,
         (float) level->height * level->tileDef->height / 2));
-    i = 0;
+    i = 400;
     float x, y;
     MonsterTypes t;
 
@@ -82,13 +82,12 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
-        //i++;
-        if (gfc_input_key_pressed("e") || i == 100) {
-            if (i == 100) i = 0;
+        i++;
+        if (gfc_input_key_pressed("e") || i == 500) {
+            if (i == 500) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            //t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
-            t = MT_Seeker;
+            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
             monster_new(gfc_vector2d(x, y), t);
         }
 
