@@ -117,6 +117,7 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	}
 	entity_load(self, state);
 	self->health = self->maxHealth;
+	self->maxIFrames = 45;
 	self->animationData->FrameRow = 2;
 	return self;
 }

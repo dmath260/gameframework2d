@@ -31,9 +31,9 @@ Uint8 bullet_touch(Entity* self, Entity* other)
 		{
 			other->touch(other, self); // condition prevents crash for two bullets
 		}
-		if (other->health == otherHealth && !other->iframes)
+		if (other->health == otherHealth)
 		{
-			other->health -= self->attack; // don't do damage twice
+			entity_hurt(other, self->attack); // don't do damage twice
 		}
 		return 1;
 	}

@@ -211,6 +211,12 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 		(int)((bounds.y + bounds.h - 1) / th)
 	);
 
+	/*
+	* Ignore the following special tiles:
+	* 67 and 69: disabled switch blocks
+	* 73: vines
+	*/
+
 	if (!axis)
 	{
 		// x-axis
@@ -219,7 +225,14 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.x, y);
-				if (current_level->tileMap[i] > 0) return 1;
+				if (current_level->tileMap[i] > 0)
+				{
+					//slog("A %i", current_level->tileMap[i]);
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
+					return 1;
+				}
 			}
 		}
 		else if (self->velocity.x > 0)
@@ -227,7 +240,14 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.w, y);
-				if (current_level->tileMap[i] > 0) return 1;
+				if (current_level->tileMap[i] > 0)
+				{
+					//slog("B %i", current_level->tileMap[i]);
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
+					return 1;
+				}
 			}
 		}
 	}
@@ -240,13 +260,24 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.h);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
+					//slog("C %i", current_level->tileMap[i]);
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
 					return 1;
 				}
 			}
 			else if (self->velocity.y < 0)
 			{
 				i = level_get_tile_index(current_level, x, indices.y);
-				if (current_level->tileMap[i] > 0) return 1;
+				if (current_level->tileMap[i] > 0)
+				{
+					//slog("D %i", current_level->tileMap[i]);
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
+					return 1;
+				}
 			}
 			else
 			{
@@ -263,7 +294,8 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 	if (!self) return;
 	GFC_Rect bounds, indices;
 	Level* current_level;
-	int i, tw, th, x, y;
+	int i, j, k, tw, th, x, y;
+	Uint8 switch_on;
 
 	bounds = self->bounds;
 	gfc_vector2d_add(bounds, bounds, self->thinkPos);
@@ -277,9 +309,21 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 		(int)((bounds.y + bounds.h - 1) / th)
 	);
 
+	/*
+	* Assumptions for special tiles:
+	* Spikes are index 65
+	* Trampolines are index 66
+	* Red switch blocks (on by default) are index 67 when off and index 68 when on
+	* Blue switch blocks (off by default) are index 69 when off and index 70 when on
+	* Switches (on by default) are index 71 when on and index 72 when off
+	* Vines are index 73
+	*/
+
 	if (!axis)
 	{
 		// x-axis
+		self->isClimbing = 0;
+
 		if (self->velocity.x < 0)
 		{
 			for (y = indices.y; y <= indices.h; y++)
@@ -287,6 +331,13 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, indices.x, y);
 				if (current_level->tileMap[i] > 0)
 				{
+					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73)
+					{
+						self->isClimbing = 1;
+						continue;
+					}
+					self->isClimbing = 0;
 					self->thinkPos.x = binary_search_position(self, axis, indices.y, indices.h);
 					self->velocity.x = 0;
 					break;
@@ -300,6 +351,13 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, indices.w, y);
 				if (current_level->tileMap[i] > 0)
 				{
+					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73)
+					{
+						self->isClimbing = 1;
+						continue;
+					}
+					self->isClimbing = 0;
 					self->thinkPos.x = binary_search_position(self, axis, indices.y, indices.h);
 					self->velocity.x = 0;
 					break;
@@ -311,6 +369,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 	{
 		// y-axis
 		self->isGrounded = 0;
+		self->isClimbing = 0;
 
 		for (x = indices.x; x <= indices.w; x++)
 		{
@@ -319,9 +378,26 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.h);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
+					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73)
+					{
+						self->isClimbing = 1;
+						continue;
+					}
+					self->isClimbing = 0;
 					self->thinkPos.y = binary_search_position(self, axis, indices.x, indices.w);
 					self->velocity.y = 0;
 					self->isGrounded = 1;
+					if (current_level->tileMap[i] == 65) entity_hurt(self, 1);
+					if (current_level->tileMap[i] == 66)
+					{
+						if (!self->gravity) break;
+						else if (!self->impulse) self->velocity.y = 5;
+						else if (self == player_entity_get() && gfc_input_key_down("w"))
+							self->velocity.y = self->impulse * sqrt(2);
+						else self->velocity.y = self->impulse / sqrt(2);
+						self->isGrounded = 0;
+					}
 					break;
 				}
 			}
@@ -330,13 +406,49 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.y);
 				if (current_level->tileMap[i] > 0)
 				{
+					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73)
+					{
+						self->isClimbing = 1;
+						continue;
+					}
+					self->isClimbing = 0;
 					self->thinkPos.y = binary_search_position(self, axis, indices.x, indices.w);
 					self->velocity.y = 0;
+					if (current_level->tileMap[i] == 65) entity_hurt(self, 1);
+					if (current_level->tileMap[i] == 71 || current_level->tileMap[i] == 72)
+					{
+						if (current_level->tileMap[i] == 71) switch_on = 1;
+						else switch_on = 0;
+						for (j = 0; j < current_level->width; j++)
+						{
+							for (k = 0; k < current_level->height; k++)
+							{
+								i = level_get_tile_index(current_level, j, k);
+								if (i < 0) continue;
+								if (current_level->tileMap[i] < 67 || current_level->tileMap[i] > 72) continue;
+								if (switch_on)
+								{
+									if (current_level->tileMap[i] == 68) current_level->tileMap[i] = 67;
+									if (current_level->tileMap[i] == 69) current_level->tileMap[i] = 70;
+									if (current_level->tileMap[i] == 71) current_level->tileMap[i] = 72;
+								}
+								else
+								{
+									if (current_level->tileMap[i] == 67) current_level->tileMap[i] = 68;
+									if (current_level->tileMap[i] == 70) current_level->tileMap[i] = 69;
+									if (current_level->tileMap[i] == 72) current_level->tileMap[i] = 71;
+								}
+							}
+						}
+						level_bake_tiles(current_level);
+					}
 					break;
 				}
 			}
 		}
 	}
+	if (self->isClimbing) self->velocity.y = 0;
 }
 
 Uint8 entity_collision_test(Entity* self, Entity *other)
@@ -376,7 +488,7 @@ void entity_think(Entity* self) {
 	//downward velocity (if entity is affected by gravity)
 	if (self->gravity)
 	{
-		self->velocity.y += 0.25;
+		if (!self->isClimbing) self->velocity.y += 0.25;
 		self->thinkPos.y += self->velocity.y;
 		clip_to_bounds(self, 1);
 	}
@@ -427,9 +539,9 @@ void entity_update(Entity *self)
 	}
 	else self->velocity.x = 0;
 
-	if (self->iframes) {
-		if (self->iframes == 1) self->color = GFC_COLOR_WHITE;
-		self->iframes--;
+	if (self->iFrames) {
+		if (self->iFrames == 1) self->color = GFC_COLOR_WHITE;
+		self->iFrames--;
 	}
 	
 	// Animation stuff, might want to move this into the animation class
@@ -448,7 +560,7 @@ void entity_update(Entity *self)
 
 	// Last thing: check if entity is still alive
 	if (self->health <= 0) {
-		if (self == player_entity_get()) player_kill("Player was killed by an enemy.");
+		if (self == player_entity_get()) player_kill("Player ran out of health.");
 		else entity_free(self);
 	}
 }
@@ -466,6 +578,16 @@ void entity_manager_update_all()
 		if (!entityManager.entityList[i].update) continue;
 		entity_update(&entityManager.entityList[i]);
 	}
+}
+
+void entity_hurt(Entity* self, Uint8 damage)
+{
+	if (self->iFrames) return;
+	self->health -= damage;
+	if (self->health <= 0) return;
+	self->iFrames = self->maxIFrames;
+	self->color = GFC_COLOR_GREY; // replace this w/ pain animation later
+	if (self == player_entity_get()) slog("Ouch! Current health: %i", self->health);
 }
 
 void entity_load(Entity* self, char* state)

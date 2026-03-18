@@ -91,11 +91,19 @@ void player_entity_think(Entity* self)
 	{
 		move.x -= 1;
 	}
-	if (gfc_input_key_down("w") && self->isGrounded)
+	if (gfc_input_key_down("w") && self->isClimbing)
+	{
+		self->thinkPos.y -= self->topSpeed;
+		self->velocity.y = self->topSpeed * -1;
+		if (check_bounds(self, 1)) self->thinkPos.y = self->position.y;
+		else self->velocity.y = 0;
+	}
+	else if (gfc_input_key_down("w") && self->isGrounded)
 	{
 		self->velocity.y += self->impulse;
 		self->isGrounded = 0;
 	}
+	else if (self->isClimbing) self->thinkPos.y = self->position.y;
 	if ((gfc_input_key_down("LSHIFT") || gfc_input_key_down("RSHIFT")) && self->isGrounded && move.x)
 	{
 		// Has to be grounded because sprinting in midair makes no sense
@@ -119,6 +127,7 @@ void player_entity_think(Entity* self)
 		);
 	}
 	if (!self->isGrounded && self->velocity.y) set_player_state(self, PS_Jump);
+	if (self->isClimbing) set_player_state(self, PS_Idle);
 	if (move.x)
 	{
 		gfc_vector2d_normalize(&move);
@@ -149,14 +158,9 @@ void player_entity_update(Entity* self)
 Uint8 player_entity_touch(Entity* self, Entity* other)
 {
 	if (!self || !other) return 0;
-	if (self->iframes || self->team == other->team) return 1;
-	self->health -= other->attack;
-	self->position.x -= self->velocity.x - other->velocity.x;
-	self->thinkPos.x = self->position.x;
-	self->iframes = 90;
-	self->color = GFC_COLOR_GREY; // replace this w/ pain animation later
-	if (other->attack != 255u) slog("Ouch! Current health: %i", self->health);
-	else slog("THE IMMORTAL SNAIL FOUND YOU");
+	if (self->iFrames || self->team == other->team) return 1;
+	entity_hurt(self, other->attack);
+	if (other->attack == 255u) slog("THE IMMORTAL SNAIL FOUND YOU");
 	return 1;
 }
 
@@ -179,6 +183,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->maxHealth = 10;
 	self->health = self->maxHealth;
 	self->attack = 2;
+	self->maxIFrames = 90;
 	self->team = 0; // team 0 for player
 	self->position = position;
 	self->thinkPos = position;

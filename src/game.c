@@ -55,19 +55,19 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    //level = level_load("level/testlevel.json");
-    level = level_load_bin("level/testlevel.bin");
+    level = level_load("level/testlevel.json");
+    //level = level_load_bin("level/testlevelv2.bin");
     if (level)
     {
         set_current_level(level);
         level_bake_tiles(level);
-        //level_save_bin(level, "level/testlevel.bin");
+        level_save_bin(level, "level/testlevelv2.bin");
     }
 
     Entity* player = player_entity_new(gfc_vector2d(
         (float) level->width * level->tileDef->width / 2,
         (float) level->height * level->tileDef->height / 2));
-    i = 400;
+    i = 0;
     float x, y;
     MonsterTypes t;
 
@@ -82,7 +82,7 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
-        i++;
+        //i++;
         if (gfc_input_key_pressed("e") || i == 500) {
             if (i == 500) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;

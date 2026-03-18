@@ -40,13 +40,15 @@ typedef struct Entity_S
 	float			rotation;
 	int				health;
 	int				maxHealth;
-	Uint8			iframes;
+	Uint8			iFrames;
+	Uint8			maxIFrames;
 	Uint8			attack;
 	int				cooldown;					//cooldown until next attack
 	int				maxCooldown;
 	GFC_Rect		bounds;						//bounding box
 	float			frame;
 	Uint8			isGrounded;
+	Uint8			isClimbing;
 	float			speedMult;
 	void (* think)	(struct Entity_S *self);	//called every frame if defined for the entity
 	void (* update)	(struct Entity_S *self);	//called every frame if defined for the entity
@@ -132,5 +134,12 @@ Uint8 check_bounds(Entity* self, Uint8 axis);
 * @param axis the axis to check (0 for x, 1 for y)
 */
 void clip_to_bounds(Entity* self, Uint8 axis);
+
+/**
+* @brief damages an entity and gives them invincibility frames
+* @param self the entity to hurt
+* @param damage how much damage the entity takes
+*/
+void entity_hurt(Entity* self, Uint8 damage);
 
 #endif
