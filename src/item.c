@@ -7,7 +7,7 @@ Uint8 item_touch(Entity* self, Entity* other)
 {
 	if (!self || !other || other != player_entity_get()) return 0;
 	
-	// give player item using a function here
+	player_give_item(other, self->item);
 
 	entity_free(self);
 	return 1;

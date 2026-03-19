@@ -542,9 +542,41 @@ void entity_update(Entity *self)
 	}
 	else self->velocity.x = 0;
 
+	if (self->itemFrames) {
+		if (self->itemFrames == 1)
+		{
+			self->color = GFC_COLOR_WHITE;
+			self->item = IT_NONE;
+		}
+		self->itemFrames--;
+	}
+
 	if (self->iFrames) {
 		if (self->iFrames == 1) self->color = GFC_COLOR_WHITE;
 		self->iFrames--;
+	}
+	else if (self == player_entity_get())
+	{
+		switch (self->item)
+		{
+			case IT_Power:
+				self->color = gfc_color_hsl(0, 1, 0.5, 1); // used HSL so invincible can be rainbow
+				break;
+			case IT_Speed:
+				self->color = gfc_color(0, 0.5, 1, 1);
+				break;
+			case IT_DoubleJump:
+				self->color = GFC_COLOR_DARKGREEN;
+				break;
+			case IT_Hover:
+				self->color = GFC_COLOR_YELLOW;
+				break;
+			case IT_Invincible:
+				if (self->color.r >= 360) self->color.r -= 360;
+				self->color.r += M_PI; // for variety :D
+				break;
+			default: self->color = GFC_COLOR_WHITE;
+		}
 	}
 	
 	// Animation stuff, might want to move this into the animation class
@@ -589,7 +621,10 @@ void entity_hurt(Entity* self, Uint8 damage)
 	self->health -= damage;
 	if (self->health <= 0) return;
 	self->iFrames = self->maxIFrames;
-	self->color = GFC_COLOR_GREY; // replace this w/ pain animation later
+	// replace this w/ pain animation later
+	self->color.r /= 2;
+	self->color.g /= 2;
+	self->color.b /= 2;
 	if (self == player_entity_get()) slog("Ouch! Current health: %i", self->health);
 }
 

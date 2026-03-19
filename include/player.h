@@ -17,6 +17,13 @@ Entity* player_entity_get();
 Entity* player_entity_new(GFC_Vector2D position);
 
 /**
+* @brief gives the player an item effect
+* @param player a pointer to the player
+* @param type the type of item to give the player
+*/
+void player_give_item(Entity *player, ItemTypes type);
+
+/**
 * @brief kills the player and slogs a death message
 * @message the message to slog
 */

@@ -76,6 +76,34 @@ void set_player_state(Entity* self, PlayerStates state)
 	entity_load(self, player_state_to_str(self));
 }
 
+void player_give_item(Entity* player, ItemTypes type)
+{
+	if (!player) return;
+	player->item = type;
+
+	// frames should be ~90 * # of seconds
+	switch (type)
+	{
+		case IT_Power:
+			player->itemFrames = 90 * 60;
+			break;
+		case IT_Speed:
+			player->itemFrames = 90 * 60;
+			break;
+		case IT_DoubleJump:
+			player->itemFrames = 90 * 60;
+			break;
+		case IT_Hover:
+			player->itemFrames = 90 * 60;
+			break;
+		case IT_Invincible:
+			player->itemFrames = 90 * 10;
+			player->color = gfc_color_hsl(0, 1, 0.5, 1);
+			break;
+		default: player->item = IT_NONE;
+	}
+}
+
 void player_entity_think(Entity* self)
 {
 	if (!self || !self->data) return;
@@ -147,12 +175,6 @@ void player_entity_update(Entity* self)
 	if (!self) return;
 	camera_center_on(self->position);
 	entity_collision_test_world(self);
-	/*
-	if (player_state_to_str(self) == "Hop")
-	{
-		slog("%f %f", self->velocity.y, self->position.y);
-	}
-	*/
 }
 
 Uint8 player_entity_touch(Entity* self, Entity* other)
