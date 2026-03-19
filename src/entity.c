@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "level.h"
 #include "player.h"
+#include "item.h"
 
 typedef struct
 {
@@ -89,6 +90,8 @@ Entity* entity_get_by_id(Uint32 id)
 void entity_free(Entity* self)
 {
 	if (!self) return;
+	if (self->item && self->team != 2 && self != player_entity_get())
+		item_new(self->position, self->item);
 	if (self->free) self->free(self);
 	if (self->animationData) {
 		animdata_free(self->animationData);
@@ -392,7 +395,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 					if (current_level->tileMap[i] == 66)
 					{
 						if (!self->gravity) break;
-						else if (!self->impulse) self->velocity.y = 5;
+						else if (!self->impulse) self->velocity.y = -5;
 						else if (self == player_entity_get() && gfc_input_key_down("w"))
 							self->velocity.y = self->impulse * sqrt(2);
 						else self->velocity.y = self->impulse / sqrt(2);

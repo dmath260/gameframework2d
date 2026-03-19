@@ -21,6 +21,17 @@ typedef enum
 	EL_ALL = 31
 }EntityLayers;
 
+typedef enum
+{
+	IT_NONE,
+	IT_Power,
+	IT_Speed,
+	IT_DoubleJump,
+	IT_Hover,
+	IT_Invincible,
+	IT_MAX
+}ItemTypes;
+
 typedef struct Entity_S
 {
 	Uint8			_inuse;						//no touchy
@@ -45,6 +56,8 @@ typedef struct Entity_S
 	Uint8			attack;
 	int				cooldown;					//cooldown until next attack
 	int				maxCooldown;
+	ItemTypes		item;						//item in use for player, item dropped on free otherwise
+	int				itemFrames;
 	GFC_Rect		bounds;						//bounding box
 	float			frame;
 	Uint8			isGrounded;

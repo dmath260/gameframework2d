@@ -70,6 +70,7 @@ int main(int argc, char * argv[])
     i = 0;
     float x, y;
     MonsterTypes t;
+    ItemTypes j;
 
     /*main game loop*/
     while(!done)
@@ -87,8 +88,10 @@ int main(int argc, char * argv[])
             if (i == 500) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
-            monster_new(gfc_vector2d(x, y), t);
+            //t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            t = MT_Grunt;
+            j = (ItemTypes)((1 + gfc_crandom()) * IT_MAX / 2);
+            monster_new(gfc_vector2d(x, y), t, j);
         }
 
         entity_manager_think_all();

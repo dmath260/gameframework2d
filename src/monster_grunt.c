@@ -34,7 +34,7 @@ void monster_grunt_think(Entity* self)
 	y_check = (int) ((self->thinkPos.y + self->bounds.y + self->bounds.h + 2) / th);
 	tile = level_get_tile_index(current_level, x_check, y_check);
 
-	if (tile != -1 && (check_bounds(self, 0) || current_level->tileMap[tile] <= 0))
+	if (tile != -1 && (check_bounds(self, 0) || self->isGrounded && current_level->tileMap[tile] <= 0))
 	{
 		self->velocity.x *= -1;
 		self->animationData->FrameRow = (self->animationData->FrameRow + 4) % 8; // 2 if left, 6 if right

@@ -10,8 +10,6 @@
 #include "monster_flier.h"
 #include "monster_immortalsnail.h"
 
-
-
 char* monster_state_to_str(Entity* self)
 {
 	if (!self || !self->data) return "Idle";
@@ -75,7 +73,7 @@ Uint8 monster_touch(Entity* self, Entity* other)
 	return 1;
 }
 
-Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
+Entity* monster_new(GFC_Vector2D position, MonsterTypes type, ItemTypes item)
 {
 	Entity* self;
 	MonsterData* data;
@@ -119,5 +117,6 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type)
 	self->health = self->maxHealth;
 	self->maxIFrames = 45;
 	self->animationData->FrameRow = 2;
+	self->item = item;
 	return self;
 }

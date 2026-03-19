@@ -158,7 +158,7 @@ void player_entity_update(Entity* self)
 Uint8 player_entity_touch(Entity* self, Entity* other)
 {
 	if (!self || !other) return 0;
-	if (self->iFrames || self->team == other->team) return 1;
+	if (self->iFrames || self->team == other->team || other->team == 2) return 1;
 	entity_hurt(self, other->attack);
 	if (other->attack == 255u) slog("THE IMMORTAL SNAIL FOUND YOU");
 	return 1;

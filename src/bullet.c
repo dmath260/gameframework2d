@@ -22,7 +22,7 @@ void bullet_update(Entity* self)
 Uint8 bullet_touch(Entity* self, Entity* other)
 {
 	int otherHealth;
-	if (!self | !other) return 0;
+	if (!self || !other || other->team == 2) return 0;
 	if (other->team != self->team)
 	{
 		self->health = 0;

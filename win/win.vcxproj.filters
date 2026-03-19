@@ -153,6 +153,9 @@
     <ClInclude Include="..\include\bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_logger\src\simple_logger.c">
@@ -288,6 +291,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\bullet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\item.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
