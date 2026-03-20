@@ -29,6 +29,7 @@ C:\Users\escdr\git\gameframework2d\gfc\src\miniz.c;C:\Users\escdr\git\gameframew
 C:\Users\escdr\git\gameframework2d\src\animation.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\animation.obj
 C:\Users\escdr\git\gameframework2d\src\bullet.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\bullet.obj
 C:\Users\escdr\git\gameframework2d\src\camera.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\camera.obj
+C:\Users\escdr\git\gameframework2d\src\door.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\door.obj
 C:\Users\escdr\git\gameframework2d\src\entity.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\entity.obj
 C:\Users\escdr\git\gameframework2d\src\game.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\game.obj
 C:\Users\escdr\git\gameframework2d\src\gf2d_draw.c;C:\Users\escdr\git\gameframework2d\win\win\x64\Debug\gf2d_draw.obj

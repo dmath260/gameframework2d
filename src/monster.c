@@ -63,7 +63,7 @@ void monster_update(Entity* self)
 Uint8 monster_touch(Entity* self, Entity* other)
 {
 	MonsterData* data;
-	if (!self | !other) return 0;
+	if (!self || !other || !self->data) return 0;
 	data = (MonsterData*) self->data;
 	if (other == data->player)
 	{
@@ -116,7 +116,7 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type, ItemTypes item)
 	entity_load(self, state);
 	self->health = self->maxHealth;
 	self->maxIFrames = 45;
-	self->animationData->FrameRow = 2;
+	self->animationData->FrameRow = 6;
 	self->item = item;
 	return self;
 }

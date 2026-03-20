@@ -155,4 +155,10 @@ void clip_to_bounds(Entity* self, Uint8 axis);
 */
 void entity_hurt(Entity* self, Uint8 damage);
 
+/**
+* @brief frees all entities besides the player
+* @note useful when transitioning between levels
+*/
+void entity_manager_free_all_but_player();
+
 #endif

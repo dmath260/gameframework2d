@@ -50,6 +50,17 @@ void entity_manager_close(void)
 	slog("closed entity system");
 }
 
+void entity_manager_free_all_but_player()
+{
+	Uint32 i;
+	if (!entityManager.entityList) return;
+	for (i = 0; i < entityManager.entityMax; i++)
+	{
+		if (&(entityManager.entityList[i]) != player_entity_get())
+			entity_free(&entityManager.entityList[i]);
+	}
+}
+
 Entity* entity_new()
 {
 	Uint32 i;
@@ -90,8 +101,11 @@ Entity* entity_get_by_id(Uint32 id)
 void entity_free(Entity* self)
 {
 	if (!self) return;
-	if (self->item && self->team != 2 && self != player_entity_get())
+	if (self->item && self->team != 2 && self != player_entity_get()) {
+		self->position.x -= self->bounds.w / 2;
+		self->position.y -= self->bounds.h / 2;
 		item_new(self->position, self->item);
+	}
 	if (self->free) self->free(self);
 	if (self->animationData) {
 		animdata_free(self->animationData);
@@ -552,8 +566,20 @@ void entity_update(Entity *self)
 	}
 
 	if (self->iFrames) {
-		if (self->iFrames == 1) self->color = GFC_COLOR_WHITE;
-		self->iFrames--;
+		if (self->item == IT_Invincible && self == player_entity_get())
+		{
+			self->iFrames == self->itemFrames;
+			if (self->color.r >= 360) self->color.r -= 360;
+			self->color = gfc_color_hsl(self->color.r + M_PI, 1, 0.5, 1);
+		}
+		else {
+			self->iFrames--;
+		}
+		if (self->iFrames == 0) {
+			self->color.r *= 2;
+			self->color.g *= 2;
+			self->color.b *= 2;
+		}
 	}
 	else if (self == player_entity_get())
 	{
@@ -571,10 +597,7 @@ void entity_update(Entity *self)
 			case IT_Hover:
 				self->color = GFC_COLOR_YELLOW;
 				break;
-			case IT_Invincible:
-				if (self->color.r >= 360) self->color.r -= 360;
-				self->color.r += M_PI; // for variety :D
-				break;
+			case IT_Invincible: break;
 			default: self->color = GFC_COLOR_WHITE;
 		}
 	}
@@ -586,6 +609,7 @@ void entity_update(Entity *self)
 	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
 
 	if (self->update) self->update(self);
+	if (!self) return;
 
 	current_level = get_current_level();
 	if (self->position.x < 0 || self->position.x > current_level->width * current_level->tileDef->width)
@@ -617,7 +641,7 @@ void entity_manager_update_all()
 
 void entity_hurt(Entity* self, Uint8 damage)
 {
-	if (self->iFrames) return;
+	if (self->iFrames || self->team == 2) return;
 	self->health -= damage;
 	if (self->health <= 0) return;
 	self->iFrames = self->maxIFrames;

@@ -43,13 +43,14 @@ void monster_flier_think(Entity* self)
 	{
 		self->cooldown = self->maxCooldown;
 		dir = (self->animationData->FrameRow - 2) / 4;
-		bullet_new(
-			gfc_vector2d(self->position.x + 25 * (1 - 2 * dir), self->position.y - 12),
-			gfc_color8(255, 0, 0, 255),
-			self->team,
-			dir,
-			self->attack
-		);
+		if ((1 - 2 * dir) * (data->player->position.x - self->position.x) <= 576) // 18 tiles
+			bullet_new(
+				gfc_vector2d(self->position.x + 25 * (1 - 2 * dir), self->position.y - 12),
+				gfc_color8(255, 0, 0, 255),
+				self->team,
+				dir,
+				self->attack
+			);
 	}
 }
 

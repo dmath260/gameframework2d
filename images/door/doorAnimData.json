@@ -1,0 +1,20 @@
+{
+  "AnimData": {
+    "Anims": {
+      "Anim": [
+        {
+          "Name": "Door",
+          "Filepath": "images/door/door.png",
+          "Index": 0,
+          "FrameWidth": 64,
+          "FrameHeight": 64,
+          "Durations": {
+            "Duration": [
+              1
+            ]
+          }
+        }
+      ]
+    }
+  }
+}							

@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
-    int i;
+    //int i;
     const Uint8 * keys;
     Level *level;
     
@@ -55,22 +55,25 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    level = level_load("level/testlevel.json");
+    level = level_load("level/level1.json");
     //level = level_load_bin("level/testlevelv2.bin");
     if (level)
     {
-        set_current_level(level);
         level_bake_tiles(level);
-        level_save_bin(level, "level/testlevelv2.bin");
+        //level_save_bin(level, "level/testlevelv2.bin");
     }
 
-    Entity* player = player_entity_new(gfc_vector2d(
-        (float) level->width * level->tileDef->width / 2,
-        (float) level->height * level->tileDef->height / 2));
-    i = 0;
-    float x, y;
-    MonsterTypes t;
-    ItemTypes j;
+    Entity* player;
+    player = player_entity_get();
+    if (!player) player = player_entity_new(gfc_vector2d(
+        (float)level->width * level->tileDef->width / 2,
+        (float)level->height * level->tileDef->height / 2)
+    );
+
+    //i = 0;
+    //float x, y;
+    //MonsterTypes t;
+    //ItemTypes j;
 
     /*main game loop*/
     while(!done)
@@ -83,24 +86,28 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
         // spawn a new monster every second or so (or if e pressed)
-        //i++;
+        /*
+        i++;
         if (gfc_input_key_pressed("e") || i == 500) {
             if (i == 500) i = 0;
             x = (float) (1 + gfc_crandom()) * level->size.x / 2;
             y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            //t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
-            t = MT_Grunt;
+            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
+            //t = MT_Grunt;
             j = (ItemTypes)((1 + gfc_crandom()) * IT_MAX / 2);
+            //j = IT_Invincible;
             monster_new(gfc_vector2d(x, y), t, j);
         }
+        */
 
         entity_manager_think_all();
         entity_manager_update_all();
-
+        
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
-            level_draw(level);
+            if (!level) level = get_current_level();
+            if (level && level->background) level_draw(level);
             
             entity_manager_draw_all();
             if (player && player->_inuse) entity_draw(player);

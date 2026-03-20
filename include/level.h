@@ -8,8 +8,11 @@ typedef struct
 	Sprite* background;				//background sprite
 	Sprite* tileLayer;				//static tile layer for fast rendering
 	Uint8* tileMap;					//pointer to the tile map data
-	Uint32 width, height;			//size of the tileMap
-	GFC_Vector2D size;				//size of the tileMap in pixels
+	Uint8* entityMap;				//data for where entities spawn when loading a level
+	Uint32 width, height;			//size of the tileMap and entityMap
+	GFC_Vector2D size;				//size of the tileMap and entityMap in pixels
+	const char* nextLevel;			//filepath of the next level to load
+	Uint8 nextIsJSON;				//0 if bin, 1 if JSON
 	TileDef* tileDef;
 }Level;
 

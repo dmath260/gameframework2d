@@ -13,6 +13,11 @@ Uint8 item_touch(Entity* self, Entity* other)
 	return 1;
 }
 
+void item_think(Entity* self)
+{
+	self->velocity.y = 0.25; // floats down instead of falling
+}
+
 void item_update(Entity* self)
 {
 	if (self->item == IT_Invincible)
@@ -56,6 +61,7 @@ Entity* item_new(GFC_Vector2D position, ItemTypes type)
 	self->health = self->maxHealth;
 	self->position = position;
 	self->thinkPos = position;
+	self->think = item_think;
 	self->update = item_update;
 	self->touch = item_touch;
 	return self;

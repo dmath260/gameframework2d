@@ -69,7 +69,7 @@ void monster_grunt_populate(Entity *self)
 	self->scale = gfc_vector2d(2, 2);
 	self->rotationCenter = gfc_vector2d(16, 16);
 	self->topSpeed = 1;
-	self->velocity.x = self->topSpeed / 2;
+	self->velocity.x = self->topSpeed / -2;
 	self->maxHealth = 2;
 	self->attack = 1;
 	self->think = monster_grunt_think;

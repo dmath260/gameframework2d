@@ -5,10 +5,15 @@
 #include "gf2d_sprite.h"
 #include "gf2d_graphics.h"
 
+#include "door.h"
 #include "level.h"
 #include "camera.h"
+#include "entity.h"
+#include "monster.h"
+#include "player.h"
 
 void level_setup_camera_bounds(Level* level);
+void level_load_entities(Level* level);
 
 Level* current_level;
 
@@ -28,12 +33,26 @@ Level* level_load(const char* filepath)
 	SJson* json;
 	SJson* config;
 	SJson *rows, *tiles, *tile;
-	if (!filepath)
+	GFC_TextLine buffer;
+	if (filepath) {
+		strncpy(buffer, filepath, sizeof(GFC_TextLine) - 1);
+		buffer[sizeof(buffer) - 1] = '\0';
+	}
+
+	if (get_current_level())
+	{
+		level = get_current_level();
+		set_current_level(NULL);
+		level_free(level);
+	}
+
+	if (!buffer)
 	{
 		slog("JSON filepath invalid");
 		return NULL;
 	}
-	json = sj_load(filepath);
+	slog("%s", buffer);
+	json = sj_load(buffer);
 	if (!json)
 	{
 		slog("JSON data invalid");
@@ -114,9 +133,61 @@ Level* level_load(const char* filepath)
 		}
 	}
 
+	rows = sj_object_get_value(config, "entityMap");
+	level->height = sj_array_count(rows);
+	if (!level->height)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined entity map in level %s (no height)", filepath);
+		return NULL;
+	}
+
+	tiles = sj_array_nth(rows, 0);
+	level->width = sj_array_count(tiles);
+	if (!level->width)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined entity map in level %s (no width)", filepath);
+		return NULL;
+	}
+
+	level->entityMap = gfc_allocate_array(sizeof(Uint8), level->width * level->height);
+	if (!level->entityMap)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined entity map in level %s (no entity map)", filepath);
+		return NULL;
+	}
+
+	for (j = 0; j < level->height; j++)
+	{
+		tiles = sj_array_get_nth(rows, j);
+		if (!tiles) continue;
+		for (i = 0; i < level->width; i++)
+		{
+			tile = sj_array_get_nth(tiles, i);
+			if (!tile) continue;
+			index = level_get_tile_index(level, i, j);
+			if (index == -1) continue;
+			sj_get_uint8_value(tile, &level->entityMap[index]);
+		}
+	}
+
+	str = sj_object_get_string(config, "nextLevel");
+	if (str)
+	{
+		level->nextLevel = _strdup(str);
+	}
+	sj_object_get_uint8(config, "nextIsJSON", &level->nextIsJSON);
+
+	level_load_entities(level);
 	level_setup_camera_bounds(level);
 
 	sj_free(json);
+	set_current_level(level);
 	return level;
 }
 
@@ -164,6 +235,8 @@ void level_free(Level* level)
 	gf2d_sprite_free(level->tileLayer);
 	gf2d_sprite_free(level->tileDef->sheet);
 	if (level->tileMap) free(level->tileMap);
+	free(level->nextLevel);
+	entity_manager_free_all_but_player();
 	free(level);
 }
 
@@ -219,7 +292,71 @@ void level_bake_tiles(Level* level)
 		0,
 		0
 	);
-	//SDL_FreeSurface(tileSurface); Not necessary, the surface is freed in gf2d_sprite_from_surface
+}
+
+void level_load_entities(Level* level)
+{
+	int i, j, index, x, y;
+	Uint8 entId;
+	if (!level) return;
+	if (!level->width || !level->height) return;
+	if (!level->tileDef->width || !level->tileDef->height) return;
+
+	player_entity_new(gfc_vector2d(0, 0));
+
+	for (j = 0; j < level->height; j++)
+	{
+		for (i = 0; i < level->width; i++)
+		{
+			index = level_get_tile_index(level, i, j);
+			if (index < 0) continue;
+			entId = level->entityMap[index];
+			if (!entId) continue;
+			x = i * level->tileDef->width;
+			y = j * level->tileDef->height;
+
+			/*
+			* Entity ID cheat sheet:
+			* 00: no entity
+			* 001: player
+			* 002-008: undefined
+			* 009: door
+			* 01X: monster_grunt
+			* 02X: monster_seeker
+			* 03X: monster_gunner
+			* 04X: monster_flier
+			* 05X: monster_immortalsnail
+			* 060: boss1 (TBD)
+			* 070: boss2 (TBD)
+			* 080: boss3 (TBD)
+			* 061-069, 071-079, 081-255: undefined
+			* 
+			* Ending digits (replacing X):
+			* 0: no item on defeat
+			* 1: power boost on defeat
+			* 2: speed boost on defeat
+			* 3: double jump on defeat
+			* 4: hover on defeat
+			* 5: invincibility on defeat
+			* 6-9: undefined
+			*/
+
+			if (entId == 1) player_entity_new(gfc_vector2d(x, y));
+			else if (entId == 9) door_new(gfc_vector2d(x, y));
+			else if (entId >= 10 && entId < 60)
+			{
+				monster_new(
+					gfc_vector2d(x, y),
+					(MonsterTypes)(entId / 10 - 1),
+					(ItemTypes)(entId % 10)
+				);
+			}
+			else if (entId >= 60 && entId < 90) continue; // spawn bosses once those are ready
+		}
+	}
+
+	Entity* player = player_entity_get();
+	camera_center_on(player->position);
 }
 
 void level_save_bin(Level* level, const char* filename)
@@ -247,6 +384,18 @@ void level_save_bin(Level* level, const char* filename)
 	fwrite(&level->width, sizeof(Uint32), 1, file);
 	fwrite(&level->height, sizeof(Uint32), 1, file);
 	fwrite(level->tileMap, sizeof(Uint8), level->width * level->height, file);
+	fwrite(level->entityMap, sizeof(Uint8), level->width * level->height, file);
+
+	if (level->nextLevel)
+	{
+		fwrite(level->nextLevel, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+	fwrite(&level->nextIsJSON, sizeof(Uint8), 1, file);
+
 	tiledef_save_to_file(level->tileDef, file);
 	fclose(file);
 }
@@ -257,10 +406,22 @@ Level *level_load_bin(const char* filename)
 	FILE* file;
 	if (!filename) return NULL;
 	Level* level;
-	file = fopen(filename, "rb");
+	if (filename) {
+		strncpy(buffer, filename, sizeof(GFC_TextLine) - 1);
+		buffer[sizeof(buffer) - 1] = '\0';
+	}
+
+	if (get_current_level())
+	{
+		level = get_current_level();
+		set_current_level(NULL);
+		level_free(level);
+	}
+
+	file = fopen(buffer, "rb");
 	if (!file)
 	{
-		slog("Failed to open level file %s", filename);
+		slog("Failed to open level file %s", buffer);
 		return NULL;
 	}
 
@@ -274,7 +435,6 @@ Level *level_load_bin(const char* filename)
 	}
 
 	fread(buffer, sizeof(GFC_TextLine), 1, file);
-	// somehow everything corrupts when loading the sprite
 	level->background = gf2d_sprite_load_image(buffer);
 	fread(&level->width, sizeof(Uint32), 1, file);
 	fread(&level->height, sizeof(Uint32), 1, file);
@@ -295,12 +455,28 @@ Level *level_load_bin(const char* filename)
 		return NULL;
 	}
 
+	level->entityMap = gfc_allocate_array(sizeof(Uint8), level->width * level->height);
+	if (!level->entityMap)
+	{
+		slog("Failed to allocate entity map for %s: width: %i, height: %i", filename, level->width, level->height);
+		level_free(level);
+		fclose(file);
+		return NULL;
+	}
+
 	Uint32 total = level->width * level->height;
 	fread(level->tileMap, sizeof(Uint8), total, file);
+	fread(level->entityMap, sizeof(Uint8), total, file);
 	level->tileDef = tiledef_load_from_file(file);
+	fread(buffer, sizeof(GFC_TextLine), 1, file);
+	level->nextLevel = _strdup(buffer);
+	fread(&level->nextIsJSON, sizeof(Uint8), 1, file);
+
+	level_load_entities(level);
 	level_setup_camera_bounds(level);
 
 	fclose(file);
+	set_current_level(level);
 	return level;
 }
 
