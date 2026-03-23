@@ -159,6 +159,9 @@
     <ClInclude Include="..\include\door.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\boss1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_logger\src\simple_logger.c">
@@ -302,6 +305,9 @@
     <ClCompile Include="..\src\door.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\boss1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\level\testlevel.json">
@@ -326,6 +332,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\level\level1.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\images\0386\0386AnimData.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\level\boss1.json">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

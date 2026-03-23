@@ -55,12 +55,11 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    level = level_load("level/level1.json");
-    //level = level_load_bin("level/testlevelv2.bin");
+    level = level_load("level/boss1.json");
+    //level = level_load_bin("level/level1.bin");
     if (level)
     {
-        level_bake_tiles(level);
-        //level_save_bin(level, "level/testlevelv2.bin");
+        //level_save_bin(level, "level/level1.bin");
     }
 
     Entity* player;
@@ -106,7 +105,7 @@ int main(int argc, char * argv[])
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
-            if (!level) level = get_current_level();
+            level = get_current_level();
             if (level && level->background) level_draw(level);
             
             entity_manager_draw_all();

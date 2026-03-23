@@ -50,6 +50,7 @@
     <ClInclude Include="..\gfc\simple_json\include\simple_json_value.h" />
     <ClInclude Include="..\gfc\simple_logger\include\simple_logger.h" />
     <ClInclude Include="..\include\animation.h" />
+    <ClInclude Include="..\include\boss1.h" />
     <ClInclude Include="..\include\bullet.h" />
     <ClInclude Include="..\include\camera.h" />
     <ClInclude Include="..\include\door.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="..\gfc\src\gfc_vector.c" />
     <ClCompile Include="..\gfc\src\miniz.c" />
     <ClCompile Include="..\src\animation.c" />
+    <ClCompile Include="..\src\boss1.c" />
     <ClCompile Include="..\src\bullet.c" />
     <ClCompile Include="..\src\camera.c" />
     <ClCompile Include="..\src\door.c" />
@@ -121,9 +123,11 @@
     <None Include="..\images\0041\0041AnimData.json" />
     <None Include="..\images\0069\0069AnimData.json" />
     <None Include="..\images\0258\0258AnimData.json" />
+    <None Include="..\images\0386\0386AnimData.json" />
     <None Include="..\images\0399\0399AnimData.json" />
     <None Include="..\images\0403\0403AnimData.json" />
     <None Include="..\images\0423\0423AnimData.json" />
+    <None Include="..\level\boss1.json" />
     <None Include="..\level\level1.json" />
     <None Include="..\level\testlevel.json" />
   </ItemGroup>

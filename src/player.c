@@ -250,6 +250,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	{
 		self->position = position;
 		self->thinkPos = position;
+		self->velocity = gfc_vector2d(0, 0);
 		return self;
 	}
 

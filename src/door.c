@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gfc_input.h"
+
 #include "player.h"
 #include "level.h"
 
@@ -10,7 +12,6 @@ Uint8 door_touch(Entity* self, Entity* other)
 	level = get_current_level();
 
 	if (gfc_input_key_pressed("w")) {
-		slog("woomy");
 		if (level->nextIsJSON) level_load(level->nextLevel);
 		else level_load_bin(level->nextLevel);
 	}

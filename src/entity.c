@@ -152,20 +152,20 @@ void entity_manager_draw_all()
 float binary_search_position(Entity *self, Uint8 axis, int start, int end)
 {
 	float start_pos, target_pos, mid, offset, lower, upper;
-	int i, j, index, tw, th, coll;
+	int i, j, index, tw, th, tr, coll;
 	Level* current_level;
 
 	current_level = get_current_level();
 	if (!self || !current_level) return NAN;
 	if (axis)
 	{
-		offset = (self->velocity.y > 0) ? self->bounds.h : 0;
+		offset = (self->velocity.y > 0) ? self->bounds.y + self->bounds.h : self->bounds.y;
 		start_pos = self->position.y + offset;
 		target_pos = self->thinkPos.y + offset;
 	}
 	else
 	{
-		offset = (self->velocity.x > 0) ? self->bounds.w : 0;
+		offset = (self->velocity.x > 0) ? self->bounds.x + self->bounds.w : self->bounds.x;
 		start_pos = self->position.x + offset;
 		target_pos = self->thinkPos.x + offset;
 	}
@@ -183,9 +183,9 @@ float binary_search_position(Entity *self, Uint8 axis, int start, int end)
 		coll = 0;
 		for (j = start; j <= end; j++)
 		{
-			if (axis) index = level_get_tile_index(current_level, j * tw + (tw / 2), (Uint32)(mid / th));
-			else index = level_get_tile_index(current_level, mid / tw, j * th + (th / 2));
-			if (current_level->tileMap[index] > 0) {
+			if (axis) index = level_get_tile_index(current_level, j, (Uint32)(mid / th));
+			else index = level_get_tile_index(current_level, mid / tw, j);
+			if (index >= 0 && current_level->tileMap[index] > 0) {
 				coll = 1;
 				break;
 			}
@@ -203,8 +203,46 @@ float binary_search_position(Entity *self, Uint8 axis, int start, int end)
 	}
 
 	mid = (upper + lower) / 2;
-	if (target_pos > start_pos) mid -= 0.001;
-	else mid += 0.001;
+	if (target_pos > start_pos)
+	{
+		tr = (int)(mid / th);
+		while (!coll && tr < (int)current_level->height)
+		{
+			for (j = start; j <= end; j++)
+			{
+				index = level_get_tile_index(current_level, j, tr);
+				if (index >= 0 && current_level->tileMap[index] > 0)
+				{
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
+					coll = 1;
+					break;
+				}
+			}
+			if (!coll) tr++;
+		}
+	}
+	else
+	{
+		tr = (int)(mid - 0.001f / th);
+		while (!coll && tr >= 0)
+		{
+			for (j = start; j <= end; j++)
+			{
+				index = level_get_tile_index(current_level, j, tr);
+				if (index >= 0 && current_level->tileMap[index] > 0)
+				{
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
+					coll = 1;
+					break;
+				}
+			}
+			if (!coll) tr--;
+		}
+	}
 	return mid - offset;
 }
 
@@ -242,9 +280,8 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.x, y);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					//slog("A %i", current_level->tileMap[i]);
 					if (current_level->tileMap[i] == 67) continue;
 					if (current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73) continue;
@@ -257,9 +294,8 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.w, y);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					//slog("B %i", current_level->tileMap[i]);
 					if (current_level->tileMap[i] == 67) continue;
 					if (current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73) continue;
@@ -274,10 +310,10 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 		{
 			if (self->velocity.y > 0)
 			{
+				int ycheck = (int)((bounds.y + bounds.h) / th);
 				i = level_get_tile_index(current_level, x, indices.h);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					//slog("C %i", current_level->tileMap[i]);
 					if (current_level->tileMap[i] == 67) continue;
 					if (current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73) continue;
@@ -287,9 +323,8 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			else if (self->velocity.y < 0)
 			{
 				i = level_get_tile_index(current_level, x, indices.y);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					//slog("D %i", current_level->tileMap[i]);
 					if (current_level->tileMap[i] == 67) continue;
 					if (current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73) continue;
@@ -298,7 +333,15 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 			}
 			else
 			{
-				return 1;
+				int ycheck = (int)((bounds.y + bounds.h) / th);
+				i = level_get_tile_index(current_level, x, ycheck);
+				if (i >= 0 && current_level->tileMap[i] > 0)
+				{
+					if (current_level->tileMap[i] == 67) continue;
+					if (current_level->tileMap[i] == 69) continue;
+					if (current_level->tileMap[i] == 73) continue;
+					return 1;
+				}
 			}
 		}
 	}
@@ -312,6 +355,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 	GFC_Rect bounds, indices;
 	Level* current_level;
 	int i, j, k, tw, th, x, y;
+	float snapped;
 	Uint8 switch_on;
 
 	bounds = self->bounds;
@@ -339,14 +383,13 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 	if (!axis)
 	{
 		// x-axis
-		self->isClimbing = 0;
 
 		if (self->velocity.x < 0)
 		{
 			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.x, y);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
 					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73)
@@ -366,7 +409,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 			for (y = indices.y; y <= indices.h; y++)
 			{
 				i = level_get_tile_index(current_level, indices.w, y);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
 					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73)
@@ -385,8 +428,6 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 	else
 	{
 		// y-axis
-		self->isGrounded = 0;
-		self->isClimbing = 0;
 
 		for (x = indices.x; x <= indices.w; x++)
 		{
@@ -421,7 +462,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 			else if (self->velocity.y < 0)
 			{
 				i = level_get_tile_index(current_level, x, indices.y);
-				if (current_level->tileMap[i] > 0)
+				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
 					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
 					if (current_level->tileMap[i] == 73)
@@ -430,11 +471,13 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 						continue;
 					}
 					self->isClimbing = 0;
-					self->thinkPos.y = binary_search_position(self, axis, indices.x, indices.w);
+					snapped = binary_search_position(self, axis, indices.x, indices.w);
+					self->thinkPos.y = (snapped > self->position.y) ? self->position.y : snapped;
 					self->velocity.y = 0;
 					if (current_level->tileMap[i] == 65) entity_hurt(self, 1);
 					if (current_level->tileMap[i] == 71 || current_level->tileMap[i] == 72)
 					{
+						if (!self->impulse) break;
 						if (current_level->tileMap[i] == 71) switch_on = 1;
 						else switch_on = 0;
 						for (j = 0; j < current_level->width; j++)
@@ -500,14 +543,26 @@ Uint8 entity_collision_test_world(Entity* self)
 }
 
 void entity_think(Entity* self) {
+	Uint8 wasGrounded;
 	if (!self) return;
+
+	wasGrounded = self->isGrounded;
+	self->isGrounded = 0;
+	self->isClimbing = 0;
 
 	//downward velocity (if entity is affected by gravity)
 	if (self->gravity)
 	{
-		if (!self->isClimbing) self->velocity.y += 0.25;
+		if (!self->isClimbing && !wasGrounded) {
+			self->velocity.y += 0.25;
+		}
 		self->thinkPos.y += self->velocity.y;
 		clip_to_bounds(self, 1);
+		if (!self->isGrounded && wasGrounded && self->velocity.y == 0)
+		{
+			if (check_bounds(self, 1)) self->isGrounded = 1;
+			else self->thinkPos.y = self->position.y;
+		}
 	}
 
 	if (self->think) self->think(self);
@@ -568,7 +623,7 @@ void entity_update(Entity *self)
 	if (self->iFrames) {
 		if (self->item == IT_Invincible && self == player_entity_get())
 		{
-			self->iFrames == self->itemFrames;
+			self->iFrames = self->itemFrames;
 			if (self->color.r >= 360) self->color.r -= 360;
 			self->color = gfc_color_hsl(self->color.r + M_PI, 1, 0.5, 1);
 		}

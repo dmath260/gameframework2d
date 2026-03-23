@@ -34,22 +34,21 @@ Level* level_load(const char* filepath)
 	SJson* config;
 	SJson *rows, *tiles, *tile;
 	GFC_TextLine buffer;
-	if (filepath) {
-		strncpy(buffer, filepath, sizeof(GFC_TextLine) - 1);
-		buffer[sizeof(buffer) - 1] = '\0';
+
+	if (!filepath)
+	{
+		slog("JSON filepath invalid");
+		return NULL;
 	}
+
+	strncpy(buffer, filepath, sizeof(GFC_TextLine) - 1);
+	buffer[sizeof(buffer) - 1] = '\0';
 
 	if (get_current_level())
 	{
 		level = get_current_level();
 		set_current_level(NULL);
 		level_free(level);
-	}
-
-	if (!buffer)
-	{
-		slog("JSON filepath invalid");
-		return NULL;
 	}
 	slog("%s", buffer);
 	json = sj_load(buffer);
@@ -183,9 +182,10 @@ Level* level_load(const char* filepath)
 	}
 	sj_object_get_uint8(config, "nextIsJSON", &level->nextIsJSON);
 
+	level_bake_tiles(level);
 	level_load_entities(level);
 	level_setup_camera_bounds(level);
-
+	
 	sj_free(json);
 	set_current_level(level);
 	return level;
@@ -237,6 +237,7 @@ void level_free(Level* level)
 	if (level->tileMap) free(level->tileMap);
 	free(level->nextLevel);
 	entity_manager_free_all_but_player();
+	entity_manager_free_all_but_player(); // called a second time to delete any powerups that dropped
 	free(level);
 }
 
@@ -341,7 +342,10 @@ void level_load_entities(Level* level)
 			* 6-9: undefined
 			*/
 
-			if (entId == 1) player_entity_new(gfc_vector2d(x, y));
+			if (entId == 1) {
+				player_entity_new(gfc_vector2d(x, y));
+				slog("Player spawn coords: %i %i", x, y);
+			}
 			else if (entId == 9) door_new(gfc_vector2d(x, y));
 			else if (entId >= 10 && entId < 60)
 			{
@@ -467,11 +471,12 @@ Level *level_load_bin(const char* filename)
 	Uint32 total = level->width * level->height;
 	fread(level->tileMap, sizeof(Uint8), total, file);
 	fread(level->entityMap, sizeof(Uint8), total, file);
-	level->tileDef = tiledef_load_from_file(file);
 	fread(buffer, sizeof(GFC_TextLine), 1, file);
 	level->nextLevel = _strdup(buffer);
 	fread(&level->nextIsJSON, sizeof(Uint8), 1, file);
+	level->tileDef = tiledef_load_from_file(file);
 
+	level_bake_tiles(level);
 	level_load_entities(level);
 	level_setup_camera_bounds(level);
 
