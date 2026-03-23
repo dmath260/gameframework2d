@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    level = level_load("level/boss1.json");
+    level = level_load("level/level1.json");
     //level = level_load_bin("level/level1.bin");
     if (level)
     {

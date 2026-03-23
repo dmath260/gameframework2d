@@ -14,7 +14,6 @@ void monster_seeker_free(Entity* self)
 void monster_seeker_think(Entity* self)
 {
 	// jump height for velocity.y -= 10: 195 px (~6 blocks)
-	GFC_Vector2D toPlayer = {0}, playerCenter = {0}, selfCenter = {0};
 	MonsterData* data;
 	Level* current_level;
 	Uint32 tw, th, x_check, y_check, tile;
@@ -44,7 +43,7 @@ void monster_seeker_think(Entity* self)
 	tw = current_level->tileDef->width;
 	th = current_level->tileDef->height;
 	dir = (self->animationData->FrameRow - 2) / 4;
-	if ((1 - 2 * dir) * (data->player->position.x - self->position.x) > 576) // 25 tiles
+	if ((1 - 2 * dir) * (data->player->position.x - self->position.x) > 576) // 18 tiles
 	{
 		self->velocity.x = 0; // can't see player from here, so don't move towards them
 		return; // skip the rest of the checks

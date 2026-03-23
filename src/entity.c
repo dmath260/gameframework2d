@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gfc_input.h"
+
 #include "gf2d_draw.h"
 
 #include "entity.h"
@@ -560,7 +562,41 @@ void entity_think(Entity* self) {
 		clip_to_bounds(self, 1);
 		if (!self->isGrounded && wasGrounded && self->velocity.y == 0)
 		{
-			if (check_bounds(self, 1)) self->isGrounded = 1;
+			if (check_bounds(self, 1)) {
+				self->isGrounded = 1;
+				// axis: 0 for x, anything else for y
+				if (!self) return;
+				GFC_Rect bounds;
+				Level* current_level;
+				int i, tw, th, x;
+
+				bounds = self->bounds;
+				gfc_vector2d_add(bounds, bounds, self->thinkPos);
+				current_level = get_current_level();
+				tw = current_level->tileDef->width;
+				th = current_level->tileDef->height;
+
+				for (x = (int)(bounds.x / tw); x <= (int)((bounds.x + bounds.w - 1) / tw); x++)
+				{
+					i = level_get_tile_index(current_level, x, (int)((bounds.y + bounds.h) / th));
+					if (i < 0 && current_level->tileMap[i] <= 0) continue;
+					if (current_level->tileMap[i] == 65)
+					{
+						entity_hurt(self, 1);
+						break;
+					}
+					if (current_level->tileMap[i] == 66)
+					{
+						if (!self->gravity) break;
+						else if (!self->impulse) self->velocity.y = -5;
+						else if (self == player_entity_get() && gfc_input_key_down("w"))
+							self->velocity.y = self->impulse * sqrt(2);
+						else self->velocity.y = self->impulse / sqrt(2);
+						self->isGrounded = 0;
+						break;
+					}
+				}
+			}
 			else self->thinkPos.y = self->position.y;
 		}
 	}
@@ -620,9 +656,10 @@ void entity_update(Entity *self)
 		self->itemFrames--;
 	}
 
-	if (self->iFrames) {
+	if (self->iFrames || (self->item == IT_Invincible && self == player_entity_get())) {
 		if (self->item == IT_Invincible && self == player_entity_get())
 		{
+			//slog("%i", self->itemFrames);
 			self->iFrames = self->itemFrames;
 			if (self->color.r >= 360) self->color.r -= 360;
 			self->color = gfc_color_hsl(self->color.r + M_PI, 1, 0.5, 1);
