@@ -24,6 +24,13 @@ Entity* player_entity_new(GFC_Vector2D position);
 void player_give_item(Entity *player, ItemTypes type);
 
 /**
+* @brief updates and draws the HUD
+* @param player a pointer to the player
+* @note consider moving elsewhere when this becomes more important
+*/
+void hud_update(Entity* player);
+
+/**
 * @brief kills the player and slogs a death message
 * @message the message to slog
 */

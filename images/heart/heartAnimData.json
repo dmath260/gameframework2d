@@ -1,0 +1,20 @@
+{
+  "AnimData": {
+    "Anims": {
+      "Anim": [
+        {
+          "Name": "Heart",
+          "Filepath": "images/heart/heart.png",
+          "Index": 0,
+          "FrameWidth": 36,
+          "FrameHeight": 36,
+          "Durations": {
+            "Duration": [
+              1
+            ]
+          }
+        }
+      ]
+    }
+  }
+}							

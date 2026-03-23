@@ -128,6 +128,20 @@ void player_give_item(Entity* player, ItemTypes type)
 	player->data = data;
 }
 
+void hud_update(Entity* player)
+{
+	int i;
+	Sprite* heart;
+	if (!player) return;
+
+	heart = gf2d_sprite_load_all("images/heart/heart.png", 36, 36, 1, 0);
+
+	for (int i = 0; i < player->health; i++)
+	{
+		gf2d_sprite_draw_image(heart, gfc_vector2d(40 * i + 12, 12));
+	}
+}
+
 void player_entity_think(Entity* self)
 {
 	PlayerData* data;
@@ -225,6 +239,7 @@ void player_entity_update(Entity* self)
 	if (!self) return;
 	camera_center_on(self->position);
 	entity_collision_test_world(self);
+
 }
 
 Uint8 player_entity_touch(Entity* self, Entity* other)

@@ -112,6 +112,8 @@ int main(int argc, char * argv[])
             if (player && player->_inuse) entity_draw(player);
             
             //UI elements last
+            hud_update(player);
+
             gf2d_sprite_draw(
                 mouse,
                 gfc_vector2d((float) mx, (float) my),
