@@ -1,13 +1,13 @@
 #include <SDL.h>
 #include "simple_logger.h"
 
-#include "gfc_audio.h"
 #include "gfc_input.h"
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
 #include "camera.h"
+#include "audio.h"
 #include "entity.h"
 #include "player.h"
 #include "monster.h"
@@ -25,8 +25,6 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
     GFC_Color mouseGFC_Color = gfc_color8(0,204,255,200);
-
-    GFC_Sound *bgm;
     
     /*program initializtion*/
     init_logger("gf2d.log",0);
@@ -44,14 +42,17 @@ int main(int argc, char * argv[])
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
     entity_manager_init(1024);
-    gfc_audio_init(32, 4, 1, 4, true, false);
+    audio_init(32, 4, 1, 4, true, false);
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
-    bgm = gfc_sound_load("audio/song_test2a.wav", -1, -1);
 
-    //gfc_sound_play(bgm, -1, -1, -1, -1);
+    // NOTE: BE CONSISTENT ABOUT MUSIC SAMPLE RATE!
+    // Either use all 44.1 kHz, or use all 48 kHz. Nothing else will work.
+    enqueue_music("audio/silence.mp3", 0); // buffer for music queue
+    enqueue_music("audio/primeval_forest_intro.mp3", 0);
+    enqueue_music("audio/primeval_forest_loop.mp3", -1);
 
     slog("press [escape] to quit");
 
@@ -101,6 +102,7 @@ int main(int argc, char * argv[])
 
         entity_manager_think_all();
         entity_manager_update_all();
+        music_update();
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
@@ -137,8 +139,8 @@ int main(int argc, char * argv[])
         if (keys[SDL_SCANCODE_ESCAPE] || !player || !player->_inuse)done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
-    gfc_sound_clear_all();
     slog("---==== END ====---");
+    music_queue_free();
     return 0;
 }
 /*eol@eof*/

@@ -162,6 +162,9 @@
     <ClInclude Include="..\include\boss1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_logger\src\simple_logger.c">
@@ -306,6 +309,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\boss1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
