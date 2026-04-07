@@ -1,6 +1,8 @@
 #ifndef __AUDIO_H__
 #define __AUDIO_H__
 
+#include "level.h"
+
 /**
 * @brief initializes the audio system
 * @param maxGFC_Sounds the maximum number of sounds that can be loaded into memory at once
@@ -20,6 +22,33 @@ void audio_init(
 );
 
 /**
+* @brief pauses the currently playing music
+*/
+void pause_music();
+
+/**
+* @brief resumes any paused music
+*/
+void resume_music();
+
+/**
+* @brief toggles music between playing and paused
+*/
+void toggle_music();
+
+/**
+* @brief plays the first song in the music queue
+* @return -1 on failure, 0 on success
+*/
+int play_music_first();
+
+/**
+* @brief gets the filename of the song that's currently playing
+* @return a pointer to the filename of the song that's currently playing or NULL if invalid
+*/
+char* get_current_music_filename();
+
+/**
 * @brief adds music to the queue and plays it if nothing else is playing
 * @param filename the path to the song to play
 * @param loops # of times to loop (0 = no loop, -1 = basically infinite loops)
@@ -28,9 +57,20 @@ void audio_init(
 int enqueue_music(char* filename, int loops);
 
 /**
+* @brief loads music from a level (intro and loop)
+* @param level the level to load music from
+*/
+void load_level_music(Level* level);
+
+/**
 * @brief gets called every frame and updates any necessary music data
 */
 void music_update();
+
+/**
+* @brief frees every element in the music queue, but not the music queue itself
+*/
+void music_queue_clear();
 
 /**
 * @brief frees the music queue and every element in it

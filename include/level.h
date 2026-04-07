@@ -6,6 +6,8 @@
 typedef struct
 {
 	Sprite* background;				//background sprite
+	const char* music_intro;		//path to music intro
+	const char* music_loop;			//path to music loop
 	Sprite* tileLayer;				//static tile layer for fast rendering
 	Uint8* tileMap;					//pointer to the tile map data
 	Uint8* entityMap;				//data for where entities spawn when loading a level

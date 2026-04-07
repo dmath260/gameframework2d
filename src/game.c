@@ -16,7 +16,7 @@
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
-    int done = 0;
+    int done = 0, paused = 0;
     //int i;
     const Uint8 * keys;
     Level *level;
@@ -50,9 +50,9 @@ int main(int argc, char * argv[])
 
     // NOTE: BE CONSISTENT ABOUT MUSIC SAMPLE RATE!
     // Either use all 44.1 kHz, or use all 48 kHz. Nothing else will work.
-    enqueue_music("audio/silence.mp3", 0); // buffer for music queue
-    enqueue_music("audio/primeval_forest_intro.mp3", 0);
-    enqueue_music("audio/primeval_forest_loop.mp3", -1);
+    //enqueue_music("audio/silence.mp3", 0); // buffer for music queue
+    //enqueue_music("audio/boss1_intro.mp3", 0);
+    //enqueue_music("audio/boss1_loop.mp3", -1);
 
     slog("press [escape] to quit");
 
@@ -85,6 +85,20 @@ int main(int argc, char * argv[])
         mf += 0.1f;
         if (mf >= 16.0)mf = 0;
 
+        // pausing
+        if (gfc_input_key_pressed("q"))
+        {
+            if (!paused)
+            {
+                paused = 1;
+            }
+            else
+            {
+                paused = 0;
+            }
+            toggle_music();
+        }
+
         // spawn a new monster every second or so (or if e pressed)
         /*
         i++;
@@ -100,9 +114,12 @@ int main(int argc, char * argv[])
         }
         */
 
-        entity_manager_think_all();
-        entity_manager_update_all();
-        music_update();
+        if (!paused)
+        {
+            entity_manager_think_all();
+            entity_manager_update_all();
+            music_update(); // move outside of if statement to continue music when paused
+        }
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame

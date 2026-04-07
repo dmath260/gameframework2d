@@ -14,7 +14,7 @@ typedef struct
 } MusicData;
 
 static GFC_List* music_queue = {0};
-static Mix_Music* current_music = {0};
+static MusicData* current_music = {0};
 
 void audio_init(
     Uint32 maxGFC_Sounds,
@@ -46,11 +46,30 @@ void audio_init(
 int play_music(MusicData *music_data)
 {
     if (!music_data || !music_data->music) return -1;
-    slog("Playing music %s", music_data->filename);
+    slog("Playing music %s with %u loops", music_data->filename, music_data->loops);
     if (Mix_PlayMusic(music_data->music, music_data->loops)) return -1;
-    if (current_music) Mix_FreeMusic(current_music);
-    current_music = music_data->music;
+    if (current_music) {
+        Mix_FreeMusic(current_music->music);
+        free(current_music);
+    }
+    current_music = music_data;
     return 0;
+}
+
+void pause_music()
+{
+    Mix_PauseMusic();
+}
+
+void resume_music()
+{
+    Mix_ResumeMusic();
+}
+
+void toggle_music()
+{
+    if (Mix_PausedMusic()) Mix_ResumeMusic();
+    else Mix_PauseMusic();
 }
 
 int play_music_first()
@@ -61,6 +80,12 @@ int play_music_first()
     if (play_music(music_data)) return -1;
     gfc_list_delete_nth(music_queue, 0);
     return 0;
+}
+
+char* get_current_music_filename()
+{
+    if (!current_music || !current_music->filename) return NULL;
+    return current_music->filename;
 }
 
 int enqueue_music(char* filename, int loops)
@@ -91,17 +116,38 @@ int enqueue_music(char* filename, int loops)
     return 0;
 }
 
+void load_level_music(Level *level)
+{
+    const char* str;
+    if (level->music_intro || level->music_loop)
+    {
+        str = get_current_music_filename();
+        // only replace the music if there is no song playing or the song is different
+        if (
+            !str ||
+            !(level->music_intro && !strcmp(level->music_intro, str)) &&
+            !(level->music_loop && !strcmp(level->music_loop, str))
+            )
+        {
+            music_queue_clear();
+            if (level->music_intro) enqueue_music(_strdup(level->music_intro), 0);
+            if (level->music_loop) enqueue_music(_strdup(level->music_loop), -1);
+            if (str) play_music_first();
+        }
+    }
+}
+
 void music_update()
 {
     double remTime;
-    remTime = Mix_MusicDuration(current_music) - Mix_GetMusicPosition(current_music);
+    remTime = Mix_MusicDuration(NULL) - Mix_GetMusicPosition(NULL);
     if (!Mix_PlayingMusic() || remTime < 1.0 / 120.0 ) {
         if (gfc_list_get_count) play_music_first();
         else if (Mix_PlayingMusic()) slog("Music queue is empty");
     }
 }
 
-void music_queue_free()
+void music_queue_clear()
 {
     if (!music_queue) return;
     Uint32 i;
@@ -113,5 +159,10 @@ void music_queue_free()
         if (data->music) Mix_FreeMusic(data->music);
     }
     gfc_list_clear(music_queue);
+}
+
+void music_queue_free()
+{
+    music_queue_clear();
     gfc_list_delete(music_queue);
 }

@@ -6,6 +6,7 @@
 #include "gf2d_graphics.h"
 
 #include "door.h"
+#include "audio.h"
 #include "level.h"
 #include "camera.h"
 #include "boss1.h"
@@ -79,6 +80,10 @@ Level* level_load(const char* filepath)
 	{
 		level->background = gf2d_sprite_load_image(str);
 	}
+
+	level->music_intro = _strdup(sj_object_get_string(config, "music_intro"));
+	level->music_loop = _strdup(sj_object_get_string(config, "music_loop"));
+	load_level_music(level);
 
 	level->tileDef = tiledef_parse(sj_object_get_value(config, "tileDef"));
 	if (!level->tileDef)
@@ -389,6 +394,24 @@ void level_save_bin(Level* level, const char* filename)
 		fwrite(blank, sizeof(GFC_TextLine), 1, file);
 	}
 
+	if (level->music_intro)
+	{
+		fwrite(level->music_intro, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
+	if (level->music_loop)
+	{
+		fwrite(level->music_loop, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
 	fwrite(&level->width, sizeof(Uint32), 1, file);
 	fwrite(&level->height, sizeof(Uint32), 1, file);
 	fwrite(level->tileMap, sizeof(Uint8), level->width * level->height, file);
@@ -444,6 +467,13 @@ Level *level_load_bin(const char* filename)
 
 	fread(buffer, sizeof(GFC_TextLine), 1, file);
 	level->background = gf2d_sprite_load_image(buffer);
+	fread(buffer, sizeof(GFC_TextLine), 1, file);
+	level->music_intro = _strdup(buffer);
+	fread(buffer, sizeof(GFC_TextLine), 1, file);
+	level->music_loop = _strdup(buffer);
+	slog("%s\n%s", level->music_intro, level->music_loop);
+	load_level_music(level);
+
 	fread(&level->width, sizeof(Uint32), 1, file);
 	fread(&level->height, sizeof(Uint32), 1, file);
 	if (!level->width || !level->height)
