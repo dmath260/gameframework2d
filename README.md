@@ -10,8 +10,14 @@ Credit for assets (3/31/26 update):
 * Trampoline sprite edited from Super Mario Maker
 * Vine sprite from Super Mario World
 * Heart sprite from Minecraft
+* Wrench sprite edited from Pokémon Black and White
 * Backgrounds from Pokémon Mystery Dungeon: Explorers of Time/Darkness/Sky and Kirby Mass Attack (downloaded from The Spriter's Resource)
 * All other images from @engineerOfLies and his placeholder game assets repository
-* Music from Animal Crossing and Pokémon Super Mystery Dungeon
+* Music from:
+
+  * Animal Crossing
+  * Kirby's Dream Land 3
+  * Pokémon Mystery Dungeon: Blue Rescue Team
+  * Pokémon Super Mystery Dungeon
 * Font is recreated from the GBA/DS Pokémon Mystery Dungeon games (full credits in the fonts folder)
 
