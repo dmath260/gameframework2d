@@ -1,8 +1,7 @@
 {
   "level": {
     "background": "images/backgrounds/bg_green.png",
-    "music_intro": "audio/silence.mp3",
-    "music_loop": "audio/song_test.mp3",
+    "music_loop": "audio/music/song_test.mp3",
     "tileDef": {
       "sheet": "images/tilesets/expandedtileset.png",
       "width": 32,

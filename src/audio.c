@@ -25,6 +25,8 @@ void audio_init(
     Uint8  enableOgg
 )
 {
+    // NOTE: BE CONSISTENT ABOUT AUDIO SAMPLE RATE!
+    // Either use all 44.1 kHz, or use all 48 kHz. Nothing else will work.
     music_queue = gfc_list_new();
     if (!music_queue) {
         slog("Couldn't initialize music queue");

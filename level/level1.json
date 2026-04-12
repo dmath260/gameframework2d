@@ -1,8 +1,8 @@
 {
   "level": {
     "background": "images/backgrounds/bg_hidden.png",
-    "music_intro": "audio/primeval_forest_intro.mp3",
-    "music_loop": "audio/primeval_forest_loop.mp3",
+    "music_intro": "audio/music/primeval_forest_intro.mp3",
+    "music_loop": "audio/music/primeval_forest_loop.mp3",
     "tileDef": {
       "sheet": "images/tilesets/expandedtileset.png",
       "width": 32,

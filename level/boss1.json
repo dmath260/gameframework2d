@@ -1,8 +1,8 @@
 {
   "level": {
     "background": "images/backgrounds/bg_factory.png",
-    "music_intro": "audio/boss1_intro.mp3",
-    "music_loop": "audio/boss1_loop.mp3",
+    "music_intro": "audio/music/boss1_intro.mp3",
+    "music_loop": "audio/music/boss1_loop.mp3",
     "tileDef": {
       "sheet": "images/tilesets/expandedtileset.png",
       "width": 32,

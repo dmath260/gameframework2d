@@ -5,6 +5,9 @@
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
+#include "gf2d_mouse.h"
+#include "gf2d_windows_common.h"
+#include "gf2d_font.h"
 
 #include "camera.h"
 #include "audio.h"
@@ -13,20 +16,43 @@
 #include "monster.h"
 #include "level.h"
 
+static int _done = 0;
+static int _paused = 0;
+static Window* _win = NULL;
+
+void toggle_pause()
+{
+    if (!_paused)
+    {
+        _paused = 1;
+        if (!_win) _win = gf2d_window_load("menus/pause_menu.json");
+    }
+    else
+    {
+        _paused = 0;
+        _win = NULL;
+    }
+    toggle_music();
+}
+
+void onCancel(void* data)
+{
+    toggle_pause();
+}
+
+void onExit(void* data)
+{
+    _done = 1;
+    _win = NULL;
+}
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
-    int done = 0, paused = 0;
-    //int i;
     const Uint8 * keys;
     Level *level;
     
-    int mx,my;
-    float mf = 0;
-    Sprite *mouse;
-    GFC_Color mouseGFC_Color = gfc_color8(0,204,255,200);
-    
-    /*program initializtion*/
+    /*program initialization*/
     init_logger("gf2d.log",0);
     slog("---==== BEGIN ====---");
     gf2d_graphics_initialize(
@@ -37,22 +63,17 @@ int main(int argc, char * argv[])
         720,
         gfc_vector4d(0,0,0,255),
         0);
-    camera_set_dimensions(gfc_vector2d(1200, 720));
-    gfc_input_init("config/input.cfg");
     gf2d_graphics_set_frame_delay(16);
-    gf2d_sprite_init(1024);
-    entity_manager_init(1024);
     audio_init(32, 4, 1, 4, true, false);
+    gf2d_sprite_init(1024);
+    gf2d_actor_init(128);
+    gf2d_font_init("config/font.cfg");
+    gfc_input_init("config/input.cfg");
+    gf2d_windows_init(128, "config/windows.cfg");
+    entity_manager_init(1024);
+    camera_set_dimensions(gfc_vector2d(1200, 720));
+    gf2d_mouse_load("actors/mouse.actor");
     SDL_ShowCursor(SDL_DISABLE);
-    
-    /*demo setup*/
-    mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
-
-    // NOTE: BE CONSISTENT ABOUT MUSIC SAMPLE RATE!
-    // Either use all 44.1 kHz, or use all 48 kHz. Nothing else will work.
-    //enqueue_music("audio/silence.mp3", 0); // buffer for music queue
-    //enqueue_music("audio/boss1_intro.mp3", 0);
-    //enqueue_music("audio/boss1_loop.mp3", -1);
 
     slog("press [escape] to quit");
 
@@ -70,51 +91,19 @@ int main(int argc, char * argv[])
         (float)level->height * level->tileDef->height / 2)
     );
 
-    //i = 0;
-    //float x, y;
-    //MonsterTypes t;
-    //ItemTypes j;
-
     /*main game loop*/
-    while(!done)
+    while(!_done)
     {
         gfc_input_update(); // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
-        SDL_GetMouseState(&mx,&my);
-        mf += 0.1f;
-        if (mf >= 16.0)mf = 0;
+        gf2d_mouse_update();
+        gf2d_windows_update_all();
 
         // pausing
-        if (gfc_input_key_pressed("q"))
-        {
-            if (!paused)
-            {
-                paused = 1;
-            }
-            else
-            {
-                paused = 0;
-            }
-            toggle_music();
-        }
+        if (gfc_input_key_pressed("q")) toggle_pause();
 
-        // spawn a new monster every second or so (or if e pressed)
-        /*
-        i++;
-        if (gfc_input_key_pressed("e") || i == 500) {
-            if (i == 500) i = 0;
-            x = (float) (1 + gfc_crandom()) * level->size.x / 2;
-            y = (float) (1 + gfc_crandom()) * level->size.y / 2;
-            t = (MonsterTypes)((1 + gfc_crandom()) * MT_MAX / 2);
-            //t = MT_Grunt;
-            j = (ItemTypes)((1 + gfc_crandom()) * IT_MAX / 2);
-            //j = IT_Invincible;
-            monster_new(gfc_vector2d(x, y), t, j);
-        }
-        */
-
-        if (!paused)
+        if (!_paused)
         {
             entity_manager_think_all();
             entity_manager_update_all();
@@ -124,36 +113,42 @@ int main(int argc, char * argv[])
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
-            level = get_current_level();
-            if (level && level->background) level_draw(level);
-            
-            entity_manager_draw_all();
-            if (player && player->_inuse) entity_draw(player);
+            if (!_paused)
+            {
+                level = get_current_level();
+                if (level && level->background) level_draw(level);
+
+                entity_manager_draw_all();
+                if (player && player->_inuse) entity_draw(player);
+
+                hud_update(player);
+            }
+            else if (level->background)
+                gf2d_sprite_draw_image(level->background, gfc_vector2d(0, 0));
             
             //UI elements last
-            hud_update(player);
+            gf2d_windows_draw_all();
 
-            gf2d_sprite_draw(
-                mouse,
-                gfc_vector2d((float) mx, (float) my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseGFC_Color,
-                (int)mf);
+            gf2d_mouse_draw();
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
-        if (!player || !player->_inuse)
-        {
-            done = 1;
-        }
-        else if (player->position.y + player->bounds.y > level->height * level->tileDef->height)
+
+        if (player && player->_inuse &&
+            player->position.y + player->bounds.y > level->height * level->tileDef->height)
         {
             player_kill("Player fell from a high place");
         }
+        if (!player || !player->_inuse)
+        {
+            _done = 1;
+        }
         
-        if (keys[SDL_SCANCODE_ESCAPE] || !player || !player->_inuse)done = 1; // exit condition
+        if (keys[SDL_SCANCODE_ESCAPE] && _win == NULL)
+        {
+            _win = window_yes_no("Exit?", onExit, onCancel, NULL);
+            toggle_pause();
+        }
+
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     slog("---==== END ====---");
