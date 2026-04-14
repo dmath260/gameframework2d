@@ -68,6 +68,7 @@ GFC_List *gf2d_element_button_update(Element *element, GFC_Vector2D offset)
     GFC_Rect bounds;
     GFC_List *list;
     ButtonElement *button;
+    ElementState old_state = element->state;
     if (!element)return NULL;
     button = (ButtonElement*)element->data;
     if (!button)return NULL;
@@ -113,6 +114,9 @@ GFC_List *gf2d_element_button_update(Element *element, GFC_Vector2D offset)
             element->state = ES_idle;
         }
     }
+
+    if (old_state != ES_highlight && element->state == ES_highlight) gf2d_windows_play_sound("select");
+
     if (gfc_input_command_pressed(button->hotkey))
     {
         element->state = ES_active;

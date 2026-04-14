@@ -73,6 +73,10 @@ GFC_FontTypes gf2d_font_type_from_text(const char *buf)
     {
         return FT_Small;
     }
+    else if (strcmp(buf, "title") == 0)
+    {
+        return FT_Title;
+    }
     else if (strcmp(buf,"H1")==0)
     {
         return FT_H1;

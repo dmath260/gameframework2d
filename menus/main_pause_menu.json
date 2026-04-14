@@ -1,0 +1,175 @@
+{
+  "window": {
+    "dimensions": [
+      0,
+      0,
+      0.5,
+      0.75
+    ],
+    "no_draw_generic": 1,
+    "justify": "center",
+    "align": "middle",
+    "elements": [
+      {
+        "type": "list",
+        "bounds": [
+          10,
+          0,
+          1,
+          1
+        ],
+        "style": "vertical",
+        "item_size": [
+          100,
+          36
+        ],
+        "elements": [
+          {
+            "type": "label",
+            "name": "title",
+            "id": 1,
+            "bounds": [
+              0,
+              0,
+              1,
+              40
+            ],
+            "color": [
+              0,
+              0,
+              0,
+              255
+            ]
+            "text": "[object Object]",
+            "justify": "center",
+            "align": "middle",
+            "style": "title"
+          },
+          {
+            "type": "button",
+            "name": "button1",
+            "id": 11,
+            "canHasFocus": true,
+            "bounds": [
+              0,
+              100,
+              576,
+              96
+            ],
+            "hotkey": "button1",
+            "sound": "confirm",
+            "justify": "center",
+            "label": {
+              "type": "label",
+              "name": "button1_l",
+              "id":  12,
+              "bounds": [
+                0,
+                0,
+                576,
+                96
+              ],
+              "text": "Button 1",
+              "justify": "center",
+              "align": "middle",
+              "style": "H3"
+            },
+            "actor": {
+              "type": "actor",
+              "bounds": [
+                0,
+                0,
+                576,
+                96
+              ],
+              "actor": "actors/large_button.actor",
+              "justify": "center"
+            }
+          },
+          {
+            "type": "button",
+            "name": "button2",
+            "id": 13,
+            "canHasFocus": true,
+            "bounds": [
+              0,
+              196,
+              576,
+              96
+            ],
+            "hotkey": "button2",
+            "sound": "confirm",
+            "justify": "center",
+            "label": {
+              "type": "label",
+              "name": "button2_l",
+              "id": 14,
+              "bounds": [
+                0,
+                0,
+                576,
+                96
+              ],
+              "text": "Button 2",
+              "justify": "center",
+              "align": "middle",
+              "style": "H3"
+            },
+            "actor": {
+              "type": "actor",
+              "bounds": [
+                0,
+                0,
+                576,
+                96
+              ],
+              "actor": "actors/large_button.actor",
+              "justify": "center"
+            }
+          },
+          {
+            "type": "button",
+            "name": "button3",
+            "id": 15,
+            "canHasFocus": true,
+            "bounds": [
+              0,
+              292,
+              576,
+              96
+            ],
+            "hotkey": "button3",
+            "sound": "confirm",
+            "justify": "center",
+            "label": {
+              "type": "label",
+              "name": "button3_l",
+              "id": 16,
+              "bounds": [
+                0,
+                0,
+                576,
+                96
+              ],
+              "text": "Button 3",
+              "justify": "center",
+              "align": "middle",
+              "style": "H3"
+            },
+            "actor": {
+              "type": "actor",
+              "bounds": [
+                0,
+                0,
+                576,
+                96
+              ],
+              "actor": "actors/large_button.actor",
+              "justify": "center"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

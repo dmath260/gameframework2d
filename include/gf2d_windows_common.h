@@ -13,6 +13,17 @@ Window *window_dialog(char *title, char *text, void(*onOK)(void *),void *okData)
 
 Window *window_yes_no(char *text, void(*onYes)(void *),void(*onNo)(void *),void *data);
 
+Window* window_menu(
+    char* title,
+    void(*onButton1)(void*),
+    char* button1,
+    void(*onButton2)(void*),
+    char* button2,
+    void(*onButton3)(void*),
+    char* button3,
+    void* data
+);
+
 Window *window_text_entry(char *question, char *defaultText, void *callbackData, size_t length, void(*onOk)(void *),void(*onCancel)(void *));
 
 Window *window_key_value(char *question, char *defaultKey,char *defaultValue,void *callbackData, size_t keyLength,size_t valueLength, void(*onOk)(void *),void(*onCancel)(void *));

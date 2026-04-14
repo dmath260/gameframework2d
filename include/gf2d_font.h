@@ -37,6 +37,7 @@ typedef enum
 {
     FT_Normal,
     FT_Small,
+    FT_Title,
     FT_H1,
     FT_H2,
     FT_H3,

@@ -125,6 +125,130 @@ Window *window_yes_no(char *text, void(*onYes)(void *),void(*onNo)(void *),void 
     return win;
 }
 
+int menu_free(Window* win)
+{
+    GFC_List* list;
+    int count, i;
+    GFC_Callback* callback;
+
+    if (!win)return 0;
+    if (!win->data)return 0;
+
+    list = (GFC_List*)win->data;
+    if (list)
+    {
+        count = gfc_list_get_count(list);
+
+        for (i = 0; i < count; i++)
+        {
+            callback = (GFC_Callback*)gfc_list_get_nth(list, i);
+            if (callback)
+            {
+                gfc_callback_free(callback);
+            }
+        }
+
+        gfc_list_delete(list);
+    }
+    return 0;
+}
+
+int menu_update(Window* win, GFC_List* updateList)
+{
+    int i, count;
+    Element* e;
+    Element* focus;
+    GFC_List* callbacks;
+    GFC_Callback* callback;
+    if (!win)return 0;
+    if (!updateList)return 0;
+
+    if ((gf2d_mouse_hidden()) && (gfc_input_command_pressed("nextelement")))
+    {
+        gf2d_window_next_focus(win);
+        return 1;
+    }
+
+    callbacks = (GFC_List*)win->data;
+    count = gfc_list_get_count(updateList);
+    for (i = 0; i < count; i++)
+    {
+        e = gfc_list_get_nth(updateList, i);
+        if (!e)continue;
+        switch (e->index)
+        {
+        case 11:
+            callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 0);
+            if (callback)
+            {
+                gfc_callback_call(callback);
+            }
+            gf2d_window_free(win);
+            return 1;
+            break;
+        case 13:
+            callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 1);
+            if (callback)
+            {
+                gfc_callback_call(callback);
+            }
+            return 1;
+            break;
+        case 15:
+            callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 2);
+            if (callback)
+            {
+                gfc_callback_call(callback);
+            }
+            return 1;
+        }
+    }
+    return 1;
+}
+
+Window* window_menu(
+    char* title,
+    void(*onButton1)(void*),
+    char* button1,
+    void(*onButton2)(void*),
+    char* button2,
+    void(*onButton3)(void*),
+    char* button3,
+    void *data
+)
+{
+    Window* win;
+    GFC_List* callbacks;
+    win = gf2d_window_load("menus/main_pause_menu.json");
+    if (!win)
+    {
+        slog("failed to load main/pause menu");
+        return NULL;
+    }
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), title);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 12), button1);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 14), button2);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 16), button3);
+    if (gf2d_mouse_hidden())gf2d_window_set_focus_to(win, gf2d_window_get_element_by_id(win, 11));
+    win->update = menu_update;
+    win->free_data = menu_free;
+    callbacks = gfc_list_new();
+    if (onButton1)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton1, data));
+    }
+    if (onButton2)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton2, data));
+    }
+    if (onButton3)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton3, data));
+    }
+    win->data = callbacks;
+    return win;
+}
+
 
 int ok_update(Window *win, GFC_List *updateList)
 {

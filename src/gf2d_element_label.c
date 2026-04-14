@@ -189,6 +189,10 @@ void gf2d_element_load_label_from_config(Element *e,SJson *json)
         {
             style = FT_Small;
         }
+        else if (strcmp(buffer, "title") == 0)
+        {
+            style = FT_Title;
+        }
         else if (strcmp(buffer,"H1") == 0)
         {
             style = FT_H1;

@@ -18,32 +18,52 @@
 
 static int _done = 0;
 static int _paused = 0;
-static Window* _win = NULL;
+static Window* _pause = NULL;
+static Window* _ex = NULL;
 
-void toggle_pause()
+void toggle_pause(void* data);
+
+void open_skills(void* data)
 {
-    if (!_paused)
-    {
-        _paused = 1;
-        if (!_win) _win = gf2d_window_load("menus/pause_menu.json");
-    }
-    else
-    {
-        _paused = 0;
-        _win = NULL;
-    }
-    toggle_music();
+    return;
 }
 
 void onCancel(void* data)
 {
-    toggle_pause();
+    _ex = NULL;
+    if (!_pause) toggle_pause(NULL);
 }
 
 void onExit(void* data)
 {
     _done = 1;
-    _win = NULL;
+    _ex = NULL;
+}
+
+void exit_window(void* data)
+{
+    _ex = window_yes_no("Exit?", onExit, onCancel, NULL);
+}
+
+void toggle_pause(void* data)
+{
+    if (!_paused)
+    {
+        _paused = 1;
+        if (!_ex) _pause = window_menu(
+            "Pause",
+            toggle_pause, "Continue",
+            open_skills, "View Skills",
+            exit_window, "Return to Menu",
+            NULL
+        );
+    }
+    else
+    {
+        _paused = 0;
+        _pause = NULL;
+    }
+    toggle_music();
 }
 
 int main(int argc, char * argv[])
@@ -64,7 +84,7 @@ int main(int argc, char * argv[])
         gfc_vector4d(0,0,0,255),
         0);
     gf2d_graphics_set_frame_delay(16);
-    audio_init(32, 4, 1, 4, true, false);
+    audio_init(32, 16, 4, 4, true, false);
     gf2d_sprite_init(1024);
     gf2d_actor_init(128);
     gf2d_font_init("config/font.cfg");
@@ -101,7 +121,7 @@ int main(int argc, char * argv[])
         gf2d_windows_update_all();
 
         // pausing
-        if (gfc_input_key_pressed("q")) toggle_pause();
+        if (gfc_input_key_pressed("q") && !_paused) toggle_pause(NULL);
 
         if (!_paused)
         {
@@ -143,10 +163,10 @@ int main(int argc, char * argv[])
             _done = 1;
         }
         
-        if (keys[SDL_SCANCODE_ESCAPE] && _win == NULL)
+        if (keys[SDL_SCANCODE_ESCAPE] && _ex == NULL && !_paused)
         {
-            _win = window_yes_no("Exit?", onExit, onCancel, NULL);
-            toggle_pause();
+            exit_window(NULL);
+            toggle_pause(NULL);
         }
 
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
