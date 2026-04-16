@@ -98,17 +98,19 @@ int yes_no_update(Window *win, GFC_List *updateList)
     return 1;
 }
 
-Window *window_yes_no(char *text, void(*onYes)(void *),void(*onNo)(void *),void *data)
+Window *window_yes_no(char *text,char *text2,void(*onYes)(void *),void(*onNo)(void *),void *data)
 {
-    Window *win;
+    Window* win = {0};
     GFC_List *callbacks;
-    win = gf2d_window_load("menus/yes_no_window.json");
+    if (text2) win = gf2d_window_load("menus/yes_no_window_2.json");
+    else win = gf2d_window_load("menus/yes_no_window.json");
     if (!win)
     {
         slog("failed to load yes/no window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win,1),text);
+    if (text2) gf2d_element_label_set_text(gf2d_window_get_element_by_id(win,2),text2);
     if (gf2d_mouse_hidden())gf2d_window_set_focus_to(win,gf2d_window_get_element_by_id(win,51));
     win->update = yes_no_update;
     win->free_data = yes_no_free;

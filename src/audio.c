@@ -120,20 +120,26 @@ int enqueue_music(char* filename, int loops)
 
 void load_level_music(Level *level)
 {
+    if (!level) return;
+    load_music_pair(level->music_intro, level->music_loop);
+}
+
+void load_music_pair(char* intro, char* loop)
+{
     const char* str;
-    if (level->music_intro || level->music_loop)
+    if (intro || loop)
     {
         str = get_current_music_filename();
         // only replace the music if there is no song playing or the song is different
         if (
             !str ||
-            !(level->music_intro && !strcmp(level->music_intro, str)) &&
-            !(level->music_loop && !strcmp(level->music_loop, str))
+            !(intro && !strcmp(intro, str)) &&
+            !(loop && !strcmp(loop, str))
             )
         {
             music_queue_clear();
-            if (level->music_intro) enqueue_music(_strdup(level->music_intro), 0);
-            if (level->music_loop) enqueue_music(_strdup(level->music_loop), -1);
+            if (intro) enqueue_music(_strdup(intro), 0);
+            if (loop) enqueue_music(_strdup(loop), -1);
             if (str) play_music_first();
         }
     }

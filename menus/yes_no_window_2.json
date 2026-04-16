@@ -1,0 +1,169 @@
+{
+  "window": {
+    "dimensions": [
+      0,
+      0,
+      0.5,
+      160
+    ],
+    "justify": "center",
+    "align": "middle",
+    "color": [
+      0,
+      128,
+      255,
+      255
+    ],
+    "elements": [
+      {
+        "type": "button",
+        "name": "item_left",
+        "hotkey": "item_left"
+      },
+      {
+        "type": "button",
+        "name": "item_right",
+        "hotkey": "item_right"
+      },
+      {
+        "type": "list",
+        "bounds": [
+          10,
+          18,
+          1,
+          1
+        ],
+        "style": "vertical",
+        "item_size": [
+          100,
+          36
+        ],
+        "elements": [
+          {
+            "type": "label",
+            "name": "question",
+            "id": 1,
+            "bounds": [
+              0,
+              0,
+              1,
+              36
+            ],
+            "text": "?",
+            "justify": "center",
+            "align": "middle",
+            "style": "H2"
+          },
+          {
+            "type": "label",
+            "name": "question",
+            "id": 2,
+            "bounds": [
+              0,
+              0,
+              1,
+              32
+            ],
+            "text": "?",
+            "justify": "center",
+            "align": "middle",
+            "style": "H6"
+          },
+          {
+            "type": "list",
+            "name": "yesno",
+            "id": 50,
+            "bounds": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "style": "horizontal",
+            "item_size": [
+              168,
+              64
+            ],
+            "elements": [
+              {
+                "type": "button",
+                "name": "yes",
+                "id": 51,
+                "canHasFocus": true,
+                "bounds": [
+                  108,
+                  0,
+                  168,
+                  64
+                ],
+                "hotkey": "yes",
+                "sound": "confirm",
+                "label": {
+                  "type": "label",
+                  "name": "yes_l",
+                  "bounds": [
+                    0,
+                    0,
+                    168,
+                    64
+                  ],
+                  "text": "Yes",
+                  "justify": "center",
+                  "align": "middle",
+                  "style": "H5"
+                },
+                "actor": {
+                  "type": "actor",
+                  "bounds": [
+                    0,
+                    0,
+                    168,
+                    64
+                  ],
+                  "actor": "actors/button.actor"
+                }
+              },
+              {
+                "type": "button",
+                "name": "no",
+                "id": 52,
+                "canHasFocus": true,
+                "bounds": [
+                  137,
+                  0,
+                  168,
+                  64
+                ],
+                "hotkey": "no",
+                "sound": "cancel",
+                "label": {
+                  "type": "label",
+                  "bounds": [
+                    0,
+                    0,
+                    168,
+                    64
+                  ],
+                  "text": "No",
+                  "align": "middle",
+                  "justify": "center",
+                  "style": "H5"
+                },
+                "actor": {
+                  "type": "actor",
+                  "bounds": [
+                    0,
+                    0,
+                    168,
+                    64
+                  ],
+                  "actor": "actors/button.actor"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -43,6 +43,7 @@ void player_free(Entity* self)
 	data = get_data(self);
 	//clean up anything I own that I asked for
 	free(data);
+	thePlayer = NULL;
 }
 
 void player_kill(char* message)

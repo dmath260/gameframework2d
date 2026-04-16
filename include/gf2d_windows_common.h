@@ -11,7 +11,7 @@ Window *window_alert(char *title, char *text, void(*onOK)(void *),void *okData);
 
 Window *window_dialog(char *title, char *text, void(*onOK)(void *),void *okData);
 
-Window *window_yes_no(char *text, void(*onYes)(void *),void(*onNo)(void *),void *data);
+Window *window_yes_no(char *text,char* text2,void(*onYes)(void *),void(*onNo)(void *),void *data);
 
 Window* window_menu(
     char* title,

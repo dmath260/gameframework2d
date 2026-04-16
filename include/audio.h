@@ -63,6 +63,13 @@ int enqueue_music(char* filename, int loops);
 void load_level_music(Level* level);
 
 /**
+* @brief loads music from intro and loop filenames
+* @param intro the filename for the music intro
+* @param loop the filename for the music loop
+*/
+void load_music_pair(char *intro, char *loop);
+
+/**
 * @brief gets called every frame and updates any necessary music data
 */
 void music_update();

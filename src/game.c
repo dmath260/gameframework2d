@@ -18,8 +18,10 @@
 
 static int _done = 0;
 static int _paused = 0;
-static Window* _pause = NULL;
+static Window* _menu = NULL;
 static Window* _ex = NULL;
+Level* _level;
+Entity* _player;
 
 void toggle_pause(void* data);
 
@@ -28,40 +30,90 @@ void open_skills(void* data)
     return;
 }
 
-void onCancel(void* data)
+void load_level(void* data)
 {
+    gf2d_window_free(_menu);
     _ex = NULL;
-    if (!_pause) toggle_pause(NULL);
+    level_load("level/level1.json");
+    //level_save_bin(_level, "level/level1.bin");
+
+    _player = player_entity_get();
+    if (!_player) _player = player_entity_new(gfc_vector2d(
+        (float)_level->width * _level->tileDef->width / 2,
+        (float)_level->height * _level->tileDef->height / 2)
+    );
+    _level = get_current_level();
+    _done = 0;
 }
 
-void onExit(void* data)
+void on_exit(void* data)
 {
     _done = 1;
     _ex = NULL;
 }
 
+void on_cancel(void* data)
+{
+    _ex = NULL;
+    if (!_menu || (!_level && _paused)) toggle_pause(NULL);
+}
+
+void no_save(void* data)
+{
+    _ex = window_yes_no("No save data found.", "Create a new game?", load_level, on_cancel, NULL);
+}
+
 void exit_window(void* data)
 {
-    _ex = window_yes_no("Exit?", onExit, onCancel, NULL);
+    _ex = window_yes_no("Exit the game?", NULL, on_exit, on_cancel, NULL);
+}
+
+void load_main_menu()
+{
+    _menu = window_menu(
+        "Menu",
+        load_level, "New Game",
+        no_save, "Continue",
+        exit_window, "Quit Game",
+        NULL
+    );
+    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
+}
+
+void return_to_menu(void* data)
+{
+    entity_free(_player);
+    level_free(_level);
+    _level = NULL;
+    if (_menu) gf2d_window_free(_menu);
+    on_cancel(data);
+    load_main_menu();
+}
+
+void return_prompt(void* data)
+{
+    _ex = window_yes_no("Return to the menu?", "(You will lose any unsaved data.)", return_to_menu, on_cancel, NULL);
 }
 
 void toggle_pause(void* data)
 {
     if (!_paused)
     {
+        slog("Pausing game");
         _paused = 1;
-        if (!_ex) _pause = window_menu(
+        if (!_ex) _menu = window_menu(
             "Pause",
             toggle_pause, "Continue",
             open_skills, "View Skills",
-            exit_window, "Return to Menu",
+            return_prompt, "Return to Menu",
             NULL
         );
     }
     else
     {
+        slog("Resuming game");
         _paused = 0;
-        _pause = NULL;
+        _menu = NULL;
     }
     toggle_music();
 }
@@ -70,7 +122,7 @@ int main(int argc, char * argv[])
 {
     /*variable declarations*/
     const Uint8 * keys;
-    Level *level;
+    Sprite* menu_bg;
     
     /*program initialization*/
     init_logger("gf2d.log",0);
@@ -97,19 +149,23 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    level = level_load("level/level1.json");
-    //level = level_load_bin("level/level1.bin");
-    if (level)
+    /**
+    _level = level_load("level/level1.json");
+    //_level = level_load_bin("level/level1.bin");
+    if (_level)
     {
-        //level_save_bin(level, "level/level1.bin");
+        //level_save_bin(_level, "level/level1.bin");
     }
 
-    Entity* player;
-    player = player_entity_get();
-    if (!player) player = player_entity_new(gfc_vector2d(
-        (float)level->width * level->tileDef->width / 2,
-        (float)level->height * level->tileDef->height / 2)
+    _player = player_entity_get();
+    if (!_player) _player = player_entity_new(gfc_vector2d(
+        (float)_level->width * _level->tileDef->width / 2,
+        (float)_level->height * _level->tileDef->height / 2)
     );
+    */
+
+    load_main_menu();
+    menu_bg = gf2d_sprite_load_image("images/backgrounds/bg_mountain.png");
 
     /*main game loop*/
     while(!_done)
@@ -120,59 +176,80 @@ int main(int argc, char * argv[])
         gf2d_mouse_update();
         gf2d_windows_update_all();
 
-        // pausing
-        if (gfc_input_key_pressed("q") && !_paused) toggle_pause(NULL);
-
-        if (!_paused)
+        if (_level)
         {
-            entity_manager_think_all();
-            entity_manager_update_all();
-            music_update(); // move outside of if statement to continue music when paused
+            // pausing
+            if (gfc_input_key_pressed("q") && !_paused) toggle_pause(NULL);
+
+            if (!_paused)
+            {
+                entity_manager_think_all();
+                entity_manager_update_all();
+                music_update(); // move outside of if statement to continue music when paused
+            }
+        }
+        else
+        {
+            // main menu stuff
+            music_update();
         }
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
+        if (_level)
+        {
             if (!_paused)
             {
-                level = get_current_level();
-                if (level && level->background) level_draw(level);
+                _level = get_current_level();
+                if (_level && _level->background) level_draw(_level);
 
                 entity_manager_draw_all();
-                if (player && player->_inuse) entity_draw(player);
+                if (_player && _player->_inuse) entity_draw(_player);
 
-                hud_update(player);
+                hud_update(_player);
             }
-            else if (level->background)
-                gf2d_sprite_draw_image(level->background, gfc_vector2d(0, 0));
+            else if (_level->background)
+                gf2d_sprite_draw_image(_level->background, gfc_vector2d(0, 0));
+        }
+        else
+        {
+            gf2d_sprite_draw_image(menu_bg, gfc_vector2d(0, 0));
+        }
             
-            //UI elements last
-            gf2d_windows_draw_all();
+        //UI elements last
+        gf2d_windows_draw_all();
 
-            gf2d_mouse_draw();
+        gf2d_mouse_draw();
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
 
-        if (player && player->_inuse &&
-            player->position.y + player->bounds.y > level->height * level->tileDef->height)
+        if (_level)
         {
-            player_kill("Player fell from a high place");
-        }
-        if (!player || !player->_inuse)
-        {
-            _done = 1;
+            if (_player && _player->_inuse &&
+                _player->position.y + _player->bounds.y > _level->height * _level->tileDef->height)
+            {
+                player_kill("Player fell from a high place");
+            }
+            if (!_player || !_player->_inuse)
+            {
+                return_to_menu(NULL);
+            }
         }
         
+        /**
         if (keys[SDL_SCANCODE_ESCAPE] && _ex == NULL && !_paused)
         {
             exit_window(NULL);
             toggle_pause(NULL);
         }
+        */
 
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     slog("---==== END ====---");
     music_queue_free();
+    gf2d_sprite_free(menu_bg);
     return 0;
 }
 /*eol@eof*/

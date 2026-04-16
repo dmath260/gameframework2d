@@ -243,6 +243,7 @@ void level_free(Level* level)
 	free(level->nextLevel);
 	entity_manager_free_all_but_player();
 	entity_manager_free_all_but_player(); // called a second time to delete any powerups that dropped
+	if (level = get_current_level()) set_current_level(NULL);
 	free(level);
 }
 
