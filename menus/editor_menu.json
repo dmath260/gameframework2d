@@ -1,0 +1,415 @@
+{
+  "window": {
+    "dimensions": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "no_draw_generic": 1,
+    "justify": "center",
+    "align": "middle",
+    "elements": [
+      {
+        "type": "actor",
+        "name": "menu_bg",
+        "id": 0,
+        "bounds": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "scale": [
+          20,
+          20
+        ],
+        "image": "images/ui/window_background_white.png",
+        "color": [
+          0,
+          128,
+          255,
+          255
+        ]
+      },
+      {
+        "type": "button",
+        "name": "load",
+        "id": 1,
+        "canHasFocus": true,
+        "bounds": [
+          0,
+          0,
+          256,
+          64
+        ],
+        "hotkey": "load",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "load_l",
+          "id": 11,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Load Level",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "save",
+        "id": 2,
+        "canHasFocus": true,
+        "bounds": [
+          264,
+          0,
+          256,
+          64
+        ],
+        "hotkey": "save",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "save_l",
+          "id": 12,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Save Level",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "settings",
+        "id": 3,
+        "canHasFocus": true,
+        "bounds": [
+          0,
+          72,
+          256,
+          64
+        ],
+        "hotkey": "settings",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "settings_l",
+          "id": 13,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Settings",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "quit",
+        "id": 4,
+        "canHasFocus": true,
+        "bounds": [
+          264,
+          72,
+          256,
+          64
+        ],
+        "hotkey": "quit",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "quit_l",
+          "id": 14,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Quit",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "label",
+        "name": "level_name",
+        "id": 15,
+        "bounds": [
+          540,
+          0,
+          1,
+          64
+        ],
+        "text": "No Level Loaded",
+        "align": "middle",
+        "style": "small",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "actor",
+        "name": "level_bg",
+        "id": 10,
+        "bounds": [
+          0,
+          0.2,
+          0.8,
+          1
+        ],
+        "scale": [
+          0.8,
+          0.8
+        ],
+        "image": "images/backgrounds/bg_temp.png"
+      },
+      {
+        "type": "label",
+        "name": "tile_header",
+        "id": 16,
+        "bounds": [
+          0.8,
+          140,
+          0.2,
+          48
+        ],
+        "text": "Tile",
+        "justify": "center",
+        "style": "H3",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "actor",
+        "name": "tile",
+        "id": 17,
+        "bounds": [
+          1064,
+          192,
+          32,
+          32
+        ],
+        "scale": [
+          1,
+          1
+        ],
+        "image": "images/ui/editor/sample_tile.png",
+        "justify": "center"
+      },
+      {
+        "type": "button",
+        "name": "tile_left",
+        "id": 5,
+        "canHasFocus": true,
+        "bounds": [
+          1024,
+          192,
+          32,
+          32
+        ],
+        "hotkey": "tile_left",
+        "sound": "confirm",
+        "justify": "center",
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            32,
+            32
+          ],
+          "actor": "actors/left_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "tile_right",
+        "id": 6,
+        "canHasFocus": true,
+        "bounds": [
+          1104,
+          192,
+          32,
+          32
+        ],
+        "hotkey": "tile_right",
+        "sound": "confirm",
+        "justify": "center",
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            32,
+            32
+          ],
+          "actor": "actors/right_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "label",
+        "name": "entity_header",
+        "id": 18,
+        "bounds": [
+          0.8,
+          256,
+          0.2,
+          48
+        ],
+        "text": "Entity",
+        "justify": "center",
+        "style": "H3",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "actor",
+        "name": "entity",
+        "id": 19,
+        "bounds": [
+          1064,
+          308,
+          32,
+          32
+        ],
+        "scale": [
+          0.5,
+          0.5
+        ],
+        "image": "images/entity_icons/0258.png",
+        "justify": "center"
+      },
+      {
+        "type": "button",
+        "name": "entity_left",
+        "id": 7,
+        "canHasFocus": true,
+        "bounds": [
+          1024,
+          308,
+          32,
+          32
+        ],
+        "hotkey": "entity_left",
+        "sound": "confirm",
+        "justify": "center",
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            32,
+            32
+          ],
+          "actor": "actors/left_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "entity_right",
+        "id": 8,
+        "canHasFocus": true,
+        "bounds": [
+          1104,
+          308,
+          32,
+          32
+        ],
+        "hotkey": "entity_right",
+        "sound": "confirm",
+        "justify": "center",
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            32,
+            32
+          ],
+          "actor": "actors/right_button.actor",
+          "justify": "center"
+        }
+      }
+    ]
+  }
+}

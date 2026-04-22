@@ -18,8 +18,29 @@ typedef struct
 }EntityManager;
 
 static EntityManager entityManager = {0};
+static GFC_List *entity_id_list = {0};
 
 void entity_manager_close(void);
+
+EntityEntry* new_entity_entry(const char* name, Uint8 id, const char* icon)
+{
+	EntityEntry *entry;
+	if (!name || !icon) return NULL;
+	entry = (EntityEntry *)gfc_allocate_array(sizeof(EntityEntry), 1);
+	if (!entry) return NULL;
+	entry->name = name;
+	entry->id = id;
+	entry->icon = gf2d_sprite_load_image(icon);
+	return entry;
+}
+
+EntityEntry* get_entity_data_at_id(Uint8 id)
+{
+	EntityEntry* entry;
+	entry = (EntityEntry*)(gfc_list_get_nth(entity_id_list, id));
+	if (!entry) return NULL;
+	return entry;
+}
 
 void entity_manager_init(Uint32 max)
 {
@@ -37,6 +58,50 @@ void entity_manager_init(Uint32 max)
 	entityManager.entityMax = max;
 	atexit(entity_manager_close);
 	slog("initialized entity system");
+
+	entity_id_list = gfc_list_new_size(256);
+	if (!entity_id_list)
+	{
+		slog("failed to allocate entity ID list");
+		return;
+	}
+	entity_id_list->count = 256; //manual override so list methods work
+
+	SJson *json, *config, *array, *entry, *id_json;
+	const char *name, *icon;
+	Uint8 id;
+	int m, i;
+	EntityEntry* new_entry;
+
+	json = sj_load("config/entity_ids.cfg");
+	if (!json)
+	{
+		slog("JSON data invalid");
+		return;
+	}
+	config = sj_object_get_value(json, "entities");
+	if (!config)
+	{
+		slog("failed to load entity ID JSON");
+		sj_free(json);
+		return;
+	}
+
+	m = sj_array_get_count(config);
+	if (!m) return;
+	for (i = 0; i < m; i++)
+	{
+		entry = sj_array_get_nth(config, i);
+		name = _strdup(sj_object_get_string(entry, "name"));
+		id_json = sj_object_get_value(entry, "id");
+		icon = _strdup(sj_object_get_string(entry, "icon"));
+		if (!name || !icon || !id_json) continue;
+		sj_get_uint8_value(id_json, &id);
+		new_entry = new_entity_entry(name, id, icon);
+		gfc_list_set_nth(entity_id_list, id, (void*)new_entry);
+	}
+
+	sj_free(json);
 }
 
 void entity_manager_close(void)
@@ -50,6 +115,17 @@ void entity_manager_close(void)
 	free(entityManager.entityList);
 	memset(&entityManager, 0, sizeof(EntityManager));
 	slog("closed entity system");
+
+	EntityEntry* data;
+	for (i = 0; i < gfc_list_get_count(entity_id_list); i++)
+	{
+		data = (EntityEntry*)gfc_list_get_nth(entity_id_list, i);
+		if (!data) continue;
+		if (data->name) free(data->name);
+		if (data->icon) gf2d_sprite_free(data->icon);
+	}
+	free(entityManager.entityList);
+	memset(&entityManager, 0, sizeof(EntityManager));
 }
 
 void entity_manager_free_all_but_player()

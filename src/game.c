@@ -11,6 +11,7 @@
 
 #include "camera.h"
 #include "audio.h"
+#include "editor.h"
 #include "entity.h"
 #include "player.h"
 #include "monster.h"
@@ -118,6 +119,11 @@ void toggle_pause(void* data)
     toggle_music();
 }
 
+void load_editor()
+{
+    if (!is_editor_open()) window_editor();
+}
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -176,7 +182,7 @@ int main(int argc, char * argv[])
         gf2d_mouse_update();
         gf2d_windows_update_all();
 
-        if (_level)
+        if (_level && !is_editor_open())
         {
             // pausing
             if (gfc_input_key_pressed("q") && !_paused) toggle_pause(NULL);
@@ -192,12 +198,13 @@ int main(int argc, char * argv[])
         {
             // main menu stuff
             music_update();
+            if (gfc_input_key_pressed("e")) load_editor();
         }
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
-        if (_level)
+        if (_level && !is_editor_open())
         {
             if (!_paused)
             {
@@ -212,7 +219,7 @@ int main(int argc, char * argv[])
             else if (_level->background)
                 gf2d_sprite_draw_image(_level->background, gfc_vector2d(0, 0));
         }
-        else
+        else if (!is_editor_open())
         {
             gf2d_sprite_draw_image(menu_bg, gfc_vector2d(0, 0));
         }
@@ -224,7 +231,7 @@ int main(int argc, char * argv[])
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
 
-        if (_level)
+        if (_level && !is_editor_open())
         {
             if (_player && _player->_inuse &&
                 _player->position.y + _player->bounds.y > _level->height * _level->tileDef->height)

@@ -27,6 +27,13 @@ ActorElement *gf2d_element_actor_new_full(const char *actorFile, const char *act
 GFC_Actor *gf2d_element_actor_get_actor(Element *e);
 
 /**
+ * @brief set the image for a given actor element
+ * @param e the element to set the actor for
+ * @param image the image to set it to
+ */
+void gf2d_element_actor_set_image(Element* e, Sprite* image);
+
+/**
  * @brief set the actor for a given actor element
  * @param e the element to set the actor for
  * @param actorFile the file to set it to

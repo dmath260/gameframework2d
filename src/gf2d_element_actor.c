@@ -138,6 +138,24 @@ void gf2d_element_actor_auto_scale(Element *e)
     if (ae->actor->size.y)ae->scale.y = e->bounds.h /ae->actor->size.y;
 }
 
+void gf2d_element_actor_set_image(Element* e, Sprite* image)
+{
+    ActorElement* ae;
+    if ((!e) || (e->type != ET_Actor))return;
+
+    ae = (ActorElement*)e->data;
+    if (ae->image)
+    {
+        gf2d_actor_free(ae->image);
+        ae->image = NULL;
+    }
+    if (image)
+    {
+        ae->image = image;
+    }
+    ae->frame = 0;
+}
+
 void gf2d_element_actor_set_actor(Element *e, const char *actorFile)
 {
     ActorElement *ae;

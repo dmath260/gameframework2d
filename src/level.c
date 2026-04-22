@@ -324,7 +324,7 @@ void level_load_entities(Level* level)
 
 			/*
 			* Entity ID cheat sheet:
-			* 00: no entity
+			* 000: no entity
 			* 001: player
 			* 002-008: undefined
 			* 009: door

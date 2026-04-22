@@ -124,7 +124,7 @@ void load_level_music(Level *level)
     load_music_pair(level->music_intro, level->music_loop);
 }
 
-void load_music_pair(char* intro, char* loop)
+void load_music_pair(const char* intro, const char* loop)
 {
     const char* str;
     if (intro || loop)
@@ -135,7 +135,7 @@ void load_music_pair(char* intro, char* loop)
             !str ||
             !(intro && !strcmp(intro, str)) &&
             !(loop && !strcmp(loop, str))
-            )
+        )
         {
             music_queue_clear();
             if (intro) enqueue_music(_strdup(intro), 0);

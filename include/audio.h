@@ -67,7 +67,7 @@ void load_level_music(Level* level);
 * @param intro the filename for the music intro
 * @param loop the filename for the music loop
 */
-void load_music_pair(char *intro, char *loop);
+void load_music_pair(const char *intro, const char *loop);
 
 /**
 * @brief gets called every frame and updates any necessary music data

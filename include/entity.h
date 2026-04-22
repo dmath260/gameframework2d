@@ -32,6 +32,13 @@ typedef enum
 	IT_MAX
 }ItemTypes;
 
+typedef struct
+{
+	const char* name;
+	Uint8 id;
+	Sprite* icon;
+}EntityEntry;
+
 typedef struct Entity_S
 {
 	Uint8			_inuse;						//no touchy
@@ -72,6 +79,13 @@ typedef struct Entity_S
 	AnimData		*animationData;				//data for animating the entity
 	char			*animDataFilePath;			//file path to JSON for animation data
 }Entity;
+
+/**
+ * @brief get the data for the entity with the specified ID
+ * @param id the ID of the entity
+ * @return NULL on failure, information about the entity otherwise
+ */
+EntityEntry* get_entity_data_at_id(Uint8 id);
 
 /**
  * @brief initialize the entity subsystem
