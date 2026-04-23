@@ -3,6 +3,7 @@
 
 #include "gfc_input.h"
 
+#include "gf2d_draw.h"
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 #include "gf2d_mouse.h"
@@ -35,7 +36,7 @@ void load_level(void* data)
 {
     gf2d_window_free(_menu);
     _ex = NULL;
-    level_load("level/level1.json");
+    level_load("level/level1.json", 1);
     //level_save_bin(_level, "level/level1.bin");
 
     _player = player_entity_get();
@@ -84,7 +85,6 @@ void load_main_menu()
 void return_to_menu(void* data)
 {
     entity_free(_player);
-    level_free(_level);
     _level = NULL;
     if (_menu) gf2d_window_free(_menu);
     on_cancel(data);
@@ -129,6 +129,8 @@ int main(int argc, char * argv[])
     /*variable declarations*/
     const Uint8 * keys;
     Sprite* menu_bg;
+    GFC_Vector2D mouse_pos;
+    GFC_Rect ed_tile;
     
     /*program initialization*/
     init_logger("gf2d.log",0);
@@ -191,7 +193,7 @@ int main(int argc, char * argv[])
             {
                 entity_manager_think_all();
                 entity_manager_update_all();
-                music_update(); // move outside of if statement to continue music when paused
+                music_update();
             }
         }
         else
@@ -226,6 +228,22 @@ int main(int argc, char * argv[])
             
         //UI elements last
         gf2d_windows_draw_all();
+        if (is_editor_open())
+        {
+            editor_draw_tiles();
+            mouse_pos = gf2d_mouse_get_position();
+            if (mouse_pos.x < 960 && mouse_pos.y >= 144)
+            {
+                //slog("%f %f", mouse_pos.x, mouse_pos.y);
+                mouse_pos = gfc_vector2d(
+                    32 * (int)(mouse_pos.x / 32),
+                    32 * (int)(mouse_pos.y / 32 + .5) - 16
+                );
+                ed_tile = gfc_rect(mouse_pos.x, mouse_pos.y, 32, 32);
+                gf2d_draw_rect(ed_tile, gfc_color8(128, 0, 255, 255));
+                //slog("%f %f %f %f", ed_tile.x, ed_tile.y, ed_tile.w, ed_tile.h);
+            }
+        }
 
         gf2d_mouse_draw();
 

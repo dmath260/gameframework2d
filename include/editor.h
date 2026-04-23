@@ -8,6 +8,11 @@
 Uint8 is_editor_open();
 
 /**
+* @brief draws tiles to the editor window
+*/
+void editor_draw_tiles();
+
+/**
 * @brief creates an editor window
 */
 Window* window_editor();

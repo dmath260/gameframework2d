@@ -12,7 +12,7 @@ Uint8 door_touch(Entity* self, Entity* other)
 	level = get_current_level();
 
 	if (gfc_input_key_pressed("w")) {
-		if (level->nextIsJSON) level_load(level->nextLevel);
+		if (level->nextIsJSON) level_load(level->nextLevel, 1);
 		else level_load_bin(level->nextLevel);
 	}
 	return 1;

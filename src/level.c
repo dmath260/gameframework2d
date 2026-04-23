@@ -26,7 +26,7 @@ Level* level_new()
 	return level;
 }
 
-Level* level_load(const char* filepath)
+Level* level_load(const char* filepath, Uint8 music)
 {
 	int i, j, index;
 	const char* str;
@@ -83,7 +83,7 @@ Level* level_load(const char* filepath)
 
 	level->music_intro = _strdup(sj_object_get_string(config, "music_intro"));
 	level->music_loop = _strdup(sj_object_get_string(config, "music_loop"));
-	load_level_music(level);
+	if (music) load_level_music(level);
 
 	level->tileDef = tiledef_parse(sj_object_get_value(config, "tileDef"));
 	if (!level->tileDef)

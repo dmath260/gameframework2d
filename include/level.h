@@ -27,9 +27,10 @@ Level* level_new();
 /**
 * @brief load a level from JSON
 * @param filepath the path to the JSON
+* @param 1 to play music, 0 to not play music
 * @return the newly allocated level (or a NULL pointer if allocation fails)
 */
-Level* level_load(const char* filepath);
+Level* level_load(const char* filepath, Uint8 music);
 
 /**
 * @brief get the current level
