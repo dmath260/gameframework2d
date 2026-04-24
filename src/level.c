@@ -185,7 +185,6 @@ Level* level_load(const char* filepath, Uint8 music)
 	{
 		level->nextLevel = _strdup(str);
 	}
-	sj_object_get_uint8(config, "nextIsJSON", &level->nextIsJSON);
 
 	level_bake_tiles(level);
 	level_load_entities(level);
@@ -426,13 +425,12 @@ void level_save_bin(Level* level, const char* filename)
 	{
 		fwrite(blank, sizeof(GFC_TextLine), 1, file);
 	}
-	fwrite(&level->nextIsJSON, sizeof(Uint8), 1, file);
 
 	tiledef_save_to_file(level->tileDef, file);
 	fclose(file);
 }
 
-Level *level_load_bin(const char* filename)
+Level *level_load_bin(const char* filename, Uint8 music)
 {
 	static GFC_TextLine buffer = {0};
 	FILE* file;
@@ -473,7 +471,7 @@ Level *level_load_bin(const char* filename)
 	fread(buffer, sizeof(GFC_TextLine), 1, file);
 	level->music_loop = _strdup(buffer);
 	slog("%s\n%s", level->music_intro, level->music_loop);
-	load_level_music(level);
+	if (music) load_level_music(level);
 
 	fread(&level->width, sizeof(Uint32), 1, file);
 	fread(&level->height, sizeof(Uint32), 1, file);
@@ -508,7 +506,6 @@ Level *level_load_bin(const char* filename)
 	fread(level->entityMap, sizeof(Uint8), total, file);
 	fread(buffer, sizeof(GFC_TextLine), 1, file);
 	level->nextLevel = _strdup(buffer);
-	fread(&level->nextIsJSON, sizeof(Uint8), 1, file);
 	level->tileDef = tiledef_load_from_file(file);
 
 	level_bake_tiles(level);

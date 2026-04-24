@@ -1,7 +1,17 @@
 #ifndef __AUDIO_H__
 #define __AUDIO_H__
 
+#include "gfc_audio.h"
+
 #include "level.h"
+
+typedef struct
+{
+    Mix_Music* music;
+    char* filename;
+    int loops;
+    double timestamp;
+} MusicData;
 
 /**
 * @brief initializes the audio system
@@ -55,6 +65,12 @@ char* get_current_music_filename();
 * @return -1 if failed, 0 if successful
 */
 int enqueue_music(char* filename, int loops);
+
+/**
+* @brief pops the last song on the music queue and deletes it from the queue
+* @return NULL on failure, the last song's MusicData on success
+*/
+MusicData* pop_music();
 
 /**
 * @brief loads music from a level (intro and loop)

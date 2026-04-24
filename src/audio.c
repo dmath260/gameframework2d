@@ -5,14 +5,6 @@
 
 #include "audio.h"
 
-typedef struct
-{
-    Mix_Music* music;
-    char* filename;
-    int loops;
-    double timestamp;
-} MusicData;
-
 static GFC_List* music_queue = {0};
 static MusicData* current_music = {0};
 
@@ -116,6 +108,15 @@ int enqueue_music(char* filename, int loops)
         return play_music_first();
     }
     return 0;
+}
+
+MusicData* pop_music()
+{
+    MusicData* music;
+    music = gfc_list_get_nth(music_queue, music_queue->count - 1);
+    if (!music) return NULL;
+    gfc_list_delete_last(music_queue);
+    return music;
 }
 
 void load_level_music(Level *level)

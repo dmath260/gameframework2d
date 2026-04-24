@@ -2,7 +2,7 @@ This will be a real game eventually, I'm just getting started.
 
 
 
-Credit for assets (4/17/26 update):
+Credit for assets (4/24/26 update):
 
 * Note: these are no longer on the GitHub as of 3/31/26 because almost all of my assets are copyrighted
 * All player, enemy, and boss sprites from the Pokémon Mystery Dungeon sprite repository (which took the sprites from the GBA/DS Pokémon Mystery Dungeon games)
@@ -16,7 +16,7 @@ Credit for assets (4/17/26 update):
 * Left/right button sprites from Pokémon Mystery Dungeon: Red Rescue Team with animations made by myself
 * Editor music sprites from Mario Paint
 * Editor music switch button from Super Mario Bros. 3
-* Backgrounds from Pokémon Mystery Dungeon: Explorers of Time/Darkness/Sky and Kirby Mass Attack (downloaded from The Spriter's Resource)
+* Backgrounds from Pokémon Mystery Dungeon: Red Rescue Team, Pokémon Mystery Dungeon: Explorers of Time/Darkness/Sky, and Kirby Mass Attack (downloaded from The Spriter's Resource)
 * All other images from @engineerOfLies and his placeholder game assets repository
 * Music from:
 

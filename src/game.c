@@ -36,8 +36,9 @@ void load_level(void* data)
 {
     gf2d_window_free(_menu);
     _ex = NULL;
-    level_load("level/level1.json", 1);
-    //level_save_bin(_level, "level/level1.bin");
+    //level_load("level/level1.json", 1);
+    //level_load_bin("level/level1.bin", 1);
+    level_load_bin("level/level2.bin", 1);
 
     _player = player_entity_get();
     if (!_player) _player = player_entity_new(gfc_vector2d(
@@ -45,6 +46,7 @@ void load_level(void* data)
         (float)_level->height * _level->tileDef->height / 2)
     );
     _level = get_current_level();
+    //level_save_bin(_level, "level/level1.bin");
     _done = 0;
 }
 
@@ -131,6 +133,7 @@ int main(int argc, char * argv[])
     Sprite* menu_bg;
     GFC_Vector2D mouse_pos;
     GFC_Rect ed_tile;
+    int e;
     
     /*program initialization*/
     init_logger("gf2d.log",0);
@@ -157,21 +160,6 @@ int main(int argc, char * argv[])
 
     slog("press [escape] to quit");
 
-    /**
-    _level = level_load("level/level1.json");
-    //_level = level_load_bin("level/level1.bin");
-    if (_level)
-    {
-        //level_save_bin(_level, "level/level1.bin");
-    }
-
-    _player = player_entity_get();
-    if (!_player) _player = player_entity_new(gfc_vector2d(
-        (float)_level->width * _level->tileDef->width / 2,
-        (float)_level->height * _level->tileDef->height / 2)
-    );
-    */
-
     load_main_menu();
     menu_bg = gf2d_sprite_load_image("images/backgrounds/bg_mountain.png");
 
@@ -183,8 +171,9 @@ int main(int argc, char * argv[])
         /*update things here*/
         gf2d_mouse_update();
         gf2d_windows_update_all();
+        e = is_editor_open();
 
-        if (_level && !is_editor_open())
+        if (_level && !e)
         {
             // pausing
             if (gfc_input_key_pressed("q") && !_paused) toggle_pause(NULL);
@@ -200,13 +189,17 @@ int main(int argc, char * argv[])
         {
             // main menu stuff
             music_update();
-            if (gfc_input_key_pressed("e")) load_editor();
+            if (gfc_input_key_pressed("e"))
+            {
+                load_editor();
+                e = is_editor_open();
+            }
         }
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen between clear_screen and next_frame
             //backgrounds drawn first
-        if (_level && !is_editor_open())
+        if (_level && !e)
         {
             if (!_paused)
             {
@@ -221,35 +214,34 @@ int main(int argc, char * argv[])
             else if (_level->background)
                 gf2d_sprite_draw_image(_level->background, gfc_vector2d(0, 0));
         }
-        else if (!is_editor_open())
+        else if (!e)
         {
             gf2d_sprite_draw_image(menu_bg, gfc_vector2d(0, 0));
         }
-            
+        
         //UI elements last
         gf2d_windows_draw_all();
-        if (is_editor_open())
+        if (e)
         {
             editor_draw_tiles();
             mouse_pos = gf2d_mouse_get_position();
             if (mouse_pos.x < 960 && mouse_pos.y >= 144)
             {
-                //slog("%f %f", mouse_pos.x, mouse_pos.y);
                 mouse_pos = gfc_vector2d(
                     32 * (int)(mouse_pos.x / 32),
                     32 * (int)(mouse_pos.y / 32 + .5) - 16
                 );
                 ed_tile = gfc_rect(mouse_pos.x, mouse_pos.y, 32, 32);
                 gf2d_draw_rect(ed_tile, gfc_color8(128, 0, 255, 255));
-                //slog("%f %f %f %f", ed_tile.x, ed_tile.y, ed_tile.w, ed_tile.h);
             }
+            if (e >= 2) redraw_win2();
         }
 
         gf2d_mouse_draw();
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
 
-        if (_level && !is_editor_open())
+        if (_level && !e)
         {
             if (_player && _player->_inuse &&
                 _player->position.y + _player->bounds.y > _level->height * _level->tileDef->height)

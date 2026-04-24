@@ -127,6 +127,37 @@ Window *window_yes_no(char *text,char *text2,void(*onYes)(void *),void(*onNo)(vo
     return win;
 }
 
+Window* window_a_b(char* text, char* text2, char* textA, char* textB, void(*onA)(void*), void(*onB)(void*), void* data)
+{
+    Window* win = { 0 };
+    GFC_List* callbacks;
+    if (text2) win = gf2d_window_load("menus/yes_no_window_2.json");
+    else win = gf2d_window_load("menus/yes_no_window.json");
+    if (!win)
+    {
+        slog("failed to load yes/no window");
+        return NULL;
+    }
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), text);
+    if (text2) gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 2), text2);
+    if (textA) gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 61), textA);
+    if (textB) gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 62), textB);
+    if (gf2d_mouse_hidden())gf2d_window_set_focus_to(win, gf2d_window_get_element_by_id(win, 51));
+    win->update = yes_no_update;
+    win->free_data = yes_no_free;
+    callbacks = gfc_list_new();
+    if (onA)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onA, data));
+    }
+    if (onB)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onB, data));
+    }
+    win->data = callbacks;
+    return win;
+}
+
 int menu_free(Window* win)
 {
     GFC_List* list;
@@ -159,7 +190,6 @@ int menu_update(Window* win, GFC_List* updateList)
 {
     int i, count;
     Element* e;
-    Element* focus;
     GFC_List* callbacks;
     GFC_Callback* callback;
     if (!win)return 0;

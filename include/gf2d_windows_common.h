@@ -13,6 +13,8 @@ Window *window_dialog(char *title, char *text, void(*onOK)(void *),void *okData)
 
 Window *window_yes_no(char *text,char* text2,void(*onYes)(void *),void(*onNo)(void *),void *data);
 
+Window* window_a_b(char* text, char* text2, char* textA, char* textB, void(*onA)(void*), void(*onB)(void*), void* data);
+
 Window* window_menu(
     char* title,
     void(*onButton1)(void*),

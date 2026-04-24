@@ -8,6 +8,11 @@
 Uint8 is_editor_open();
 
 /**
+* @brief draws secondary window over tiles
+*/
+void redraw_win2();
+
+/**
 * @brief draws tiles to the editor window
 */
 void editor_draw_tiles();

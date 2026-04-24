@@ -116,21 +116,21 @@
       },
       {
         "type": "button",
-        "name": "settings",
+        "name": "background",
         "id": 3,
         "canHasFocus": true,
         "bounds": [
+          528,
           0,
-          72,
           256,
           64
         ],
-        "hotkey": "settings",
+        "hotkey": "background",
         "sound": "confirm",
         "justify": "center",
         "label": {
           "type": "label",
-          "name": "settings_l",
+          "name": "background_l",
           "id": 13,
           "bounds": [
             0,
@@ -138,7 +138,7 @@
             256,
             64
           ],
-          "text": "Settings",
+          "text": "Background",
           "justify": "center",
           "align": "middle",
           "style": "small"
@@ -161,8 +161,8 @@
         "id": 4,
         "canHasFocus": true,
         "bounds": [
-          264,
-          72,
+          792,
+          0,
           256,
           64
         ],
@@ -171,7 +171,7 @@
         "justify": "center",
         "label": {
           "type": "label",
-          "name": "quit_l",
+          "name": "quit",
           "id": 14,
           "bounds": [
             0,
@@ -197,12 +197,135 @@
         }
       },
       {
+        "type": "button",
+        "name": "music_intro",
+        "id": 5,
+        "canHasFocus": true,
+        "bounds": [
+          0,
+          72,
+          256,
+          64
+        ],
+        "hotkey": "music_intro",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "music_intro_l",
+          "id": 15,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Music Intro",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "music_loop",
+        "id": 6,
+        "canHasFocus": true,
+        "bounds": [
+          264,
+          72,
+          256,
+          64
+        ],
+        "hotkey": "music_loop",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "music_loop_l",
+          "id": 16,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Music Loop",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
+        "type": "button",
+        "name": "next_level",
+        "id": 7,
+        "canHasFocus": true,
+        "bounds": [
+          528,
+          72,
+          256,
+          64
+        ],
+        "hotkey": "next_level",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "next_level_l",
+          "id": 17,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Next Level",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
+      },
+      {
         "type": "label",
         "name": "level_name",
-        "id": 15,
+        "id": 8,
         "bounds": [
-          540,
-          0,
+          804,
+          72,
           1,
           64
         ],
@@ -235,7 +358,7 @@
       {
         "type": "label",
         "name": "tile_header",
-        "id": 16,
+        "id": 21,
         "bounds": [
           0.8,
           140,
@@ -255,7 +378,7 @@
       {
         "type": "actor",
         "name": "tile",
-        "id": 17,
+        "id": 22,
         "bounds": [
           1064,
           192,
@@ -272,7 +395,7 @@
       {
         "type": "button",
         "name": "tile_left",
-        "id": 5,
+        "id": 23,
         "canHasFocus": true,
         "bounds": [
           1024,
@@ -298,7 +421,7 @@
       {
         "type": "button",
         "name": "tile_right",
-        "id": 6,
+        "id": 24,
         "canHasFocus": true,
         "bounds": [
           1104,
@@ -324,7 +447,7 @@
       {
         "type": "label",
         "name": "entity_header",
-        "id": 18,
+        "id": 25,
         "bounds": [
           0.8,
           256,
@@ -344,7 +467,7 @@
       {
         "type": "actor",
         "name": "entity",
-        "id": 19,
+        "id": 26,
         "bounds": [
           1064,
           308,
@@ -361,7 +484,7 @@
       {
         "type": "button",
         "name": "entity_left",
-        "id": 7,
+        "id": 27,
         "canHasFocus": true,
         "bounds": [
           1024,
@@ -387,7 +510,7 @@
       {
         "type": "button",
         "name": "entity_right",
-        "id": 8,
+        "id": 28,
         "canHasFocus": true,
         "bounds": [
           1104,

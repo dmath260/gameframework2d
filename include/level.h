@@ -14,7 +14,6 @@ typedef struct
 	Uint32 width, height;			//size of the tileMap and entityMap
 	GFC_Vector2D size;				//size of the tileMap and entityMap in pixels
 	const char* nextLevel;			//filepath of the next level to load
-	Uint8 nextIsJSON;				//0 if bin, 1 if JSON
 	TileDef* tileDef;
 }Level;
 
@@ -82,9 +81,10 @@ void level_save_bin(Level* level, const char* filename);
 /**
 * @brief load level from binary file
 * @param filename the path of the file to load the level from
+* @param 1 to play music, 0 to not play music
 * @return NULL if level is invalid, a pointer to the loaded level otherwise
 */
-Level *level_load_bin(const char* filename);
+Level *level_load_bin(const char* filename, Uint8 music);
 
 /**
 * @brief draw the current level

@@ -16,17 +16,22 @@
 #include "level.h"
 
 Window* _win;
+Window* _win2;
+Window* _win3;
 Uint8 _ent_id;
 Uint8 _tile_id;
 Uint8 _held_ent;
 Uint8 _hotkey_mode;
 Level* _level;
 const char* _level_name;
+char _name_buf[GFCLINELEN];
 GFC_Vector2D _camera;
 
 Uint8 is_editor_open()
 {
     if (!_win) return 0;
+    if (_win3) return 3;
+    if (_win2) return 2;
     return 1;
 }
 
@@ -42,43 +47,264 @@ int get_index_at_mouse_pos()
     return level_get_tile_index(_level, mouse_pos.x, mouse_pos.y);
 }
 
+void redraw_win2()
+{
+    if (_win2) gf2d_window_draw(_win2);
+}
+
+void clear(void* data)
+{
+    _win2 = NULL;
+}
+
+int little_bobby_tables(char* string_to_check)
+{
+    char* check;
+
+    if (strncmp(_name_buf, string_to_check, strlen(string_to_check)))
+    {
+        slog("Did you really name your son Robert'); DROP TABLE Students;-- ?");
+        _win2 = window_alert("Invalid path", "Cannot load from another folder.", clear, NULL);
+        return 0;
+    }
+
+    check = &_name_buf[0]; // Add 1, so it starts at zero
+    while (string_to_check)
+    {
+        string_to_check = strchr(string_to_check, '/');
+        if (string_to_check)
+        {
+            check = strchr(check, '/');
+            check++;
+            string_to_check++;
+        }
+    }
+    check = strchr(check + 1, '/');
+    if (check)
+    {
+        slog("Did you really name your son Robert'); DROP TABLE Students;-- ?");
+        _win2 = window_alert("Invalid path", "Cannot load from unrecognized subfolders.", clear, NULL);
+        return 0;
+    }
+
+    return 1;
+}
+
 void load(void* data)
 {
-    const char* str;
     Level* level;
-    str = (const char*)data;
-    if (!str)
-    {
-        slog("Invalid string");
-        return;
-    }
-    level = level_load(str, 0);
+    _win2 = NULL;
+
+    if (!little_bobby_tables("level/")) return;
+
+    level = level_load(_name_buf, 0);
     if (!level)
     {
-        slog("Failed to load level %s", str);
-        return;
+        level = level_load_bin(_name_buf, 0);
+        if (!level)
+        {
+            _win2 = window_alert("Failed to load level", "File is neither valid JSON or binary.", clear, NULL);
+            return;
+        }
     }
     _level = level;
-    _level_name = str;
+    if (_level_name) free((void*)_level_name);
+    _level_name = _strdup(_name_buf);
+    _camera = gfc_vector2d(0, 0);
     set_current_level(NULL);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 15), _level_name);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 8), _level_name);
     gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 10), _level->background);
+}
+
+void save(void* data)
+{
+    Level* level;
+    _win2 = NULL;
+
+    if (!little_bobby_tables("level/")) return;
+
+    /*
+    level_save(_level, _name_buf);
+    level = level_load(_name_buf, 0);
+    if (!level)
+    {
+        level = level_load_bin(_name_buf, 0);
+        if (!level)
+        {
+            _win2 = window_alert("Failed to save level", "Sorry, something went wrong.", clear, NULL);
+            return;
+        }
+    }
+    level_free(level);
+    if (_level_name) free((void*)_level_name);
+    _level_name = _strdup(_name_buf);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 8), _level_name);
+    _win2 = window_alert("Level saved", "Level saved successfully.", clear, NULL);
+    */
+    _win2 = window_alert("Not supported", "Support for saving to JSON will be ready shortly.", clear, NULL);
+}
+
+void save_bin(void* data)
+{
+    Level* level;
+    _win2 = NULL;
+
+    if (!little_bobby_tables("level/")) return;
+
+    level_save_bin(_level, _name_buf);
+    level = level_load(_name_buf, 0);
+    if (!level)
+    {
+        level = level_load_bin(_name_buf, 0);
+        if (!level)
+        {
+            _win2 = window_alert("Failed to save level", "Sorry, something went wrong.", clear, NULL);
+            return;
+        }
+    }
+    level_free(level);
+    if (_level_name) free((void*)_level_name);
+    _level_name = _strdup(_name_buf);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 8), _level_name);
+    _win2 = window_alert("Level saved", "Level saved successfully.", clear, NULL);
+}
+
+void save_json_or_bin(void* data)
+{
+    _win2 = window_a_b("Save as JSON or binary?", NULL, "JSON", "Binary", save, save_bin, NULL);
+}
+
+void load_prompt(void* data)
+{
+    gfc_line_cpy(_name_buf, _level_name);
+    _win2 = window_text_entry("Enter path of level to load", _name_buf, NULL, GFCLINELEN, load, clear);
+}
+
+void save_prompt(void* data)
+{
+    gfc_line_cpy(_name_buf, _level_name);
+    _win2 = window_text_entry("Enter path to save level to", _name_buf, NULL, GFCLINELEN, save_json_or_bin, clear);
+}
+
+void change_background(void* data)
+{
+    Sprite* background;
+    _win2 = NULL;
+
+    if (!little_bobby_tables("images/backgrounds/")) return;
+    background = gf2d_sprite_load_image(_name_buf);
+    if (!background)
+    {
+        _win2 = window_alert("Failed to load background", "File is not a valid image.", clear, NULL);
+        return;
+    }
+    _level->background = background;
+    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 10), _level->background);
+}
+
+void background_prompt(void* data)
+{
+    gfc_line_cpy(_name_buf, _level->background->filepath);
+    _win2 = window_text_entry("Enter path of background", _name_buf, NULL, GFCLINELEN, change_background, clear);
 }
 
 void exit_editor(void* data)
 {
+    _win2 = NULL;
     load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
     if (_level) level_free(_level);
     _level = NULL;
+    if (_level_name) free((void *)_level_name);
     gf2d_window_free(_win);
     _win = NULL;
+}
+
+void exit_prompt(void* data)
+{
+    _win2 = window_yes_no("Exit the editor?", "You will lose any unsaved data.", exit_editor, clear, NULL);
+}
+
+void change_music_intro(void* data)
+{
+    MusicData* music;
+    _win2 = NULL;
+
+    if (!little_bobby_tables("audio/music/")) return;
+    enqueue_music(_name_buf, 0);
+    music = pop_music(_name_buf);
+    if (!music)
+    {
+        _win2 = window_alert("Failed to load music intro", "File is not a valid audio file.", clear, NULL);
+        return;
+    }
+    _level->music_intro = _strdup(music->filename);
+}
+
+void music_intro_prompt(void* data)
+{
+    gfc_line_cpy(_name_buf, _level->music_intro);
+    _win2 = window_text_entry("Enter path of music intro", _name_buf, NULL, GFCLINELEN, change_music_intro, clear);
+}
+
+void change_music_loop(void* data)
+{
+    MusicData* music;
+    _win2 = NULL;
+
+    if (!little_bobby_tables("audio/music/")) return;
+    enqueue_music(_name_buf, -1);
+    music = pop_music(_name_buf);
+    if (!music)
+    {
+        _win2 = window_alert("Failed to load music loop", "File is not a valid audio file.", clear, NULL);
+        return;
+    }
+    _level->music_loop = _strdup(music->filename);
+}
+
+void music_loop_prompt(void* data)
+{
+    gfc_line_cpy(_name_buf, _level->music_loop);
+    _win2 = window_text_entry("Enter path of music loop", _name_buf, NULL, GFCLINELEN, change_music_loop, clear);
+}
+
+void change_next_level(void* data)
+{
+    Level* level;
+    _win2 = NULL;
+
+    if (!little_bobby_tables("level/")) return;
+
+    // don't check validity if next level is already validated
+    if (strcmp(_name_buf, _level_name) && strcmp(_name_buf, _level->nextLevel))
+    {
+        level = level_load(_name_buf, 0);
+        if (!level)
+        {
+            level = level_load_bin(_name_buf, 0);
+            if (!level)
+            {
+                _win2 = window_alert("Failed to load next level", "Next level is not valid.", clear, NULL);
+                return;
+            }
+        }
+        level_free(level);
+    }
+    if (_level->nextLevel) free((void*)_level->nextLevel);
+    _level->nextLevel = _strdup(_name_buf);
+}
+
+void next_level_prompt(void* data)
+{
+    gfc_line_cpy(_name_buf, _level->nextLevel);
+    _win2 = window_text_entry("Enter path to next level", _name_buf, NULL, GFCLINELEN, change_next_level, clear);
 }
 
 void increment_tile(void* data)
 {
     Element* tile_icon;
     ActorElement* tile_element;
-    tile_icon = gf2d_window_get_element_by_id(_win, 17);
+    tile_icon = gf2d_window_get_element_by_id(_win, 22);
     tile_element = (ActorElement*)tile_icon->data;
     if (!tile_element) return;
     if (_tile_id == 73)
@@ -97,7 +323,7 @@ void decrement_tile(void* data)
 {
     Element* tile_icon;
     ActorElement* tile_element;
-    tile_icon = gf2d_window_get_element_by_id(_win, 17);
+    tile_icon = gf2d_window_get_element_by_id(_win, 22);
     tile_element = (ActorElement*)tile_icon->data;
     if (!tile_element) return;
     if (_tile_id == 0)
@@ -144,7 +370,7 @@ void increment_entity(void* data)
         ent = get_entity_data_at_id(_ent_id);
         if (ent) break;
     }
-    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 19), ent->icon);
+    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 26), ent->icon);
 }
 
 void decrement_entity(void* data)
@@ -162,7 +388,7 @@ void decrement_entity(void* data)
         ent = get_entity_data_at_id(_ent_id);
         if (ent) break;
     }
-    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 19), ent->icon);
+    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 26), ent->icon);
 }
 
 void replace_entity(Uint8 eid)
@@ -181,19 +407,19 @@ void pan_camera(Uint8 dir)
     switch (dir)
     {
         case 0:
-            if (_camera.y == 0) slog("Cannot move farther up.");
+            if (_camera.y == 0) gf2d_windows_play_sound("cancel");
             else _camera.y--;
             break;
         case 1:
-            if (_camera.y == _level->height - 18) slog("Cannot move farther down.");
+            if (_camera.y == _level->height - 18) gf2d_windows_play_sound("cancel");
             else _camera.y++;
             break;
         case 2:
-            if (_camera.x == 0) slog("Cannot move left.");
+            if (_camera.x == 0) gf2d_windows_play_sound("cancel");
             else _camera.x--;
             break;
         case 3:
-            if (_camera.x == _level->height - 30) slog("Cannot move farther right.");
+            if (_camera.x == _level->width - 30) gf2d_windows_play_sound("cancel");
             else _camera.x++;
             break;
         default:
@@ -354,30 +580,16 @@ int editor_update(Window* win, GFC_List* updateList)
     {
         e = gfc_list_get_nth(updateList, i);
         if (!e)continue;
-        if ((strcmp(e->name, "item_right") == 0) || (strcmp(e->name, "item_left") == 0))
-        {
-            // Update this later
-            focus = gf2d_window_get_element_by_focus(win);
-            if ((!focus) || (focus->index == 52))
-            {
-                gf2d_window_set_focus_to(win, gf2d_window_get_element_by_id(win, 51));
-            }
-            else
-            {
-                gf2d_window_set_focus_to(win, gf2d_window_get_element_by_id(win, 52));
-            }
-            return 1;
-        }
-        switch (e->index)
+
+        switch(e->index)
         {
             case 1:
-                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 0);
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks,0);
                 if (callback)
                 {
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
             case 2:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 1);
                 if (callback)
@@ -385,7 +597,6 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
             case 3:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 2);
                 if (callback)
@@ -393,7 +604,6 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
             case 4:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 3);
                 if (callback)
@@ -401,7 +611,6 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
             case 5:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 4);
                 if (callback)
@@ -409,7 +618,6 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
             case 6:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 5);
                 if (callback)
@@ -417,7 +625,6 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
             case 7:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 6);
                 if (callback)
@@ -425,16 +632,37 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
-            case 8:
+            case 23:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 7);
                 if (callback)
                 {
                     gfc_callback_call(callback);
                 }
                 return 1;
-                break;
+            case 24:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 8);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                return 1;
+            case 27:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 9);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                return 1;
+            case 28:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 10);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                return 1;
         }
+
+        return 1;
     }
     return 1;
 }
@@ -452,10 +680,13 @@ Window* window_editor()
     _win->update = editor_update;
     _win->free_data = editor_free;
     callbacks = gfc_list_new();
-    gfc_list_append(callbacks, gfc_callback_new(NULL, NULL)); // for load button
-    gfc_list_append(callbacks, gfc_callback_new(NULL, NULL)); // for save button
-    gfc_list_append(callbacks, gfc_callback_new(NULL, NULL)); // for settings button
-    gfc_list_append(callbacks, gfc_callback_new(exit_editor, NULL)); // for quit button
+    gfc_list_append(callbacks, gfc_callback_new(load_prompt, NULL)); // for load button
+    gfc_list_append(callbacks, gfc_callback_new(save_prompt, NULL)); // for save button
+    gfc_list_append(callbacks, gfc_callback_new(background_prompt, NULL)); // for background button
+    gfc_list_append(callbacks, gfc_callback_new(exit_prompt, NULL)); // for quit button
+    gfc_list_append(callbacks, gfc_callback_new(music_intro_prompt, NULL)); // for music intro button
+    gfc_list_append(callbacks, gfc_callback_new(music_loop_prompt, NULL)); // for music loop button
+    gfc_list_append(callbacks, gfc_callback_new(next_level_prompt, NULL)); // for next level button
     gfc_list_append(callbacks, gfc_callback_new(decrement_tile, NULL)); // for left tile button
     gfc_list_append(callbacks, gfc_callback_new(increment_tile, NULL)); // for right tile button
     gfc_list_append(callbacks, gfc_callback_new(decrement_entity, NULL)); // for left entity button
@@ -465,10 +696,10 @@ Window* window_editor()
     _tile_id = 1;
     _ent_id = -1;
     increment_entity(NULL);
-    load((void *)("level/testlevel.json"));
-    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 17), _level->tileDef->sheet);
+    gfc_line_cpy(_name_buf, "level/testlevel.json");
+    load(NULL);
+    gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 22), _level->tileDef->sheet);
     _hotkey_mode = 0;
-    _camera = gfc_vector2d(0, 0);
     load_music_pair("audio/music/editor0_intro.mp3", "audio/music/editor0_loop.mp3");
     return _win;
 }
