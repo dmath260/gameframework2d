@@ -195,6 +195,232 @@ Level* level_load(const char* filepath, Uint8 music)
 	return level;
 }
 
+Level* level_save(Level* level, const char* filename)
+{
+	/*
+	FILE *file;
+	GFC_TextLine blank = {0};
+	if (!level || !filename) return;
+	file = fopen(filename, "wb");
+	if (!file)
+	{
+		slog("Failed to save level to file %s", filename);
+		return;
+	}
+
+	// update this every time you update the level structure
+	if (level->background)
+	{
+		fwrite(level->background->filepath, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
+	if (level->music_intro)
+	{
+		fwrite(level->music_intro, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
+	if (level->music_loop)
+	{
+		fwrite(level->music_loop, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
+	fwrite(&level->width, sizeof(Uint32), 1, file);
+	fwrite(&level->height, sizeof(Uint32), 1, file);
+	fwrite(level->tileMap, sizeof(Uint8), level->width * level->height, file);
+	fwrite(level->entityMap, sizeof(Uint8), level->width * level->height, file);
+
+	if (level->nextLevel)
+	{
+		fwrite(level->nextLevel, sizeof(GFC_TextLine), 1, file);
+	}
+	else
+	{
+		fwrite(blank, sizeof(GFC_TextLine), 1, file);
+	}
+
+	tiledef_save_to_file(level->tileDef, file);
+	fclose(file); 
+	
+	int i, j, index;
+	const char* str;
+	Level* level;
+	SJson* json;
+	SJson* config;
+	SJson* rows, * tiles, * tile;
+	GFC_TextLine buffer;
+
+	if (!filepath)
+	{
+		slog("JSON filepath invalid");
+		return NULL;
+	}
+
+	strncpy(buffer, filepath, sizeof(GFC_TextLine) - 1);
+	buffer[sizeof(buffer) - 1] = '\0';
+
+	if (get_current_level())
+	{
+		level = get_current_level();
+		set_current_level(NULL);
+		level_free(level);
+	}
+	slog("%s", buffer);
+	json = sj_load(buffer);
+	if (!json)
+	{
+		slog("JSON data invalid");
+		return NULL;
+	}
+
+	config = sj_object_get_value(json, "level");
+	if (!config)
+	{
+		slog("failed to load level file %s, missing level information", filepath);
+		sj_free(json);
+		return NULL;
+	}
+
+	level = level_new();
+	if (!level)
+	{
+		slog("failed to allocate level data for level %s", filepath);
+		sj_free(json);
+		return NULL;
+	}
+
+	str = sj_object_get_string(config, "background");
+	if (str)
+	{
+		level->background = gf2d_sprite_load_image(str);
+	}
+
+	level->music_intro = _strdup(sj_object_get_string(config, "music_intro"));
+	level->music_loop = _strdup(sj_object_get_string(config, "music_loop"));
+	if (music) load_level_music(level);
+
+	level->tileDef = tiledef_parse(sj_object_get_value(config, "tileDef"));
+	if (!level->tileDef)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("failed to parse tiledef data from level %s", filepath);
+		return NULL;
+	}
+
+	rows = sj_object_get_value(config, "tileMap");
+	level->height = sj_array_count(rows);
+	if (!level->height)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined tilemap in level %s (no height)", filepath);
+		return NULL;
+	}
+
+	tiles = sj_array_nth(rows, 0);
+	level->width = sj_array_count(tiles);
+	if (!level->width)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined tilemap in level %s (no width)", filepath);
+		return NULL;
+	}
+
+	level->tileMap = gfc_allocate_array(sizeof(Uint8), level->width * level->height);
+	if (!level->tileMap)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined tilemap in level %s (no tilemap)", filepath);
+		return NULL;
+	}
+
+	for (j = 0; j < level->height; j++)
+	{
+		tiles = sj_array_get_nth(rows, j);
+		if (!tiles) continue;
+		for (i = 0; i < level->width; i++)
+		{
+			tile = sj_array_get_nth(tiles, i);
+			if (!tile) continue;
+			index = level_get_tile_index(level, i, j);
+			if (index == -1) continue;
+			sj_get_uint8_value(tile, &level->tileMap[index]);
+		}
+	}
+
+	rows = sj_object_get_value(config, "entityMap");
+	level->height = sj_array_count(rows);
+	if (!level->height)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined entity map in level %s (no height)", filepath);
+		return NULL;
+	}
+
+	tiles = sj_array_nth(rows, 0);
+	level->width = sj_array_count(tiles);
+	if (!level->width)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined entity map in level %s (no width)", filepath);
+		return NULL;
+	}
+
+	level->entityMap = gfc_allocate_array(sizeof(Uint8), level->width * level->height);
+	if (!level->entityMap)
+	{
+		level_free(level);
+		sj_free(json);
+		slog("undefined entity map in level %s (no entity map)", filepath);
+		return NULL;
+	}
+
+	for (j = 0; j < level->height; j++)
+	{
+		tiles = sj_array_get_nth(rows, j);
+		if (!tiles) continue;
+		for (i = 0; i < level->width; i++)
+		{
+			tile = sj_array_get_nth(tiles, i);
+			if (!tile) continue;
+			index = level_get_tile_index(level, i, j);
+			if (index == -1) continue;
+			sj_get_uint8_value(tile, &level->entityMap[index]);
+		}
+	}
+
+	str = sj_object_get_string(config, "nextLevel");
+	if (str)
+	{
+		level->nextLevel = _strdup(str);
+	}
+
+	level_bake_tiles(level);
+	level_load_entities(level);
+	level_setup_camera_bounds(level);
+
+	sj_free(json);
+	set_current_level(level);
+	return level;
+	*/
+}
+
 Level* get_current_level()
 {
 	return current_level;
@@ -239,6 +465,7 @@ void level_free(Level* level)
 	gf2d_sprite_free(level->tileLayer);
 	gf2d_sprite_free(level->tileDef->sheet);
 	if (level->tileMap) free(level->tileMap);
+	if (level->entityMap) free(level->entityMap);
 	free(level->nextLevel);
 	entity_manager_free_all_but_player();
 	entity_manager_free_all_but_player(); // called a second time to delete any powerups that dropped

@@ -157,7 +157,7 @@
       },
       {
         "type": "button",
-        "name": "quit",
+        "name": "level_size",
         "id": 4,
         "canHasFocus": true,
         "bounds": [
@@ -166,12 +166,12 @@
           256,
           64
         ],
-        "hotkey": "quit",
+        "hotkey": "level_size",
         "sound": "confirm",
         "justify": "center",
         "label": {
           "type": "label",
-          "name": "quit",
+          "name": "level_size_l",
           "id": 14,
           "bounds": [
             0,
@@ -179,7 +179,7 @@
             256,
             64
           ],
-          "text": "Quit",
+          "text": "Level Size",
           "justify": "center",
           "align": "middle",
           "style": "small"
@@ -320,24 +320,45 @@
         }
       },
       {
-        "type": "label",
-        "name": "level_name",
+        "type": "button",
+        "name": "quit",
         "id": 8,
+        "canHasFocus": true,
         "bounds": [
-          804,
+          792,
           72,
-          1,
+          256,
           64
         ],
-        "text": "No Level Loaded",
-        "align": "middle",
-        "style": "small",
-        "color": [
-          0,
-          0,
-          0,
-          255
-        ]
+        "hotkey": "quit",
+        "sound": "confirm",
+        "justify": "center",
+        "label": {
+          "type": "label",
+          "name": "quit_l",
+          "id": 18,
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "text": "Quit",
+          "justify": "center",
+          "align": "middle",
+          "style": "small"
+        },
+        "actor": {
+          "type": "actor",
+          "bounds": [
+            0,
+            0,
+            256,
+            64
+          ],
+          "actor": "actors/unscaled_button.actor",
+          "justify": "center"
+        }
       },
       {
         "type": "actor",
@@ -532,6 +553,226 @@
           "actor": "actors/right_button.actor",
           "justify": "center"
         }
+      },
+      {
+        "type": "label",
+        "name": "control_header",
+        "id": 30,
+        "bounds": [
+          0.8,
+          372,
+          0.2,
+          48
+        ],
+        "text": "Controls",
+        "justify": "center",
+        "style": "H3",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control1",
+        "id": 31,
+        "bounds": [
+          0.8,
+          412,
+          0.2,
+          48
+        ],
+        "text": "Arrow keys: pan view",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control2",
+        "id": 32,
+        "bounds": [
+          0.8,
+          440,
+          0.2,
+          48
+        ],
+        "text": "/: swap hotkeys",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control3",
+        "id": 33,
+        "bounds": [
+          0.8,
+          468,
+          0.2,
+          48
+        ],
+        "text": "(tile/entity mode)",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control4",
+        "id": 34,
+        "bounds": [
+          0.8,
+          496,
+          0.2,
+          48
+        ],
+        "text": ",: Prev. tile/entity",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control5",
+        "id": 35,
+        "bounds": [
+          0.8,
+          524,
+          0.2,
+          48
+        ],
+        "text": ".: Next tile/entity",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control6",
+        "id": 36,
+        "bounds": [
+          0.8,
+          552,
+          0.2,
+          48
+        ],
+        "text": "Click: Place tile",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control7",
+        "id": 37,
+        "bounds": [
+          0.8,
+          580,
+          0.2,
+          48
+        ],
+        "text": "Shift+Click: Delete tile",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control8",
+        "id": 38,
+        "bounds": [
+          0.8,
+          608,
+          0.2,
+          48
+        ],
+        "text": "M: Place entity",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control9",
+        "id": 39,
+        "bounds": [
+          0.8,
+          636,
+          0.2,
+          48
+        ],
+        "text": "Space: Move entity",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
+      },
+      {
+        "type": "label",
+        "name": "control10",
+        "id": 40,
+        "bounds": [
+          0.8,
+          664,
+          0.2,
+          48
+        ],
+        "text": "N: Delete entity",
+        "justify": "center",
+        "style": "H6",
+        "color": [
+          0,
+          0,
+          0,
+          255
+        ]
       }
     ]
   }

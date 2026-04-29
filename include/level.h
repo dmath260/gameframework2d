@@ -32,6 +32,13 @@ Level* level_new();
 Level* level_load(const char* filepath, Uint8 music);
 
 /**
+* @brief save current level to JSON
+* @param level the level to save
+* @param filename the path of the file to save the level to
+*/
+void level_save_bin(Level* level, const char* filename);
+
+/**
 * @brief get the current level
 * @return a pointer to the current level
 */

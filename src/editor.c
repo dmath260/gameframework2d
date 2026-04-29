@@ -108,11 +108,9 @@ void load(void* data)
         }
     }
     _level = level;
-    if (_level_name) free((void*)_level_name);
     _level_name = _strdup(_name_buf);
     _camera = gfc_vector2d(0, 0);
     set_current_level(NULL);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 8), _level_name);
     gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 10), _level->background);
 }
 
@@ -138,7 +136,6 @@ void save(void* data)
     level_free(level);
     if (_level_name) free((void*)_level_name);
     _level_name = _strdup(_name_buf);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 8), _level_name);
     _win2 = window_alert("Level saved", "Level saved successfully.", clear, NULL);
     */
     _win2 = window_alert("Not supported", "Support for saving to JSON will be ready shortly.", clear, NULL);
@@ -165,7 +162,6 @@ void save_bin(void* data)
     level_free(level);
     if (_level_name) free((void*)_level_name);
     _level_name = _strdup(_name_buf);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(_win, 8), _level_name);
     _win2 = window_alert("Level saved", "Level saved successfully.", clear, NULL);
 }
 
@@ -208,20 +204,125 @@ void background_prompt(void* data)
     _win2 = window_text_entry("Enter path of background", _name_buf, NULL, GFCLINELEN, change_background, clear);
 }
 
-void exit_editor(void* data)
+int validate_size()
 {
-    _win2 = NULL;
-    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
-    if (_level) level_free(_level);
-    _level = NULL;
-    if (_level_name) free((void *)_level_name);
-    gf2d_window_free(_win);
-    _win = NULL;
+    Uint8 i, space = 0;
+
+    for (i = 0; _name_buf[i] != 0; i++)
+    {
+        if (_name_buf[i] == ' ')
+        {
+            if (i == 0)
+            {
+                _win2 = window_alert("Invalid size", "Cannot start size with a space", clear, NULL);
+                return 0;
+            }
+            if (space)
+            {
+                _win2 = window_alert("Invalid size", "Cannot have multiple spaces", clear, NULL);
+                return 0;
+            }
+            space = 1;
+        }
+        else if (_name_buf[i] < '0' || _name_buf[i] > '9')
+        {
+            _win2 = window_alert("Invalid size", "Only use numbers and a single space", clear, NULL);
+            return 0;
+        }
+        else if (space == 1) space = 2;
+    }
+
+    if (space != 2)
+    {
+        _win2 = window_alert("Invalid size", "Did not detect two separate numbers", clear, NULL);
+        return 0;
+    }
+
+    return 1;
 }
 
-void exit_prompt(void* data)
+void change_size(void* data)
 {
-    _win2 = window_yes_no("Exit the editor?", "You will lose any unsaved data.", exit_editor, clear, NULL);
+    int width, height, i, j, width_old, height_old, ind;
+    Uint8* tMap, * eMap;
+    _win2 = NULL;
+    
+    if (!validate_size()) return;
+    width = 0;
+    height = 0;
+    for (i = 0; _name_buf[i] != ' '; i++)
+    {
+        width *= 10;
+        width += (_name_buf[i] - '0');
+        if (width > 256)
+        {
+            _win2 = window_alert("Invalid size", "Width cannot be greater than 256", clear, NULL);
+            return;
+        }
+    }
+    if (width < 38)
+    {
+        _win2 = window_alert("Invalid size", "Width cannot be less than 38", clear, NULL);
+        return;
+    }
+    i++;
+    for (; _name_buf[i] != 0; i++)
+    {
+        height *= 10;
+        height += (_name_buf[i] - '0');
+        if (height > 256)
+        {
+            _win2 = window_alert("Invalid size", "Height cannot be greater than 256", clear, NULL);
+            return;
+        }
+    }
+    if (height < 23)
+    {
+        _win2 = window_alert("Invalid size", "Width cannot be less than 23", clear, NULL);
+        return;
+    }
+
+    width_old = _level->width;
+    height_old = _level->height;
+    if (width_old == width && height_old == height) return;
+    tMap = (Uint8*)gfc_allocate_array(sizeof(Uint8), width * height);
+    eMap = (Uint8*)gfc_allocate_array(sizeof(Uint8), width * height);
+    if (!tMap || !eMap)
+    {
+        if (tMap) free(tMap);
+        if (eMap) free(eMap);
+        return;
+    }
+
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            if (i >= height_old || j >= width_old)
+            {
+                tMap[j + i * width] = 0;
+                eMap[j + i * width] = 0;
+                continue;
+            }
+            ind = level_get_tile_index(_level, j, i);
+            tMap[j + i * width] = _level->tileMap[ind];
+            eMap[j + i * width] = _level->entityMap[ind];
+        }
+    }
+
+    _level->tileMap = tMap;
+    _level->entityMap = eMap;
+    _level->width = width;
+    _level->height = height;
+    _camera.x = 0;
+    _camera.y = 0;
+}
+
+void size_prompt(void* data)
+{
+    sprintf(_name_buf, "%i %i", _level->width, _level->height);
+    _win2 = window_text_entry("Enter level size (format: \"w h\")",
+        _name_buf, NULL, GFCLINELEN, change_size, clear);
 }
 
 void change_music_intro(void* data)
@@ -298,6 +399,22 @@ void next_level_prompt(void* data)
 {
     gfc_line_cpy(_name_buf, _level->nextLevel);
     _win2 = window_text_entry("Enter path to next level", _name_buf, NULL, GFCLINELEN, change_next_level, clear);
+}
+
+void exit_editor(void* data)
+{
+    _win2 = NULL;
+    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
+    if (_level) level_free(_level);
+    _level = NULL;
+    if (_level_name) free((void*)_level_name);
+    gf2d_window_free(_win);
+    _win = NULL;
+}
+
+void exit_prompt(void* data)
+{
+    _win2 = window_yes_no("Exit the editor?", "You will lose any unsaved data.", exit_editor, clear, NULL);
 }
 
 void increment_tile(void* data)
@@ -519,7 +636,6 @@ int editor_update(Window* win, GFC_List* updateList)
 {
     int i, count;
     Element* e;
-    Element* focus;
     GFC_List* callbacks;
     GFC_Callback* callback;
     if (!win)return 0;
@@ -534,6 +650,8 @@ int editor_update(Window* win, GFC_List* updateList)
     if (gfc_input_key_pressed("/"))
     {
         _hotkey_mode = (_hotkey_mode + 1) % 2;
+        (gf2d_window_get_element_by_id(_win, 21 + _hotkey_mode * 4))->color = GFC_COLOR_WHITE;
+        (gf2d_window_get_element_by_id(_win, 25 - _hotkey_mode * 4))->color = GFC_COLOR_BLACK;
         gf2d_windows_play_sound("confirm");
     }
     else if (gfc_input_key_pressed(","))
@@ -632,29 +750,36 @@ int editor_update(Window* win, GFC_List* updateList)
                     gfc_callback_call(callback);
                 }
                 return 1;
-            case 23:
+            case 8:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 7);
                 if (callback)
                 {
                     gfc_callback_call(callback);
                 }
                 return 1;
-            case 24:
+            case 23:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 8);
                 if (callback)
                 {
                     gfc_callback_call(callback);
                 }
                 return 1;
-            case 27:
+            case 24:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 9);
                 if (callback)
                 {
                     gfc_callback_call(callback);
                 }
                 return 1;
-            case 28:
+            case 27:
                 callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 10);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                return 1;
+            case 28:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 11);
                 if (callback)
                 {
                     gfc_callback_call(callback);
@@ -683,10 +808,11 @@ Window* window_editor()
     gfc_list_append(callbacks, gfc_callback_new(load_prompt, NULL)); // for load button
     gfc_list_append(callbacks, gfc_callback_new(save_prompt, NULL)); // for save button
     gfc_list_append(callbacks, gfc_callback_new(background_prompt, NULL)); // for background button
-    gfc_list_append(callbacks, gfc_callback_new(exit_prompt, NULL)); // for quit button
+    gfc_list_append(callbacks, gfc_callback_new(size_prompt, NULL)); // for level size button
     gfc_list_append(callbacks, gfc_callback_new(music_intro_prompt, NULL)); // for music intro button
     gfc_list_append(callbacks, gfc_callback_new(music_loop_prompt, NULL)); // for music loop button
     gfc_list_append(callbacks, gfc_callback_new(next_level_prompt, NULL)); // for next level button
+    gfc_list_append(callbacks, gfc_callback_new(exit_prompt, NULL)); // for quit button
     gfc_list_append(callbacks, gfc_callback_new(decrement_tile, NULL)); // for left tile button
     gfc_list_append(callbacks, gfc_callback_new(increment_tile, NULL)); // for right tile button
     gfc_list_append(callbacks, gfc_callback_new(decrement_entity, NULL)); // for left entity button
@@ -701,5 +827,6 @@ Window* window_editor()
     gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 22), _level->tileDef->sheet);
     _hotkey_mode = 0;
     load_music_pair("audio/music/editor0_intro.mp3", "audio/music/editor0_loop.mp3");
+    (gf2d_window_get_element_by_id(_win, 21))->color = GFC_COLOR_WHITE;
     return _win;
 }

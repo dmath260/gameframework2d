@@ -176,7 +176,11 @@ int main(int argc, char * argv[])
         if (_level && !e)
         {
             // pausing
-            if (gfc_input_key_pressed("q") && !_paused) toggle_pause(NULL);
+            if (gfc_input_key_pressed("q") && !_paused)
+            {
+                toggle_pause(NULL);
+                gf2d_windows_play_sound("cancel");
+            }
 
             if (!_paused)
             {
