@@ -215,7 +215,6 @@ int menu_update(Window* win, GFC_List* updateList)
             {
                 gfc_callback_call(callback);
             }
-            gf2d_window_free(win);
             return 1;
             break;
         case 13:

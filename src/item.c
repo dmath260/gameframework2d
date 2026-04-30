@@ -35,27 +35,37 @@ Entity* item_new(GFC_Vector2D position, ItemTypes type)
 	self = entity_new();
 	if (!self) return NULL;
 	self->item = type;
-	self->animDataFilePath = "images/item/itemAnimData.json";
-	entity_load(self, "Item");
-	self->animationData->FrameRow = 0;
-	self->bounds = gfc_rect(4, 4, 24, 24);
-	switch (type)
+	if (type == IT_HealthRestore)
 	{
-		case IT_Power:
-		case IT_Invincible:
-			self->color = gfc_color_hsl(0, 1, 0.5, 1); // used HSL so invincible can be rainbow
-			break;
-		case IT_Speed:
-			self->color = gfc_color(0, 0.5, 1, 1); // lighter blue
-			break;
-		case IT_DoubleJump:
-			self->color = GFC_COLOR_DARKGREEN;
-			break;
-		case IT_Hover:
-			self->color = GFC_COLOR_YELLOW;
-			break;
-		default: self->color = GFC_COLOR_WHITE;
+		self->animDataFilePath = "images/heart/heartAnimData.json";
+		entity_load(self, "Heart");
+		self->scale = gfc_vector2d(0.75, 0.75);
+		self->bounds = gfc_rect(0, 0, 27, 27);
 	}
+	else
+	{
+		self->animDataFilePath = "images/item/itemAnimData.json";
+		entity_load(self, "Item");
+		self->bounds = gfc_rect(4, 4, 24, 24);
+		switch (type)
+		{
+			case IT_Power:
+			case IT_Invincible:
+				self->color = gfc_color_hsl(0, 1, 0.5, 1); // used HSL so invincible can be rainbow
+				break;
+			case IT_Speed:
+				self->color = gfc_color(0, 0.5, 1, 1); // lighter blue
+				break;
+			case IT_DoubleJump:
+				self->color = GFC_COLOR_DARKGREEN;
+				break;
+			case IT_Hover:
+				self->color = GFC_COLOR_YELLOW;
+				break;
+			default: self->color = GFC_COLOR_WHITE;
+		}
+	}
+	self->animationData->FrameRow = 0;
 	self->team = 2; // team 2 for items and such
 	self->maxHealth = 0x7FFFFFFF;
 	self->health = self->maxHealth;

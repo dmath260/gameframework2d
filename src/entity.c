@@ -184,6 +184,12 @@ void entity_free(Entity* self)
 		self->position.y -= self->bounds.h / 2;
 		item_new(self->position, self->item);
 	}
+	else if (!self->item && self->team == 1 && self->maxHealth <= 20 && gfc_random() < 0.25)
+	{
+		self->position.x -= self->bounds.w / 2;
+		self->position.y -= self->bounds.h / 2;
+		item_new(self->position, IT_HealthRestore);
+	}
 	if (self->free) self->free(self);
 	if (self->animationData) {
 		animdata_free(self->animationData);

@@ -29,6 +29,7 @@ typedef enum
 	IT_DoubleJump,
 	IT_Hover,
 	IT_Invincible,
+	IT_HealthRestore,
 	IT_MAX
 }ItemTypes;
 

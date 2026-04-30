@@ -6,24 +6,6 @@
 #include "player.h"
 #include "camera.h"
 
-typedef enum
-{
-	PS_Null,
-	PS_Idle,
-	PS_Walk,
-	PS_Jump,
-	PS_Attack,
-	PS_Pain,
-	PS_Die,
-	PS_MAX
-}PlayerStates;
-
-typedef struct
-{
-	PlayerStates state;
-	Uint8 itemFlag;
-} PlayerData;
-
 static Entity* thePlayer = NULL;
 
 Entity* player_entity_get()
@@ -46,10 +28,9 @@ void player_free(Entity* self)
 	thePlayer = NULL;
 }
 
-void player_kill(char* message)
+void player_kill()
 {
 	if (!thePlayer) return;
-	slog("%s", message);
 	entity_free(thePlayer);
 }
 
@@ -89,16 +70,22 @@ void player_give_item(Entity* player, ItemTypes type)
 	if (!player || !player->data) return;
 	data = get_data(player);
 
-	if (player->itemFrames)
+	if (type == IT_HealthRestore)
 	{
-		if (player->item == type) slog("Resetting powerup duration");
-		else if (player->item == IT_Invincible)
+		if (player->health == player->maxHealth)
 		{
-			slog("Cannot override invincibility with another powerup");
 			return;
 		}
-		else slog("Replacing powerup");
+		else if (player->health >= player->maxHealth - 2)
+		{
+			player->health = player->maxHealth;
+			return;
+		}
+		player->health += 2;
+		return;
 	}
+
+	if (player->itemFrames && player->item == IT_Invincible) return;
 
 	player->item = type;
 
@@ -129,6 +116,148 @@ void player_give_item(Entity* player, ItemTypes type)
 	player->data = data;
 }
 
+void give_skill_points(Entity* player, Uint8 points)
+{
+	if (!player || !player->data) return NULL;
+	PlayerData* data;
+	data = get_data(player);
+	if (data->skillPoints + points < data->skillPoints)
+	{
+		return NULL;
+	}
+	data->skillPoints += points;
+}
+
+void spend_skill_points(Entity* player, Uint8 points)
+{
+	if (!player || !player->data) return NULL;
+	PlayerData* data;
+	data = get_data(player);
+	if (data->skillPoints - points > data->skillPoints)
+	{
+		return NULL;
+	}
+	data->skillPoints -= points;
+}
+
+void set_skill_points(Entity* player, Uint8 points)
+{
+	if (!player || !player->data) return NULL;
+	PlayerData* data;
+	data = get_data(player);
+	data->skillPoints = points;
+}
+
+Uint8 check_skill(Entity* player, SkillsOwned skill)
+{
+	if (!player || !player->data) return 0;
+	PlayerData* data;
+	data = get_data(player);
+	return ((data->skills & skill) == skill);
+}
+
+void grant_skill(Entity* player, SkillsOwned skill)
+{
+	if (!player || !player->data) return NULL;
+	PlayerData* data;
+	data = get_data(player);
+	if (skill & SO_MaxHealth && !check_skill(player, SO_MaxHealth))
+	{
+		player->health += player->maxHealth;
+		player->maxHealth *= 2;
+	}
+	data->skills |= skill;
+}
+
+void revoke_skill(Entity* player, SkillsOwned skill)
+{
+	if (!player || !player->data) return NULL;
+	PlayerData* data;
+	data = get_data(player);
+	if (skill & SO_MaxHealth && check_skill(player, SO_MaxHealth))
+	{
+		player->maxHealth /= 2;
+		player->health -= player->maxHealth;
+	}
+	data->skills &= ~skill;
+}
+
+void set_skills(Entity* player, SkillsOwned skills)
+{
+	if (!player || !player->data) return NULL;
+	PlayerData* data;
+	data = get_data(player);
+	if (skills & SO_MaxHealth && !check_skill(player, SO_MaxHealth))
+	{
+		player->health += player->maxHealth;
+		player->maxHealth *= 2;
+	}
+	else if (!(skills & SO_MaxHealth) && check_skill(player, SO_MaxHealth))
+	{
+		player->maxHealth /= 2;
+		player->health -= player->maxHealth;
+	}
+	data->skills = skills;
+}
+
+void player_save(Entity* player)
+{
+	PlayerData* data;
+	FILE* file;
+	if (!player || !player->data) return;
+	file = fopen("save/player.sav", "wb");
+	if (!file)
+	{
+		return;
+	}
+	data = get_data(player);
+
+	// update this every time you update the player structure
+	fwrite(&data->skillPoints, sizeof(Uint8), 1, file);
+	fwrite(&data->skills, sizeof(SkillsOwned), 1, file);
+	fwrite(&data->levelsBeaten, sizeof(Uint8), 1, file);
+
+	fclose(file);
+}
+
+PlayerData* player_load()
+{
+	PlayerData* data;
+	FILE* file;
+	file = fopen("save/player.sav", "rb");
+	if (!file)
+	{
+		return NULL;
+	}
+
+	data = gfc_allocate_array(sizeof(PlayerData), 1);
+	fread(&data->skillPoints, sizeof(Uint8), 1, file);
+	fread(&data->skills, sizeof(SkillsOwned), 1, file);
+	fread(&data->levelsBeaten, sizeof(Uint8), 1, file);
+
+	fclose(file);
+	return data;
+}
+
+void wipe_data()
+{
+	FILE* file;
+	Uint8 zero_8 = 0;
+	SkillsOwned zero_32 = 0;
+	file = fopen("save/player.sav", "wb");
+	if (!file)
+	{
+		return;
+	}
+
+	// update this every time you update the player structure
+	fwrite(&zero_8, sizeof(Uint8), 1, file);
+	fwrite(&zero_32, sizeof(SkillsOwned), 1, file);
+	fwrite(&zero_8, sizeof(Uint8), 1, file);
+
+	fclose(file);
+}
+
 void hud_update(Entity* player)
 {
 	int i;
@@ -151,7 +280,87 @@ void player_entity_think(Entity* self)
 
 	GFC_Vector2D move = {0};
 	if (!self) return;
+
 	// Replace these with gfc_input_command_down if you can figure out how it works
+	if (gfc_input_key_pressed("UP"))
+	{
+		if (check_skill(self, SO_ALL))
+		{
+			set_skills(self, SO_NONE);
+		}
+		else if (check_skill(self, SO_MaxHealth))
+		{
+			set_skills(self, SO_ALL);
+		}
+		else if (check_skill(self, SO_Hover))
+		{
+			set_skills(self, SO_MaxHealth);
+		}
+		else if (check_skill(self, SO_DoubleJump))
+		{
+			set_skills(self, SO_Hover);
+		}
+		else if (check_skill(self, SO_SpeedMax))
+		{
+			set_skills(self, SO_DoubleJump);
+		}
+		else if (check_skill(self, SO_Speed1))
+		{
+			set_skills(self, SO_SpeedMax);
+		}
+		else if (check_skill(self, SO_PowerMax))
+		{
+			set_skills(self, SO_Speed1);
+		}
+		else if (check_skill(self, SO_Power1))
+		{
+			set_skills(self, SO_PowerMax);
+		}
+		else if (check_skill(self, SO_NONE))
+		{
+			set_skills(self, SO_Power1);
+		}
+	}
+	else if (gfc_input_key_pressed("DOWN"))
+	{
+		if (check_skill(self, SO_ALL))
+		{
+			set_skills(self, SO_MaxHealth);
+		}
+		else if (check_skill(self, SO_MaxHealth))
+		{
+			set_skills(self, SO_Hover);
+		}
+		else if (check_skill(self, SO_Hover))
+		{
+			set_skills(self, SO_DoubleJump);
+		}
+		else if (check_skill(self, SO_DoubleJump))
+		{
+			set_skills(self, SO_SpeedMax);
+		}
+		else if (check_skill(self, SO_SpeedMax))
+		{
+			set_skills(self, SO_Speed1);
+		}
+		else if (check_skill(self, SO_Speed1))
+		{
+			set_skills(self, SO_PowerMax);
+		}
+		else if (check_skill(self, SO_PowerMax))
+		{
+			set_skills(self, SO_Power1);
+		}
+		else if (check_skill(self, SO_Power1))
+		{
+			set_skills(self, SO_NONE);
+		}
+		else if (check_skill(self, SO_NONE))
+		{
+			set_skills(self, SO_ALL);
+		}
+	}
+	
 	if (gfc_input_key_down("d"))
 	{
 		move.x += 1;
@@ -172,7 +381,7 @@ void player_entity_think(Entity* self)
 	{
 		self->velocity.y += self->impulse;
 		self->isGrounded = 0;
-		if (self->item == IT_DoubleJump) data->itemFlag = 1;
+		if (self->item == IT_DoubleJump || (data->skills & SO_DoubleJump)) data->itemFlag = 1;
 		else data->itemFlag = 0;
 	}
 	else if (self->isClimbing)
@@ -180,12 +389,14 @@ void player_entity_think(Entity* self)
 		self->thinkPos.y = self->position.y;
 		data->itemFlag = 0;
 	}
-	else if (gfc_input_key_pressed("w") && self->item == IT_DoubleJump && data->itemFlag == 1)
+	else if (gfc_input_key_pressed("w") && data->itemFlag == 1 &&
+		(self->item == IT_DoubleJump || (data->skills & SO_DoubleJump)))
 	{
 		data->itemFlag = 0;
 		self->velocity.y = self->impulse;
 	}
-	else if (gfc_input_key_down("w") && self->item == IT_Hover && self->velocity.y >= 0 && self->velocity.y < 0.25)
+	else if (gfc_input_key_down("w") && (self->item == IT_Hover || (data->skills & SO_Hover)) &&
+		self->velocity.y >= 0 && self->velocity.y < 0.25)
 	{
 		if (!data->itemFlag) data->itemFlag = 60;
 		else data->itemFlag--;
@@ -195,18 +406,22 @@ void player_entity_think(Entity* self)
 		}
 	}
 	else if (self->isGrounded) data->itemFlag = 0;
+
 	if ((gfc_input_key_down("LSHIFT") || gfc_input_key_down("RSHIFT")) && self->isGrounded && move.x)
 	{
 		// Has to be grounded because sprinting in midair makes no sense
 		// Also makes no sense to start sprinting before moving (matters when jumping)
-		self->speedMult = 2.0 * (1 + (self->item == IT_Speed));
+		self->speedMult = 2.0 / 3.0 * (3 + (self->item == IT_Speed) +
+			(data->skills & SO_Speed1) + (data->skills & SO_Speed2));
 	}
 	else if (!gfc_input_key_down("LSHIFT") && !gfc_input_key_down("RSHIFT") || !move.x)
 	{
 		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
 		// If the player stops moving horizontally, they have no momentum, so reduce their speed
-		self->speedMult = 1.0 * (1 + (self->item == IT_Speed));
+		self->speedMult = 1.0 / 3.0 * (3 + (self->item == IT_Speed) +
+			(data->skills & SO_Speed1) + (data->skills & SO_Speed2));
 	}
+
 	if (gfc_input_key_pressed(" "))
 	{
 		bullet_new(
@@ -214,9 +429,10 @@ void player_entity_think(Entity* self)
 			gfc_color8(0, 204, 255, 255),
 			self->team,
 			(self->animationData->FrameRow - 2) / 4,
-			self->attack * (1 + (self->item == IT_Power))
+			self->attack * (1 + (self->item == IT_Power) + (data->skills & SO_Power1) + (data->skills & SO_Power2))
 		);
 	}
+
 	if (!self->isGrounded && self->velocity.y) set_player_state(self, PS_Jump);
 	if (self->isClimbing) set_player_state(self, PS_Idle);
 	if (move.x)
@@ -240,7 +456,6 @@ void player_entity_update(Entity* self)
 	if (!self) return;
 	camera_center_on(self->position);
 	entity_collision_test_world(self);
-
 }
 
 Uint8 player_entity_touch(Entity* self, Entity* other)
@@ -253,7 +468,6 @@ Uint8 player_entity_touch(Entity* self, Entity* other)
 	}
 	else if (!self->iFrames) {
 		entity_hurt(self, other->attack);
-		if (other->attack == 255u) slog("THE IMMORTAL SNAIL FOUND YOU");
 	}
 	return 1;
 }
@@ -273,7 +487,11 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self = entity_new();
 	if (!self) return NULL;
 	PlayerData* data;
-	data = gfc_allocate_array(sizeof(PlayerData), 1);
+	data = player_load();
+	if (!data)
+	{
+		data = gfc_allocate_array(sizeof(PlayerData), 1);
+	}
 	self->data = data;
 	self->animDataFilePath = "images/0258/0258AnimData.json";
 	set_player_state(self, PS_Idle);
@@ -283,7 +501,7 @@ Entity* player_entity_new(GFC_Vector2D position)
 	self->impulse = -10;
 	self->topSpeed = 3;
 	self->speedMult = 1;
-	self->maxHealth = 10;
+	self->maxHealth = 10 * (1 + check_skill(self, SO_MaxHealth));
 	self->health = self->maxHealth;
 	self->attack = 2;
 	self->maxIFrames = 90;
