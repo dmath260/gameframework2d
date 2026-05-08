@@ -33,6 +33,6 @@ Credit for assets (5/4/26 update):
 * SFX from:
 
   * Pokémon Mystery Dungeon: Explorers of Time/Darkness/Sky
-  * Pokémon Mystery Dungeon: Red Rescue Team
+  * Pokémon Mystery Dungeon: Red Rescue Team (some edited)
 * Font is recreated from the GBA/DS Pokémon Mystery Dungeon games (full credits in the fonts folder)
 

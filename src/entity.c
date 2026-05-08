@@ -3,6 +3,7 @@
 #include "gfc_input.h"
 
 #include "gf2d_draw.h"
+#include "gf2d_windows.h"
 
 #include "entity.h"
 #include "camera.h"
@@ -562,6 +563,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 							}
 						}
 						level_bake_tiles(current_level);
+						gf2d_windows_play_sound("switch");
 					}
 					break;
 				}
@@ -709,6 +711,7 @@ void entity_update(Entity *self)
 		{
 			self->color = GFC_COLOR_WHITE;
 			self->item = IT_NONE;
+			gf2d_windows_play_sound("expire");
 		}
 		self->itemFrames--;
 	}
@@ -796,6 +799,8 @@ void entity_hurt(Entity* self, Uint8 damage)
 	self->color.r /= 2;
 	self->color.g /= 2;
 	self->color.b /= 2;
+	if (self == player_entity_get()) gf2d_windows_play_sound("hurt1");
+	else gf2d_windows_play_sound("hurt2");
 }
 
 void entity_load(Entity* self, char* state)

@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gf2d_windows.h"
+
 #include "boss1.h"
 #include "door.h"
 #include "bullet.h"
@@ -28,6 +30,7 @@ void boss1_think(Entity* self)
 				self->iFrames = 255;
 				data->phase = 1;
 				self->thinkPos = gfc_vector2d(32 * 46, 32 * 37);
+				gf2d_windows_play_sound("warp");
 			}
 			break;
 		case 1:
@@ -36,6 +39,7 @@ void boss1_think(Entity* self)
 				data->phase = 2;
 				self->iFrames = 255;
 				self->thinkPos = gfc_vector2d(32 * 98, 32 * 32);
+				gf2d_windows_play_sound("warp");
 			}
 			else if (self->iFrames <= 5 && (self->position.x - data->player->position.x) > 480)
 			{
@@ -53,6 +57,7 @@ void boss1_think(Entity* self)
 				data->phase = 3;
 				self->iFrames = 255;
 				self->thinkPos = gfc_vector2d(32 * 175, 32 * 11);
+				gf2d_windows_play_sound("warp");
 			}
 			else if (self->iFrames <= 5 && (self->position.x - data->player->position.x) > 480)
 			{
@@ -130,6 +135,7 @@ void boss1_update(Entity* self)
 void boss1_free(Entity* self)
 {
 	door_new(self->position);
+	if (self->health <= 0) gf2d_windows_play_sound("boss_ko");
 }
 
 Entity* boss1_new(GFC_Vector2D position)

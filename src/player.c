@@ -2,6 +2,8 @@
 
 #include "gfc_input.h"
 
+#include "gf2d_windows.h"
+
 #include "bullet.h"
 #include "player.h"
 #include "camera.h"
@@ -72,6 +74,7 @@ void player_give_item(Entity* player, ItemTypes type)
 
 	if (type == IT_HealthRestore)
 	{
+		gf2d_windows_play_sound("heal");
 		if (player->health == player->maxHealth)
 		{
 			return;
@@ -85,6 +88,7 @@ void player_give_item(Entity* player, ItemTypes type)
 		return;
 	}
 
+	gf2d_windows_play_sound("powerup");
 	if (player->itemFrames && player->item == IT_Invincible) return;
 
 	player->item = type;
@@ -383,6 +387,7 @@ void player_entity_think(Entity* self)
 		self->isGrounded = 0;
 		if (self->item == IT_DoubleJump || (data->skills & SO_DoubleJump)) data->itemFlag = 1;
 		else data->itemFlag = 0;
+		gf2d_windows_play_sound("jump");
 	}
 	else if (self->isClimbing)
 	{
@@ -394,6 +399,7 @@ void player_entity_think(Entity* self)
 	{
 		data->itemFlag = 0;
 		self->velocity.y = self->impulse;
+		gf2d_windows_play_sound("jump");
 	}
 	else if (gfc_input_key_down("w") && (self->item == IT_Hover || (data->skills & SO_Hover)) &&
 		self->velocity.y >= 0 && self->velocity.y < 0.25)

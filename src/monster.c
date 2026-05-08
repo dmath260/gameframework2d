@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gf2d_windows.h"
+
 #include "monster.h"
 #include "player.h"
 #include "level.h"
@@ -35,6 +37,7 @@ void monster_free(Entity* self)
 	data = (MonsterData*)self->data;
 	//clean up anything I own that I asked for
 	free(data);
+	if (self->health <= 0) gf2d_windows_play_sound("enemy_ko");
 }
 
 void monster_think(Entity* self)

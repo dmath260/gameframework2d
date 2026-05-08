@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gf2d_windows.h"
+
 #include "monster_seeker.h"
 #include "player.h"
 #include "level.h"
@@ -36,9 +38,11 @@ void monster_seeker_think(Entity* self)
 	{
 		return;
 	}
+
 	dir = next_pos.x < self_pos.x; // left if true, right if false
 	if (next_pos.x == self_pos.x) dir = (self->animationData->FrameRow - 2) / 4;
 	self->animationData->FrameRow = dir * 4 + 2;
+
 	if (next_pos.x != self_pos.x) self->velocity.x = self->topSpeed * (1 - 2 * dir);
 	else if (next_pos.y != self_pos.y) self->velocity.x = self->topSpeed * (1 - 2 * dir);
 	//self->thinkPos.x += self->velocity.x;
@@ -47,6 +51,7 @@ void monster_seeker_think(Entity* self)
 	{
 		self->velocity.y += self->impulse;
 		self->isGrounded = 0;
+		gf2d_windows_play_sound("jump2");
 	}
 }
 

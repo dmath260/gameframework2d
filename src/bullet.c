@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "gf2d_windows.h"
+
 #include "bullet.h"
 
 void bullet_free(Entity* self)
@@ -65,5 +67,7 @@ Entity* bullet_new(GFC_Vector2D position, GFC_Color color, Uint8 team, Uint8 dir
 	self->touch = bullet_touch;
 	self->scale = gfc_vector2d(4, 4);
 	self->free = bullet_free;
+	if (self->team) gf2d_windows_play_sound("pewpew2");
+	else gf2d_windows_play_sound("pewpew");
 	return self;
 }
