@@ -32,10 +32,8 @@ void monster_seeker_think(Entity* self)
 
 	self_pos = gfc_vector2d(32 * roundf(self->position.x / 32), 32 * roundf(self->position.y / 32));
 	next_pos = find_next(self->position, data->player->position, 0, 18, 0, 0);
-	slog("(%f, %f), (%f, %f)", self_pos.x, self_pos.y, next_pos.x, next_pos.y);
 	if (gfc_vector2d_compare(next_pos, self_pos))
 	{
-		//slog("Oops");
 		return;
 	}
 	dir = next_pos.x < self_pos.x; // left if true, right if false
@@ -50,55 +48,6 @@ void monster_seeker_think(Entity* self)
 		self->velocity.y += self->impulse;
 		self->isGrounded = 0;
 	}
-	//if (gfc_vector2d_compare(self->position, self->thinkPos)) slog("Oops, I did it again");
-	slog("%f %f %f %f", self->thinkPos.x, self->position.x, self->thinkPos.y, self->position.y);
-	/*
-	if (data->player->position.x - self->position.x > self->velocity.x
-		|| data->player->position.x - self->position.x < -1 * self->velocity.x)
-	{
-		if (data->player->position.x >= self->position.x) self->animationData->FrameRow = 2;
-		else self->animationData->FrameRow = 6;
-		close = 0;
-	}
-	else
-	{
-		self->thinkPos.x -= self->velocity.x;
-		close = 1;
-	}
-
-	tw = current_level->tileDef->width;
-	th = current_level->tileDef->height;
-	dir = (self->animationData->FrameRow - 2) / 4;
-	if ((1 - 2 * dir) * (data->player->position.x - self->position.x) > 576) // 18 tiles
-	{
-		self->velocity.x = 0; // can't see player from here, so don't move towards them
-		return; // skip the rest of the checks
-	}
-
-	self->velocity.x = self->topSpeed * (1 - 2 * dir);
-	self->thinkPos.x += self->velocity.x;
-	x_check = self->velocity.x > 0 ?
-		(int)((self->thinkPos.x + self->bounds.x + self->bounds.w + 4) / tw) :
-		(int)((self->thinkPos.x + self->bounds.x - 4) / tw);
-	y_check = (int)((self->thinkPos.y + self->bounds.y + self->bounds.h + 2) / th);
-	tile = level_get_tile_index(current_level, x_check, y_check);
-
-	if (tile != -1 && (check_bounds(self, 0) || current_level->tileMap[tile] <= 0))
-	{
-		if (self->thinkPos.y + 8 >= data->player->position.y && self->isGrounded)
-		{
-			self->velocity.y += self->impulse;
-			self->isGrounded = 0;
-		}
-	}
-	else if (close && self->thinkPos.y - 8 > data->player->position.y && self->isGrounded)
-	{
-		self->velocity.y += self->impulse;
-		self->isGrounded = 0;
-		self->thinkPos.x -= self->velocity.x;
-	}
-	else self->thinkPos.x -= self->velocity.x;
-	*/
 }
 
 void monster_seeker_update(Entity* self)
@@ -110,7 +59,6 @@ void monster_seeker_update(Entity* self)
 	*/
 
 	// do general monster updating first
-	//slog("%f %f %f %f", self->thinkPos.x, self->position.x, self->thinkPos.y, self->position.y);
 	monster_update(self);
 }
 

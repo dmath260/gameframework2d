@@ -4,6 +4,11 @@
 #endif
 
 /**
+* @brief closes the pathfinding system
+*/
+void path_close();
+
+/**
 * @brief initializes the pathfinding system
 */
 void path_init();

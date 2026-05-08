@@ -26,11 +26,13 @@ Credit for assets (5/4/26 update):
   * Kirby's Dream Land 3
   * Kirby: Canvas Curse
   * Mario Paint
+  * Pokémon Legends: Z-A
   * Pokémon Mystery Dungeon: Blue Rescue Team
+  * Pokémon Mystery Dungeon: Explorers of Sky
   * Pokémon Super Mystery Dungeon
 * SFX from:
 
-  * Pokémon Mystery Dungeon: Explorers of Sky
+  * Pokémon Mystery Dungeon: Explorers of Time/Darkness/Sky
   * Pokémon Mystery Dungeon: Red Rescue Team
 * Font is recreated from the GBA/DS Pokémon Mystery Dungeon games (full credits in the fonts folder)
 

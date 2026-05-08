@@ -14,13 +14,13 @@
 #include "audio.h"
 #include "editor.h"
 #include "entity.h"
-#include "path.h"
 #include "player.h"
 #include "monster.h"
 #include "level.h"
 
 static int _done = 0;
 static int _paused = 0;
+static int _alive = 0;
 static Window* _menu = NULL;
 static Window* _ex = NULL;
 Level* _level;
@@ -42,12 +42,13 @@ void on_exit(void* data)
 void on_cancel(void* data)
 {
     _ex = NULL;
-    if (!_menu || (!_level && _paused)) toggle_pause(NULL);
+    if ((!_menu && _alive) || (!_level && _paused)) toggle_pause(NULL);
 }
 
 void load_level(void* data)
 {
     gf2d_window_free(_menu);
+    _menu = NULL;
     _ex = NULL;
     //level_load("level/testlevel.json", 1);
     level_load_bin("level/level3.bin", 1);
@@ -57,6 +58,7 @@ void load_level(void* data)
         (float)_level->width * _level->tileDef->width / 2,
         (float)_level->height * _level->tileDef->height / 2)
     );
+    _alive = 1;
     _level = get_current_level();
     //level_save_bin(_level, "level/level1.bin");
     _done = 0;
@@ -103,11 +105,17 @@ void die(void* data)
 {
     player_save(_player);
     entity_free(_player);
+    _alive = 0;
     _level = NULL;
-    gf2d_window_free(_menu);
+
+    if (_menu) gf2d_window_free(_menu);
+    _menu = NULL;
+    _paused = 0;
+
     on_cancel(data);
     load_music_pair("audio/music/silence.mp3", "audio/music/silence.mp3");
     gf2d_windows_play_sound("death");
+
     _menu = window_alert("You died!", "Click to return to the menu.", load_main_menu, NULL);
 }
 
@@ -115,6 +123,7 @@ void return_to_menu(void* data)
 {
     player_save(_player);
     entity_free(_player);
+    _alive = 0;
     _level = NULL;
     gf2d_window_free(_menu);
     on_cancel(data);
@@ -128,22 +137,26 @@ void return_prompt(void* data)
 
 void toggle_pause(void* data)
 {
-    if (!_paused)
+    if (_paused)
     {
+        _paused = 0;
+        if (_menu)
+        {
+            gf2d_window_free(_menu);
+            _menu = NULL;
+        }
+    }
+    else
+    {
+        if (_ex) return;
         _paused = 1;
-        if (!_ex) _menu = window_menu(
+        _menu = window_menu(
             "Pause",
             toggle_pause, "Continue",
             open_skills, "View Skills",
             return_prompt, "Return to Menu",
             NULL
         );
-    }
-    else
-    {
-        _paused = 0;
-        gf2d_window_free(_menu);
-        _menu = NULL;
     }
     toggle_music();
 }
@@ -182,7 +195,6 @@ int main(int argc, char * argv[])
     gf2d_windows_init(128, "config/windows.cfg");
     entity_manager_init(1024);
     camera_set_dimensions(gfc_vector2d(1200, 720));
-    path_init();
     gf2d_mouse_load("actors/mouse.actor");
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -202,7 +214,7 @@ int main(int argc, char * argv[])
         if (_level && !e)
         {
             // pausing
-            if (gfc_input_key_pressed("q") && !_paused)
+            if (gfc_input_key_pressed("q") && !_paused && !_ex)
             {
                 toggle_pause(NULL);
                 gf2d_windows_play_sound("cancel");

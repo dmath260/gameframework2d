@@ -7,6 +7,7 @@
 
 #include "door.h"
 #include "audio.h"
+#include "path.h"
 #include "level.h"
 #include "camera.h"
 #include "boss1.h"
@@ -177,9 +178,10 @@ Level* level_load(const char* filepath, Uint8 music)
 	level_bake_tiles(level);
 	level_load_entities(level);
 	level_setup_camera_bounds(level);
-	
+
 	sj_free(json);
 	set_current_level(level);
+	path_init();
 	return level;
 }
 
@@ -228,6 +230,7 @@ void level_add_border(Level* level, Uint8 tile) {
 void level_free(Level* level)
 {
 	if (!level) return;
+	path_close();
 	gf2d_sprite_free(level->background);
 	gf2d_sprite_free(level->tileLayer);
 	gf2d_sprite_free(level->tileDef->sheet);
@@ -499,6 +502,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 
 	fclose(file);
 	set_current_level(level);
+	path_init();
 	return level;
 }
 
