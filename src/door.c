@@ -14,7 +14,14 @@ Uint8 door_touch(Entity* self, Entity* other)
 	if (gfc_input_key_pressed("w")) {
 		gf2d_windows_play_sound("door");
 		level_load(level->nextLevel, 1);
-		if (!get_current_level()) level_load_bin(level->nextLevel, 1);
+		if (!get_current_level())
+		{
+			if (!get_current_level())
+			{
+				return 1;
+			}
+			level_load_bin(level->nextLevel, 1);
+		}
 	}
 	return 1;
 }

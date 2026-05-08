@@ -2,6 +2,7 @@
 
 #include "gf2d_windows.h"
 
+#include "level.h"
 #include "bullet.h"
 
 void bullet_free(Entity* self)
@@ -11,8 +12,30 @@ void bullet_free(Entity* self)
 
 void bullet_think(Entity* self)
 {
+	int x, y, i;
+	Level* level;
+
 	if (!self) return;
 	self->thinkPos.x += self->topSpeed;
+
+	level = get_current_level();
+	if (!level) return;
+	float x_pos[4] = { self->thinkPos.x, self->thinkPos.x,
+		self->thinkPos.x + self->bounds.w, self->thinkPos.x + self->bounds.w };
+	float y_pos[4] = { self->thinkPos.y, self->thinkPos.y + self->bounds.h,
+		self->thinkPos.y, self->thinkPos.y + self->bounds.h };
+
+	for (int i = 0; i < 4; i++)
+	{
+		x = (int)(x_pos[i] / 32);
+		y = (int)(y_pos[i] / 32);
+		i = level_get_tile_index(level, x, y);
+		if (i < 0 || tile_is_solid(level->tileMap[i], 1))
+		{
+			entity_free(self);
+			return;
+		}
+	}
 }
 
 void bullet_update(Entity* self)

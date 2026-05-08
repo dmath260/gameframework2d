@@ -103,6 +103,8 @@ void load_main_menu()
 
 void die(void* data)
 {
+    // Note: the player_save fails here because they player's already been freed.
+    // Move it to the player_free function and delete the entity_free function here.
     player_save(_player);
     entity_free(_player);
     _alive = 0;
@@ -117,6 +119,24 @@ void die(void* data)
     gf2d_windows_play_sound("death");
 
     _menu = window_alert("You died!", "Click to return to the menu.", load_main_menu, NULL);
+}
+
+void you_win(void* data)
+{
+    player_save(_player);
+    entity_free(_player);
+    _alive = 0;
+    _level = NULL;
+
+    if (_menu) gf2d_window_free(_menu);
+    _menu = NULL;
+    _paused = 0;
+
+    on_cancel(data);
+    load_music_pair("audio/music/silence.mp3", "audio/music/silence.mp3");
+    gf2d_windows_play_sound("win");
+
+    _menu = window_alert("Level cleared!", "Click to return to the menu.", load_main_menu, NULL);
 }
 
 void return_to_menu(void* data)
@@ -224,6 +244,10 @@ int main(int argc, char * argv[])
             {
                 entity_manager_think_all();
                 entity_manager_update_all();
+                if (!get_current_level() && _player && _player->health)
+                {
+                    you_win(NULL);
+                }
                 music_update();
             }
         }

@@ -763,6 +763,10 @@ void entity_update(Entity *self)
 	if (!self) return;
 
 	current_level = get_current_level();
+	if (!current_level)
+	{
+		return;
+	}
 	if (self->position.x < 0 || self->position.x > current_level->width * current_level->tileDef->width)
 	{
 		self->health = 0;
@@ -786,6 +790,10 @@ void entity_manager_update_all()
 		if (!entityManager.entityList[i]._inuse) continue;
 		if (!entityManager.entityList[i].update) continue;
 		entity_update(&entityManager.entityList[i]);
+		if (!get_current_level())
+		{
+			return;
+		}
 	}
 }
 

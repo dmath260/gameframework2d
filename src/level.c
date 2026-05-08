@@ -41,6 +41,11 @@ Level* level_load(const char* filepath, Uint8 music)
 	{
 		return NULL;
 	}
+	else if (!strcmp("level/youwin", filepath))
+	{
+		level_free(get_current_level());
+		return NULL;
+	}
 
 	strncpy(buffer, filepath, sizeof(GFC_TextLine) - 1);
 	buffer[sizeof(buffer) - 1] = '\0';
