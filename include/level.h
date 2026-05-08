@@ -99,4 +99,12 @@ Level *level_load_bin(const char* filename, Uint8 music);
 */
 void level_draw(Level* level);
 
+/**
+* @brief checks if a given tile is solid
+* @param tile_id the id of the tile to check
+* @param areVinesSolid 1 if you want to count vines as solid, 0 otherwise
+* @return 1 if given tile is solid, 0 otherwise
+*/
+int tile_is_solid(int tile_id, Uint8 areVinesSolid);
+
 #endif

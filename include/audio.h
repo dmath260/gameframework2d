@@ -95,9 +95,4 @@ void music_update();
 */
 void music_queue_clear();
 
-/**
-* @brief frees the music queue and every element in it
-*/
-void music_queue_free();
-
 #endif

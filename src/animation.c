@@ -20,7 +20,6 @@ AnimData* animdata_parse(SJson* config, char* state, AnimData* animationData)
 	if (!animationData) {
 		animationData = animdata_new();
 		if (!animationData) {
-			slog("Could not create animation data");
 			return NULL;
 		}
 	}

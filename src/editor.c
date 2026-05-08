@@ -63,7 +63,7 @@ int little_bobby_tables(char* string_to_check)
 
     if (strncmp(_name_buf, string_to_check, strlen(string_to_check)))
     {
-        slog("Did you really name your son Robert'); DROP TABLE Students;-- ?");
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Invalid path", "Cannot load from another folder.", clear, NULL);
         return 0;
     }
@@ -82,7 +82,7 @@ int little_bobby_tables(char* string_to_check)
     check = strchr(check + 1, '/');
     if (check)
     {
-        slog("Did you really name your son Robert'); DROP TABLE Students;-- ?");
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Invalid path", "Cannot load from unrecognized subfolders.", clear, NULL);
         return 0;
     }
@@ -103,6 +103,7 @@ void load(void* data)
         level = level_load_bin(_name_buf, 0);
         if (!level)
         {
+            gf2d_windows_play_sound("notify");
             _win2 = window_alert("Failed to load level", "File is neither valid JSON or binary.", clear, NULL);
             return;
         }
@@ -138,6 +139,7 @@ void save(void* data)
     _level_name = _strdup(_name_buf);
     _win2 = window_alert("Level saved", "Level saved successfully.", clear, NULL);
     */
+    gf2d_windows_play_sound("notify");
     _win2 = window_alert("Not supported", "Support for saving to JSON will be ready shortly.", clear, NULL);
 }
 
@@ -155,6 +157,7 @@ void save_bin(void* data)
         level = level_load_bin(_name_buf, 0);
         if (!level)
         {
+            gf2d_windows_play_sound("notify");
             _win2 = window_alert("Failed to save level", "Sorry, something went wrong.", clear, NULL);
             return;
         }
@@ -162,6 +165,7 @@ void save_bin(void* data)
     level_free(level);
     if (_level_name) free((void*)_level_name);
     _level_name = _strdup(_name_buf);
+    gf2d_windows_play_sound("get");
     _win2 = window_alert("Level saved", "Level saved successfully.", clear, NULL);
 }
 
@@ -191,6 +195,7 @@ void change_background(void* data)
     background = gf2d_sprite_load_image(_name_buf);
     if (!background)
     {
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Failed to load background", "File is not a valid image.", clear, NULL);
         return;
     }
@@ -214,11 +219,13 @@ int validate_size()
         {
             if (i == 0)
             {
+                gf2d_windows_play_sound("notify");
                 _win2 = window_alert("Invalid size", "Cannot start size with a space", clear, NULL);
                 return 0;
             }
             if (space)
             {
+                gf2d_windows_play_sound("notify");
                 _win2 = window_alert("Invalid size", "Cannot have multiple spaces", clear, NULL);
                 return 0;
             }
@@ -226,6 +233,7 @@ int validate_size()
         }
         else if (_name_buf[i] < '0' || _name_buf[i] > '9')
         {
+            gf2d_windows_play_sound("notify");
             _win2 = window_alert("Invalid size", "Only use numbers and a single space", clear, NULL);
             return 0;
         }
@@ -234,6 +242,7 @@ int validate_size()
 
     if (space != 2)
     {
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Invalid size", "Did not detect two separate numbers", clear, NULL);
         return 0;
     }
@@ -256,12 +265,14 @@ void change_size(void* data)
         width += (_name_buf[i] - '0');
         if (width > 256)
         {
+            gf2d_windows_play_sound("notify");
             _win2 = window_alert("Invalid size", "Width cannot be greater than 256", clear, NULL);
             return;
         }
     }
     if (width < 38)
     {
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Invalid size", "Width cannot be less than 38", clear, NULL);
         return;
     }
@@ -272,12 +283,14 @@ void change_size(void* data)
         height += (_name_buf[i] - '0');
         if (height > 256)
         {
+            gf2d_windows_play_sound("notify");
             _win2 = window_alert("Invalid size", "Height cannot be greater than 256", clear, NULL);
             return;
         }
     }
     if (height < 23)
     {
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Invalid size", "Width cannot be less than 23", clear, NULL);
         return;
     }
@@ -335,6 +348,7 @@ void change_music_intro(void* data)
     music = pop_music(_name_buf);
     if (!music)
     {
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Failed to load music intro", "File is not a valid audio file.", clear, NULL);
         return;
     }
@@ -357,6 +371,7 @@ void change_music_loop(void* data)
     music = pop_music(_name_buf);
     if (!music)
     {
+        gf2d_windows_play_sound("notify");
         _win2 = window_alert("Failed to load music loop", "File is not a valid audio file.", clear, NULL);
         return;
     }
@@ -385,6 +400,7 @@ void change_next_level(void* data)
             level = level_load_bin(_name_buf, 0);
             if (!level)
             {
+                gf2d_windows_play_sound("notify");
                 _win2 = window_alert("Failed to load next level", "Next level is not valid.", clear, NULL);
                 return;
             }
@@ -481,7 +497,6 @@ void increment_entity(void* data)
         _ent_id++;
         if (_ent_id == id)
         {
-            slog("Could not find any other entities.");
             return;
         }
         ent = get_entity_data_at_id(_ent_id);
@@ -499,7 +514,6 @@ void decrement_entity(void* data)
         _ent_id--;
         if (_ent_id == id)
         {
-            slog("Could not find any other entities.");
             return;
         }
         ent = get_entity_data_at_id(_ent_id);
@@ -539,8 +553,6 @@ void pan_camera(Uint8 dir)
             if (_camera.x == _level->width - 30) gf2d_windows_play_sound("cancel");
             else _camera.x++;
             break;
-        default:
-            slog("Direction not recognized.");
     }
 }
 
@@ -798,7 +810,6 @@ Window* window_editor()
     _win = gf2d_window_load("menus/editor_menu.json");
     if (!_win)
     {
-        slog("failed to load editor window");
         return NULL;
     }
 

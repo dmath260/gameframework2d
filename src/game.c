@@ -14,6 +14,7 @@
 #include "audio.h"
 #include "editor.h"
 #include "entity.h"
+#include "path.h"
 #include "player.h"
 #include "monster.h"
 #include "level.h"
@@ -49,7 +50,7 @@ void load_level(void* data)
     gf2d_window_free(_menu);
     _ex = NULL;
     //level_load("level/testlevel.json", 1);
-    level_load_bin("level/level2.bin", 1);
+    level_load_bin("level/level3.bin", 1);
 
     _player = player_entity_get();
     if (!_player) _player = player_entity_new(gfc_vector2d(
@@ -181,6 +182,7 @@ int main(int argc, char * argv[])
     gf2d_windows_init(128, "config/windows.cfg");
     entity_manager_init(1024);
     camera_set_dimensions(gfc_vector2d(1200, 720));
+    path_init();
     gf2d_mouse_load("actors/mouse.actor");
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -283,7 +285,6 @@ int main(int argc, char * argv[])
         }
     }
     slog("---==== END ====---");
-    music_queue_free();
     gf2d_sprite_free(menu_bg);
     return 0;
 }

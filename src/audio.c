@@ -8,6 +8,26 @@
 static GFC_List* music_queue = {0};
 static MusicData* current_music = {0};
 
+void music_queue_clear()
+{
+    if (!music_queue) return;
+    Uint32 i;
+    MusicData* data;
+    for (i = 0; i < gfc_list_get_count(music_queue); i++)
+    {
+        data = (MusicData*)gfc_list_get_nth(music_queue, i);
+        if (!data) continue;
+        if (data->music) Mix_FreeMusic(data->music);
+    }
+    gfc_list_clear(music_queue);
+}
+
+void music_queue_free()
+{
+    music_queue_clear();
+    gfc_list_delete(music_queue);
+}
+
 void audio_init(
     Uint32 maxGFC_Sounds,
     Uint32 channels,
@@ -21,7 +41,6 @@ void audio_init(
     // Either use all 44.1 kHz, or use all 48 kHz. Nothing else will work.
     music_queue = gfc_list_new();
     if (!music_queue) {
-        slog("Couldn't initialize music queue");
         return;
     }
 
@@ -34,13 +53,12 @@ void audio_init(
         enableOgg
     );
 
-    slog("initialized audio system");
+    atexit(music_queue_free);
 }
 
 int play_music(MusicData *music_data)
 {
     if (!music_data || !music_data->music) return -1;
-    slog("Playing music %s with %u loops", music_data->filename, music_data->loops);
     if (Mix_PlayMusic(music_data->music, music_data->loops)) return -1;
     if (current_music) {
         Mix_FreeMusic(current_music->music);
@@ -89,14 +107,12 @@ int enqueue_music(char* filename, int loops)
     void* music_void;
     music = Mix_LoadMUS(filename);
     if (!music) {
-        slog("Music couldn't be loaded: %s", filename);
         return -1;
     }
     music_data = gfc_allocate_array(sizeof(MusicData), 1);
     if (!music_data)
     {
         Mix_FreeMusic(music);
-        slog("Couldn't allocate music data");
         return -1;
     }
     music_data->music = music;
@@ -152,26 +168,5 @@ void music_update()
     remTime = Mix_MusicDuration(NULL) - Mix_GetMusicPosition(NULL);
     if (!Mix_PlayingMusic() || remTime < 1.0 / 120.0 ) {
         if (gfc_list_get_count) play_music_first();
-        else if (Mix_PlayingMusic()) slog("Music queue is empty");
     }
-}
-
-void music_queue_clear()
-{
-    if (!music_queue) return;
-    Uint32 i;
-    MusicData* data;
-    for (i = 0; i < gfc_list_get_count(music_queue); i++)
-    {
-        data = (MusicData*)gfc_list_get_nth(music_queue, i);
-        if (!data) continue;
-        if (data->music) Mix_FreeMusic(data->music);
-    }
-    gfc_list_clear(music_queue);
-}
-
-void music_queue_free()
-{
-    music_queue_clear();
-    gfc_list_delete(music_queue);
 }

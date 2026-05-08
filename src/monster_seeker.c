@@ -3,6 +3,7 @@
 #include "monster_seeker.h"
 #include "player.h"
 #include "level.h"
+#include "path.h"
 
 void monster_seeker_free(Entity* self)
 {
@@ -18,6 +19,7 @@ void monster_seeker_think(Entity* self)
 	Level* current_level;
 	Uint32 tw, th, x_check, y_check, tile;
 	Uint8 dir, close;
+	GFC_Vector2D self_pos, next_pos;
 
 	current_level = get_current_level();
 	if ((!self) || (!self->data) || !current_level) return;
@@ -27,6 +29,30 @@ void monster_seeker_think(Entity* self)
 	monster_think(self);
 
 	if (!data->player) return;
+
+	self_pos = gfc_vector2d(32 * roundf(self->position.x / 32), 32 * roundf(self->position.y / 32));
+	next_pos = find_next(self->position, data->player->position, 0, 18, 0, 0);
+	slog("(%f, %f), (%f, %f)", self_pos.x, self_pos.y, next_pos.x, next_pos.y);
+	if (gfc_vector2d_compare(next_pos, self_pos))
+	{
+		//slog("Oops");
+		return;
+	}
+	dir = next_pos.x < self_pos.x; // left if true, right if false
+	if (next_pos.x == self_pos.x) dir = (self->animationData->FrameRow - 2) / 4;
+	self->animationData->FrameRow = dir * 4 + 2;
+	if (next_pos.x != self_pos.x) self->velocity.x = self->topSpeed * (1 - 2 * dir);
+	else if (next_pos.y != self_pos.y) self->velocity.x = self->topSpeed * (1 - 2 * dir);
+	//self->thinkPos.x += self->velocity.x;
+
+	if (self_pos.y > next_pos.y && self->isGrounded)
+	{
+		self->velocity.y += self->impulse;
+		self->isGrounded = 0;
+	}
+	//if (gfc_vector2d_compare(self->position, self->thinkPos)) slog("Oops, I did it again");
+	slog("%f %f %f %f", self->thinkPos.x, self->position.x, self->thinkPos.y, self->position.y);
+	/*
 	if (data->player->position.x - self->position.x > self->velocity.x
 		|| data->player->position.x - self->position.x < -1 * self->velocity.x)
 	{
@@ -72,6 +98,7 @@ void monster_seeker_think(Entity* self)
 		self->thinkPos.x -= self->velocity.x;
 	}
 	else self->thinkPos.x -= self->velocity.x;
+	*/
 }
 
 void monster_seeker_update(Entity* self)
@@ -83,6 +110,7 @@ void monster_seeker_update(Entity* self)
 	*/
 
 	// do general monster updating first
+	//slog("%f %f %f %f", self->thinkPos.x, self->position.x, self->thinkPos.y, self->position.y);
 	monster_update(self);
 }
 

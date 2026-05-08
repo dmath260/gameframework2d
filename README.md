@@ -2,10 +2,12 @@ This will be a real game eventually, I'm just getting started.
 
 
 
-Credit for assets (4/24/26 update):
+Credit for assets (5/4/26 update):
 
 * Note: these are no longer on the GitHub as of 3/31/26 because almost all of my assets are copyrighted
 * All player, enemy, and boss sprites from the Pokémon Mystery Dungeon sprite repository (which took the sprites from the GBA/DS Pokémon Mystery Dungeon games)
+
+  * Cutscene images not from the games were created by baronessfaron and Noo
 * Spike ball and switch block sprites from Super Mario Maker
 * Trampoline sprite edited from Super Mario Maker
 * Vine sprite from Super Mario World
@@ -22,6 +24,7 @@ Credit for assets (4/24/26 update):
 
   * Animal Crossing
   * Kirby's Dream Land 3
+  * Kirby: Canvas Curse
   * Mario Paint
   * Pokémon Mystery Dungeon: Blue Rescue Team
   * Pokémon Super Mystery Dungeon

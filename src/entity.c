@@ -46,23 +46,19 @@ void entity_manager_init(Uint32 max)
 {
 	if (!max)
 	{
-		slog("cannot initialize entity system with zero entities");
 		return;
 	}
 	entityManager.entityList = gfc_allocate_array(sizeof(Entity), max);
 	if (!entityManager.entityList)
 	{
-		slog("failed to allocate %i entities", max);
 		return;
 	}
 	entityManager.entityMax = max;
 	atexit(entity_manager_close);
-	slog("initialized entity system");
 
 	entity_id_list = gfc_list_new_size(256);
 	if (!entity_id_list)
 	{
-		slog("failed to allocate entity ID list");
 		return;
 	}
 	entity_id_list->count = 256; //manual override so list methods work
@@ -76,13 +72,11 @@ void entity_manager_init(Uint32 max)
 	json = sj_load("config/entity_ids.cfg");
 	if (!json)
 	{
-		slog("JSON data invalid");
 		return;
 	}
 	config = sj_object_get_value(json, "entities");
 	if (!config)
 	{
-		slog("failed to load entity ID JSON");
 		sj_free(json);
 		return;
 	}
@@ -114,7 +108,6 @@ void entity_manager_close(void)
 	}
 	free(entityManager.entityList);
 	memset(&entityManager, 0, sizeof(EntityManager));
-	slog("closed entity system");
 
 	EntityEntry* data;
 	for (i = 0; i < gfc_list_get_count(entity_id_list); i++)
@@ -143,7 +136,6 @@ Entity* entity_new()
 {
 	Uint32 i;
 	if (!entityManager.entityList) {
-		slog("entity system has not been initialized");
 		return NULL;
 	}
 	for (i = 0; i < entityManager.entityMax; i++)
@@ -165,7 +157,6 @@ Entity* entity_get_by_id(Uint32 id)
 {
 	Uint32 i;
 	if (!entityManager.entityList) {
-		slog("entity system has not been initialized");
 		return NULL;
 	}
 	for (i = 0; i < entityManager.entityMax; i++)
@@ -223,7 +214,6 @@ void entity_manager_draw_all()
 {
 	Uint32 i;
 	if (!entityManager.entityList) {
-		slog("entity system has not been initialized");
 		return;
 	}
 	for (i = 0; i < entityManager.entityMax; i++)
@@ -297,9 +287,7 @@ float binary_search_position(Entity *self, Uint8 axis, int start, int end)
 				index = level_get_tile_index(current_level, j, tr);
 				if (index >= 0 && current_level->tileMap[index] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					coll = 1;
 					break;
 				}
@@ -317,9 +305,7 @@ float binary_search_position(Entity *self, Uint8 axis, int start, int end)
 				index = level_get_tile_index(current_level, j, tr);
 				if (index >= 0 && current_level->tileMap[index] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					coll = 1;
 					break;
 				}
@@ -366,9 +352,7 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, indices.x, y);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					return 1;
 				}
 			}
@@ -380,9 +364,7 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, indices.w, y);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					return 1;
 				}
 			}
@@ -398,9 +380,7 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.h);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					return 1;
 				}
 			}
@@ -409,9 +389,7 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.y);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					return 1;
 				}
 			}
@@ -421,9 +399,7 @@ Uint8 check_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, ycheck);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67) continue;
-					if (current_level->tileMap[i] == 69) continue;
-					if (current_level->tileMap[i] == 73) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 0)) continue;
 					return 1;
 				}
 			}
@@ -475,7 +451,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, indices.x, y);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 1)) continue;
 					if (current_level->tileMap[i] == 73)
 					{
 						self->isClimbing = 1;
@@ -495,7 +471,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, indices.w, y);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 1)) continue;
 					if (current_level->tileMap[i] == 73)
 					{
 						self->isClimbing = 1;
@@ -520,7 +496,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.h);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 1)) continue;
 					if (current_level->tileMap[i] == 73)
 					{
 						self->isClimbing = 1;
@@ -548,7 +524,7 @@ void clip_to_bounds(Entity* self, Uint8 axis)
 				i = level_get_tile_index(current_level, x, indices.y);
 				if (i >= 0 && current_level->tileMap[i] > 0)
 				{
-					if (current_level->tileMap[i] == 67 || current_level->tileMap[i] == 69) continue;
+					if (!tile_is_solid(current_level->tileMap[i], 1)) continue;
 					if (current_level->tileMap[i] == 73)
 					{
 						self->isClimbing = 1;
@@ -704,7 +680,6 @@ void entity_manager_think_all()
 {
 	Uint32 i;
 	if (!entityManager.entityList) {
-		slog("entity system has not been initialized");
 		return;
 	}
 	for (i = 0; i < entityManager.entityMax; i++)
@@ -741,7 +716,6 @@ void entity_update(Entity *self)
 	if (self->iFrames || (self->item == IT_Invincible && self == player_entity_get())) {
 		if (self->item == IT_Invincible && self == player_entity_get())
 		{
-			//slog("%i", self->itemFrames);
 			self->iFrames = self->itemFrames;
 			if (self->color.r >= 360) self->color.r -= 360;
 			self->color = gfc_color_hsl(self->color.r + M_PI, 1, 0.5, 1);
@@ -793,7 +767,7 @@ void entity_update(Entity *self)
 
 	// Last thing: check if entity is still alive
 	if (self->health <= 0) {
-		if (self == player_entity_get()) player_kill("Player ran out of health.");
+		if (self == player_entity_get()) player_kill();
 		else entity_free(self);
 	}
 }
@@ -802,7 +776,6 @@ void entity_manager_update_all()
 {
 	Uint32 i;
 	if (!entityManager.entityList) {
-		slog("entity system has not been initialized");
 		return;
 	}
 	for (i = 0; i < entityManager.entityMax; i++)
@@ -823,7 +796,6 @@ void entity_hurt(Entity* self, Uint8 damage)
 	self->color.r /= 2;
 	self->color.g /= 2;
 	self->color.b /= 2;
-	if (self == player_entity_get()) slog("Ouch! Current health: %i", self->health);
 }
 
 void entity_load(Entity* self, char* state)
@@ -833,30 +805,25 @@ void entity_load(Entity* self, char* state)
 
 	if (!self)
 	{
-		slog("Invalid entity");
 		return;
 	}
 	if (!state)
 	{
-		slog("Invalid state");
 		return;
 	}
 	if (!self->animDataFilePath)
 	{
-		slog("JSON filepath invalid");
 		return;
 	}
 	json = sj_load(self->animDataFilePath);
 	if (!json)
 	{
-		slog("JSON data invalid");
 		return;
 	}
 
 	config = sj_object_get_value(json, "AnimData");
 	if (!config)
 	{
-		slog("Failed to load animation data for %s", self->animDataFilePath);
 		sj_free(json);
 		return;
 	}
@@ -864,7 +831,6 @@ void entity_load(Entity* self, char* state)
 	animationData = animdata_parse(config, state, self->animationData);
 	if (!animationData)
 	{
-		slog("Failed to parse animation data for %s", self->animDataFilePath);
 		sj_free(json);
 		return;
 	}
