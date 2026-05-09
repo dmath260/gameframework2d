@@ -24,6 +24,7 @@ PlayerData* get_data(Entity* self)
 void player_free(Entity* self)
 {
 	PlayerData* data;
+	player_save(self);
 	data = get_data(self);
 	//clean up anything I own that I asked for
 	free(data);
@@ -204,6 +205,32 @@ void set_skills(Entity* player, SkillsOwned skills)
 	data->skills = skills;
 }
 
+Uint8 beat_level(Entity* player, Uint8 level_beaten)
+{
+	LevelsBeaten mask;
+	if (!player || !player->data) return 0;
+	PlayerData* data;
+	data = get_data(player);
+	mask = 1 << level_beaten;
+
+	// only give skill points if level not beaten previously
+	if ((data->levelsBeaten & mask)) return 0;
+	give_skill_points(player, 2 * level_beaten);
+	data->levelsBeaten |= mask;
+	return 1;
+}
+
+Uint8 level_cleared(Entity* player, Uint8 level)
+{
+	LevelsBeaten mask;
+	if (!player || !player->data) return 0;
+	PlayerData* data;
+	data = get_data(player);
+	mask = 1 << level;
+	if ((data->levelsBeaten & mask)) return 1;
+	return 0;
+}
+
 void player_save(Entity* player)
 {
 	PlayerData* data;
@@ -219,7 +246,7 @@ void player_save(Entity* player)
 	// update this every time you update the player structure
 	fwrite(&data->skillPoints, sizeof(Uint8), 1, file);
 	fwrite(&data->skills, sizeof(SkillsOwned), 1, file);
-	fwrite(&data->levelsBeaten, sizeof(Uint8), 1, file);
+	fwrite(&data->levelsBeaten, sizeof(LevelsBeaten), 1, file);
 
 	fclose(file);
 }
@@ -237,7 +264,7 @@ PlayerData* player_load()
 	data = gfc_allocate_array(sizeof(PlayerData), 1);
 	fread(&data->skillPoints, sizeof(Uint8), 1, file);
 	fread(&data->skills, sizeof(SkillsOwned), 1, file);
-	fread(&data->levelsBeaten, sizeof(Uint8), 1, file);
+	fread(&data->levelsBeaten, sizeof(LevelsBeaten), 1, file);
 
 	fclose(file);
 	return data;

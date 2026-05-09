@@ -1,0 +1,369 @@
+{
+  "window": {
+    "dimensions": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "no_draw_generic": 1,
+    "justify": "center",
+    "align": "middle",
+    "elements": [
+      {
+        "type": "actor",
+        "name": "menu_bg",
+        "id": 0,
+        "bounds": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "image": "images/backgrounds/bg_sky.png"
+      },
+      {
+        "type": "list",
+        "bounds": [
+          0,
+          0.125,
+          1,
+          1
+        ],
+        "style": "vertical",
+        "item_size": [
+          0,
+          0
+        ],
+        "elements": [
+          {
+            "type": "label",
+            "name": "title",
+            "id": 1,
+            "bounds": [
+              10,
+              0,
+              1,
+              40
+            ],
+            "color": [
+              0,
+              0,
+              0,
+              255
+            ],
+            "text": "Select Level",
+            "justify": "center",
+            "align": "middle",
+            "style": "title"
+          },
+          {
+            "type": "list",
+            "bounds": [
+              0,
+              0.275,
+              1,
+              0.2
+            ],
+            "style": "horizontal",
+            "item_size": [
+              325,
+              0
+            ],
+            "elements": [
+              {
+                "type": "list",
+                "bounds": [
+                  225,
+                  0,
+                  100,
+                  144
+                ],
+                "style": "vertical",
+                "item_size": [
+                  0,
+                  0
+                ],
+                "elements": [
+                  {
+                    "type": "button",
+                    "name": "l1_button",
+                    "id": 10,
+                    "canHasFocus": true,
+                    "bounds": [
+                      0,
+                      0,
+                      100,
+                      100
+                    ],
+                    "sound": "confirm",
+                    "actor": {
+                      "type": "actor",
+                      "bounds": [
+                        0,
+                        0,
+                        100,
+                        100
+                      ],
+                      "id": 13,
+                      "actor": "actors/level1_button.actor"
+                    }
+                  },
+                  {
+                    "type": "actor",
+                    "name": "l1_label_bg",
+                    "id": 11,
+                    "bounds": [
+                      0,
+                      100,
+                      100,
+                      44
+                    ],
+                    "scale": [
+                      1.5625,
+                      0.6875
+                    ],
+                    "image": "images/ui/window_background_white.png",
+                    "color": [
+                      255,
+                      0,
+                      0,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "l1_label",
+                    "id": 12,
+                    "bounds": [
+                      0,
+                      100,
+                      100,
+                      44
+                    ],
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      255
+                    ],
+                    "text": "Level 1",
+                    "justify": "center",
+                    "align": "middle",
+                    "style": "H6"
+                  }
+                ]
+              },
+              {
+                "type": "list",
+                "bounds": [
+                  225,
+                  0,
+                  100,
+                  144
+                ],
+                "style": "vertical",
+                "item_size": [
+                  0,
+                  0
+                ],
+                "elements": [
+                  {
+                    "type": "button",
+                    "name": "l2_button",
+                    "id": 20,
+                    "canHasFocus": true,
+                    "bounds": [
+                      0,
+                      0,
+                      100,
+                      100
+                    ],
+                    "sound": "confirm",
+                    "actor": {
+                      "type": "actor",
+                      "bounds": [
+                        0,
+                        0,
+                        100,
+                        100
+                      ],
+                      "id": 23,
+                      "actor": "actors/level2_button.actor"
+                    }
+                  },
+                  {
+                    "type": "actor",
+                    "name": "l2_label_bg",
+                    "id": 21,
+                    "bounds": [
+                      0,
+                      100,
+                      100,
+                      44
+                    ],
+                    "scale": [
+                      1.5625,
+                      0.6875
+                    ],
+                    "image": "images/ui/window_background_white.png",
+                    "color": [
+                      255,
+                      0,
+                      0,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "l2_label",
+                    "id": 22,
+                    "bounds": [
+                      0,
+                      100,
+                      100,
+                      44
+                    ],
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      255
+                    ],
+                    "text": "Level 2",
+                    "justify": "center",
+                    "align": "middle",
+                    "style": "H6"
+                  }
+                ]
+              },
+              {
+                "type": "list",
+                "bounds": [
+                  225,
+                  0,
+                  100,
+                  144
+                ],
+                "style": "vertical",
+                "item_size": [
+                  0,
+                  0
+                ],
+                "elements": [
+                  {
+                    "type": "button",
+                    "name": "l3_button",
+                    "id": 30,
+                    "canHasFocus": true,
+                    "bounds": [
+                      0,
+                      0,
+                      100,
+                      100
+                    ],
+                    "sound": "confirm",
+                    "actor": {
+                      "type": "actor",
+                      "bounds": [
+                        0,
+                        0,
+                        100,
+                        100
+                      ],
+                      "id": 33,
+                      "actor": "actors/level3_button.actor"
+                    }
+                  },
+                  {
+                    "type": "actor",
+                    "name": "l3_label_bg",
+                    "id": 31,
+                    "bounds": [
+                      0,
+                      100,
+                      100,
+                      44
+                    ],
+                    "scale": [
+                      1.5625,
+                      0.6875
+                    ],
+                    "image": "images/ui/window_background_white.png",
+                    "color": [
+                      255,
+                      0,
+                      0,
+                      255
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "l3_label",
+                    "id": 32,
+                    "bounds": [
+                      0,
+                      100,
+                      100,
+                      44
+                    ],
+                    "color": [
+                      0,
+                      0,
+                      0,
+                      255
+                    ],
+                    "text": "Level 3",
+                    "justify": "center",
+                    "align": "middle",
+                    "style": "H6"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "quit",
+            "id": 2,
+            "canHasFocus": true,
+            "bounds": [
+              472,
+              0.65,
+              256,
+              64
+            ],
+            "sound": "confirm",
+            "justify": "center",
+            "label": {
+              "type": "label",
+              "name": "quit_l",
+              "id": 3,
+              "bounds": [
+                0,
+                0,
+                256,
+                64
+              ],
+              "text": "Quit",
+              "justify": "center",
+              "align": "middle",
+              "style": "small"
+            },
+            "actor": {
+              "type": "actor",
+              "bounds": [
+                0,
+                0,
+                256,
+                64
+              ],
+              "actor": "actors/unscaled_button.actor",
+              "justify": "center"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

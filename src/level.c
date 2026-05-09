@@ -41,14 +41,15 @@ Level* level_load(const char* filepath, Uint8 music)
 	{
 		return NULL;
 	}
-	else if (!strcmp("level/youwin", filepath))
-	{
-		level_free(get_current_level());
-		return NULL;
-	}
 
 	strncpy(buffer, filepath, sizeof(GFC_TextLine) - 1);
 	buffer[sizeof(buffer) - 1] = '\0';
+
+	json = sj_load(buffer);
+	if (!json)
+	{
+		return NULL;
+	}
 
 	if (get_current_level())
 	{
@@ -56,12 +57,7 @@ Level* level_load(const char* filepath, Uint8 music)
 		set_current_level(NULL);
 		level_free(level);
 	}
-	json = sj_load(buffer);
-	if (!json)
-	{
-		return NULL;
-	}
-
+	
 	config = sj_object_get_value(json, "level");
 	if (!config)
 	{
@@ -450,6 +446,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	file = fopen(buffer, "rb");
 	if (!file)
 	{
+		slog("a");
 		return NULL;
 	}
 
@@ -458,6 +455,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	if (!level)
 	{
 		fclose(file);
+		slog("b");
 		return NULL;
 	}
 
@@ -475,6 +473,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	{
 		level_free(level);
 		fclose(file);
+		slog("c");
 		return NULL;
 	}
 
@@ -483,6 +482,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	{
 		level_free(level);
 		fclose(file);
+		slog("d");
 		return NULL;
 	}
 
@@ -491,6 +491,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	{
 		level_free(level);
 		fclose(file);
+		slog("e");
 		return NULL;
 	}
 

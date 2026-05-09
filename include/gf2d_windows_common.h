@@ -26,6 +26,14 @@ Window* window_menu(
     void* data
 );
 
+Window* window_select(
+    void(*onButton1)(void*),
+    void(*onButton2)(void*),
+    void(*onButton3)(void*),
+    void(*onButton4)(void*),
+    void* data
+);
+
 Window *window_text_entry(char *question, char *defaultText, void *callbackData, size_t length, void(*onOk)(void *),void(*onCancel)(void *));
 
 Window *window_key_value(char *question, char *defaultKey,char *defaultValue,void *callbackData, size_t keyLength,size_t valueLength, void(*onOk)(void *),void(*onCancel)(void *));

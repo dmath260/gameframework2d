@@ -1,0 +1,34 @@
+{
+    "actor":
+    {
+        "sprite": "images/cutscenes/0386.png",
+        "frameWidth": 40,
+        "frameHeight": 40,
+        "framesPerLine": 1,
+        "scale": [2.5,2.5],
+        "actionList":
+        [
+            {
+                "action": "idle",
+                "startFrame": 3,
+                "endFrame": 3,
+                "frameRate": 0,
+                "type": "loop"
+            },
+            {
+                "action": "high",
+                "startFrame": 4,
+                "endFrame": 4,
+                "frameRate": 0,
+                "type": "loop"
+            },
+            {
+                "action": "press",
+                "startFrame": 5,
+                "endFrame": 5,
+                "frameRate": 0,
+                "type": "loop"
+            }
+        ]
+    }
+}

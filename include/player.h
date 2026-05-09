@@ -30,13 +30,22 @@ typedef enum
 	SO_ALL = 127
 }SkillsOwned;
 
+typedef enum
+{
+	LB_NONE = 0,
+	LB_Level1 = 1,
+	LB_Level2 = 2,
+	LB_Level3 = 4,
+	LB_ALL = 7
+}LevelsBeaten;
+
 typedef struct
 {
 	PlayerStates state;
 	Uint8 itemFlag;
 	Uint8 skillPoints;
 	SkillsOwned skills;
-	Uint8 levelsBeaten;
+	LevelsBeaten levelsBeaten;
 } PlayerData;
 
 /**
@@ -101,6 +110,22 @@ void revoke_skill(Entity* player, SkillsOwned skill);
 * @param skill the skill(s) the player will have
 */
 void set_skills(Entity* player, SkillsOwned skills);
+
+/**
+* @brief saves that the player beat a specific level
+* @param player a pointer to the player
+* @param level_beaten the level the player just cleared
+* @return 1 if level cleared for the first time, 0 otherwise (including on error)
+*/
+Uint8 beat_level(Entity* player, Uint8 level_beaten);
+
+/**
+* @brief checks if a level has been cleared
+* @param player a pointer to the player
+* @param level the level(s) to check
+* @return 1 if level already cleared, 0 otherwise (including on error)
+*/
+Uint8 level_cleared(Entity* player, Uint8 level);
 
 /**
 * @brief saves player data to a binary file (currently "saves/player.sav")

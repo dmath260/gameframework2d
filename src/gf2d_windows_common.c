@@ -8,6 +8,7 @@
 #include "gf2d_elements.h"
 #include "gf2d_element_label.h"
 #include "gf2d_element_entry.h"
+#include "gf2d_element_actor.h"
 
 #include "gf2d_windows_common.h"
 
@@ -280,6 +281,141 @@ Window* window_menu(
     return win;
 }
 
+int select_free(Window* win)
+{
+    GFC_List* list;
+    int count, i;
+    GFC_Callback* callback;
+
+    if (!win)return 0;
+    if (!win->data)return 0;
+
+    list = (GFC_List*)win->data;
+    if (list)
+    {
+        count = gfc_list_get_count(list);
+
+        for (i = 0; i < count; i++)
+        {
+            callback = (GFC_Callback*)gfc_list_get_nth(list, i);
+            if (callback)
+            {
+                gfc_callback_free(callback);
+            }
+        }
+
+        gfc_list_delete(list);
+    }
+    return 0;
+}
+
+int select_update(Window* win, GFC_List* updateList)
+{
+    int i, count;
+    Element* e;
+    GFC_List* callbacks;
+    GFC_Callback* callback;
+    if (!win)return 0;
+    if (!updateList)return 0;
+
+    callbacks = (GFC_List*)win->data;
+    count = gfc_list_get_count(updateList);
+    for (i = 0; i < count; i++)
+    {
+        e = gfc_list_get_nth(updateList, i);
+        if (!e)continue;
+        switch (e->index)
+        {
+            case 10:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 0);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                gf2d_window_free(win);
+                return 1;
+                break;
+            case 20:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 1);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                gf2d_window_free(win);
+                return 1;
+                break;
+            case 30:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 2);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                gf2d_window_free(win);
+                return 1;
+                break;
+            case 2:
+                callback = (GFC_Callback*)gfc_list_get_nth(callbacks, 3);
+                if (callback)
+                {
+                    gfc_callback_call(callback);
+                }
+                gf2d_window_free(win);
+                return 1;
+        }
+    }
+    return 1;
+}
+
+Window* window_select(
+    void(*onButton1)(void*),
+    void(*onButton2)(void*),
+    void(*onButton3)(void*),
+    void(*onButton4)(void*),
+    void* data
+)
+{
+    Window* win;
+    GFC_List* callbacks;
+    Uint8 levelsBeaten, i;
+    char buffer[36];
+    win = gf2d_window_load("menus/level_select_menu.json");
+    if (!win)
+    {
+        slog("failed to load level select menu");
+        return NULL;
+    }
+
+    levelsBeaten = (Uint8*)data;
+    for (i = 1; i < 4; i++)
+    {
+        if (!(levelsBeaten & (1 << (i - 1)))) continue;
+        gf2d_element_set_color(gf2d_window_get_element_by_id(win, 1 + 10 * i), gfc_color8(0, 176, 80, 255));
+        sprintf(buffer, "actors/level%i_button_defeated.actor", i);
+        gf2d_element_actor_set_actor(gf2d_window_get_element_by_id(win, 3 + 10 * i), buffer);
+    }
+
+    win->update = select_update;
+    win->free_data = select_free;
+    callbacks = gfc_list_new();
+    if (onButton1)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton1, data));
+    }
+    if (onButton2)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton2, data));
+    }
+    if (onButton3)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton3, data));
+    }
+    if (onButton4)
+    {
+        gfc_list_append(callbacks, gfc_callback_new(onButton4, data));
+    }
+    win->data = callbacks;
+    return win;
+}
 
 int ok_update(Window *win, GFC_List *updateList)
 {

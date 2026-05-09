@@ -25,8 +25,10 @@ static Window* _menu = NULL;
 static Window* _ex = NULL;
 Level* _level;
 Entity* _player;
+Uint8 _l;
 
 void toggle_pause(void* data);
+void load_main_menu();
 
 void open_skills(void* data)
 {
@@ -47,11 +49,17 @@ void on_cancel(void* data)
 
 void load_level(void* data)
 {
+    const char* path;
+    if (get_current_level()) level_free(get_current_level());
     gf2d_window_free(_menu);
     _menu = NULL;
     _ex = NULL;
-    //level_load("level/testlevel.json", 1);
-    level_load_bin("level/level3.bin", 1);
+    path = (const char*)(data);
+    level_load(path, 1);
+    if (!get_current_level())
+    {
+        level_load_bin(path, 1);
+    }
 
     _player = player_entity_get();
     if (!_player) _player = player_entity_new(gfc_vector2d(
@@ -60,28 +68,60 @@ void load_level(void* data)
     );
     _alive = 1;
     _level = get_current_level();
-    //level_save_bin(_level, "level/level1.bin");
     _done = 0;
+}
+
+void load_level1(void* data)
+{
+    load_level((void*)("level/level1.bin"));
+    _l = 1;
+}
+
+void load_level2(void* data)
+{
+    load_level((void*)("level/level2.bin"));
+    _l = 2;
+}
+
+void load_level3(void* data)
+{
+    load_level((void*)("level/level3.bin"));
+    _l = 3;
+}
+
+void open_select_window(void *data)
+{
+    Uint8 levels_beaten, free;
+    Entity* player;
+    free = (Uint8)(data);
+    if (!free) gf2d_window_free(_menu); // ironic, I know
+    _menu = NULL;
+    _l = 0;
+    player = player_entity_new(gfc_vector2d(0, 0));
+    levels_beaten = level_cleared(player, 1) + 2 * level_cleared(player, 2) + 4 * level_cleared(player, 3);
+    entity_free(player);
+    _menu = window_select(load_level1, load_level2, load_level3, load_main_menu, (void *)levels_beaten);
+    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
 }
 
 void delete_data(void* data)
 {
     int i;
     wipe_data();
-    load_level(data);
+    open_select_window(data);
 }
 
 void overwrite_save(void* data)
 {
-    if (!player_load()) load_level(data);
+    if (!player_load()) open_select_window(data);
     else _ex = window_yes_no("Warning: existing data found.",
         "Overwrite data and start new game?", delete_data, on_cancel, NULL);
 }
 
 void no_save(void* data)
 {
-    if (player_load()) load_level(data);
-    else _ex = window_yes_no("No save data found.", "Create a new game?", load_level, on_cancel, NULL);
+    if (player_load()) open_select_window(data);
+    else _ex = window_yes_no("No save data found.", "Create a new game?", open_select_window, on_cancel, NULL);
 }
 
 void exit_window(void* data)
@@ -103,10 +143,6 @@ void load_main_menu()
 
 void die(void* data)
 {
-    // Note: the player_save fails here because they player's already been freed.
-    // Move it to the player_free function and delete the entity_free function here.
-    player_save(_player);
-    entity_free(_player);
     _alive = 0;
     _level = NULL;
 
@@ -123,7 +159,12 @@ void die(void* data)
 
 void you_win(void* data)
 {
-    player_save(_player);
+    char message[32];
+
+    if (level_cleared(_player, _l)) sprintf(message, "Click to select another level.");
+    else sprintf(message, "You got %i skill points!", 2 * _l);
+    beat_level(_player, _l);
+
     entity_free(_player);
     _alive = 0;
     _level = NULL;
@@ -136,15 +177,17 @@ void you_win(void* data)
     load_music_pair("audio/music/silence.mp3", "audio/music/silence.mp3");
     gf2d_windows_play_sound("win");
 
-    _menu = window_alert("Level cleared!", "Click to return to the menu.", load_main_menu, NULL);
+    _menu = window_alert("Level cleared!", message, open_select_window, (void *)(1));
 }
 
 void return_to_menu(void* data)
 {
-    player_save(_player);
-    entity_free(_player);
-    _alive = 0;
-    _level = NULL;
+    if (_alive)
+    {
+        entity_free(_player);
+        _alive = 0;
+        _level = NULL;
+    }
     gf2d_window_free(_menu);
     on_cancel(data);
     load_main_menu();

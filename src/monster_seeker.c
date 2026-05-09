@@ -19,8 +19,7 @@ void monster_seeker_think(Entity* self)
 	// jump height for velocity.y -= 10: 195 px (~6 blocks)
 	MonsterData* data;
 	Level* current_level;
-	Uint32 tw, th, x_check, y_check, tile;
-	Uint8 dir, close;
+	Uint8 dir;
 	GFC_Vector2D self_pos, next_pos;
 
 	current_level = get_current_level();
