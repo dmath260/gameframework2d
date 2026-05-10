@@ -176,4 +176,12 @@ void entity_hurt(Entity* self, Uint8 damage);
 */
 void entity_manager_free_all_but_player();
 
+/**
+* @brief populates an entity from a JSON file
+* @param self the entity to populate
+* @param filepath path to the JSON file
+* @return 1 on success, 0 on failure
+*/
+int populate_entity(Entity* self, const char* filepath);
+
 #endif

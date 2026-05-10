@@ -317,7 +317,7 @@ void level_load_entities(Level* level)
 			if (!entId) continue;
 			x = i * level->tileDef->width;
 			y = j * level->tileDef->height;
-
+			
 			/*
 			* Entity ID cheat sheet:
 			* 000: no entity
@@ -329,9 +329,9 @@ void level_load_entities(Level* level)
 			* 03X: monster_gunner
 			* 04X: monster_flier
 			* 05X: monster_immortalsnail
-			* 060: boss1 (TBD)
-			* 070: boss2 (TBD)
-			* 080: boss3 (TBD)
+			* 060: boss1
+			* 070: boss2
+			* 080: boss3
 			* 061-069, 071-079, 081-255: undefined
 			* 
 			* Ending digits (replacing X):
@@ -347,7 +347,10 @@ void level_load_entities(Level* level)
 			if (entId == 1) {
 				player_entity_new(gfc_vector2d(x, y));
 			}
-			else if (entId == 9) door_new(gfc_vector2d(x, y));
+			else if (entId == 9)
+			{
+				door_new(gfc_vector2d(x, y));
+			}
 			else if (entId >= 10 && entId < 60)
 			{
 				monster_new(
@@ -446,7 +449,6 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	file = fopen(buffer, "rb");
 	if (!file)
 	{
-		slog("a");
 		return NULL;
 	}
 
@@ -455,7 +457,6 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	if (!level)
 	{
 		fclose(file);
-		slog("b");
 		return NULL;
 	}
 
@@ -473,7 +474,6 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	{
 		level_free(level);
 		fclose(file);
-		slog("c");
 		return NULL;
 	}
 
@@ -482,7 +482,6 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	{
 		level_free(level);
 		fclose(file);
-		slog("d");
 		return NULL;
 	}
 
@@ -491,7 +490,6 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	{
 		level_free(level);
 		fclose(file);
-		slog("e");
 		return NULL;
 	}
 
@@ -505,7 +503,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	level_bake_tiles(level);
 	level_load_entities(level);
 	level_setup_camera_bounds(level);
-
+	
 	fclose(file);
 	set_current_level(level);
 	path_init();

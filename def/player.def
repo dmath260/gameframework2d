@@ -1,0 +1,27 @@
+{
+  "entityInfo": {
+    "id": 1,
+    "impulse": -10,
+    "topSpeed": 3,
+    "scale": [
+      2,
+      2
+    ],
+    "rotationCenter": [
+      12,
+      16
+    ],
+    "maxHealth": 10,
+    "maxIFrames": 90,
+    "attack": 2,
+    "bounds": [
+      -18,
+      -30,
+      52,
+      52
+    ],
+    "animDataFilePath": "images/0258/0258AnimData.json",
+    "frameRow": 2,
+    "defaultState": "Idle"
+  }
+}

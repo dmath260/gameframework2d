@@ -62,10 +62,6 @@ void load_level(void* data)
     }
 
     _player = player_entity_get();
-    if (!_player) _player = player_entity_new(gfc_vector2d(
-        (float)_level->width * _level->tileDef->width / 2,
-        (float)_level->height * _level->tileDef->height / 2)
-    );
     _alive = 1;
     _level = get_current_level();
     _done = 0;

@@ -84,27 +84,6 @@ void boss1_think(Entity* self)
 			entity_free(self);
 	}
 
-	/*
-	self->cooldown--;
-	if (!self->cooldown)
-	{
-		self->cooldown = self->maxCooldown;
-		for (i = 0; i < data->phase; i++)
-		{
-			bullet_new(
-				gfc_vector2d(
-					self->position.x - self->bounds.w / 2,
-					self->position.y - self->bounds.h / 2 * gfc_crandom()
-				),
-				GFC_COLOR_RED,
-				self->team,
-				1,
-				self->attack
-			);
-		}
-	}
-	*/
-
 	for (i = 0; i < data->phase; i++)
 	{
 		self->cooldown--;
@@ -150,24 +129,12 @@ Entity* boss1_new(GFC_Vector2D position)
 		data->player = player_entity_get();
 	}
 	self->data = data;
-	self->animDataFilePath = "images/0386/0386AnimData.json";
-	entity_load(self, "Walk");
-	self->animationData->FrameRow = 6;
-	self->rotationCenter = gfc_vector2d(12, 16);
-	self->bounds = gfc_rect(-40, -70, 130, 150); // change these values later AND move to set_player_state
-	self->gravity = 0;
-	self->topSpeed = 20;
-	self->maxHealth = 60;
+	populate_entity(self, "def/boss1.def");
 	self->health = self->maxHealth;
-	self->attack = 3;
-	self->maxIFrames = 90;
 	self->iFrames = 255;
 	self->color = GFC_COLOR_LIGHTGREY;
-	self->team = 1; // team 1 for monsters and bosses
 	self->position = position;
 	self->thinkPos = position;
-	self->scale = gfc_vector2d(4, 4);
-	self->maxCooldown = 180;
 	self->cooldown = self->maxCooldown;
 	self->think = boss1_think;
 	self->update = boss1_update;

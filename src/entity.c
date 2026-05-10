@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "gfc_input.h"
+#include "gfc_hashmap.h"
 
 #include "gf2d_draw.h"
 #include "gf2d_windows.h"
@@ -13,9 +14,10 @@
 
 typedef struct
 {
-	Entity	*entityList;
-	Uint32	entityMax;
-	Uint32	entityPool;
+	Entity		*entityList;
+	Uint32		entityMax;
+	Uint32		entityPool;
+	GFC_HashMap	*name_to_id;
 }EntityManager;
 
 static EntityManager entityManager = {0};
@@ -63,6 +65,7 @@ void entity_manager_init(Uint32 max)
 		return;
 	}
 	entity_id_list->count = 256; //manual override so list methods work
+	entityManager.name_to_id = gfc_hashmap_new();
 
 	SJson *json, *config, *array, *entry, *id_json;
 	const char *name, *icon;
@@ -108,7 +111,6 @@ void entity_manager_close(void)
 		entity_free(&entityManager.entityList[i]);
 	}
 	free(entityManager.entityList);
-	memset(&entityManager, 0, sizeof(EntityManager));
 
 	EntityEntry* data;
 	for (i = 0; i < gfc_list_get_count(entity_id_list); i++)
@@ -118,7 +120,10 @@ void entity_manager_close(void)
 		if (data->name) free(data->name);
 		if (data->icon) gf2d_sprite_free(data->icon);
 	}
-	free(entityManager.entityList);
+	gfc_list_clear(entity_id_list);
+	free(entity_id_list);
+	gfc_hashmap_free(entityManager.name_to_id);
+
 	memset(&entityManager, 0, sizeof(EntityManager));
 }
 
@@ -128,8 +133,9 @@ void entity_manager_free_all_but_player()
 	if (!entityManager.entityList) return;
 	for (i = 0; i < entityManager.entityMax; i++)
 	{
-		if (&(entityManager.entityList[i]) != player_entity_get())
-			entity_free(&entityManager.entityList[i]);
+		if (&(entityManager.entityList[i]) == player_entity_get()) continue;
+		if ((entityManager.entityList[i]).isClimbing == 42) continue;
+		entity_free(&entityManager.entityList[i]);
 	}
 }
 
@@ -220,6 +226,7 @@ void entity_manager_draw_all()
 	for (i = 0; i < entityManager.entityMax; i++)
 	{
 		if (!entityManager.entityList[i]._inuse) continue;
+		if (entityManager.entityList[i].isClimbing == 42) continue;
 		entity_draw(&entityManager.entityList[i]);
 	}
 }
@@ -593,6 +600,7 @@ Uint8 entity_collision_test_world(Entity* self)
 	for (i = 0; i < entityManager.entityMax; i++)
 	{
 		if (!entityManager.entityList[i]._inuse) continue;
+		if (entityManager.entityList[i].isClimbing == 42) continue;
 		if (entity_collision_test(self, &entityManager.entityList[i]))
 		{
 			other = &entityManager.entityList[i];
@@ -852,4 +860,114 @@ void entity_load(Entity* self, char* state)
 
 	sj_free(json);
 	return;
+}
+
+int load_reference_ent(const char* filepath)
+{
+	SJson* json, * config, * arr, * elem;
+	Entity* ent;
+	float x, y, w, h;
+	json = sj_load(filepath);
+	if (!json)
+	{
+		return 0;
+	}
+
+	config = sj_object_get_value(json, "entityInfo");
+	if (!config)
+	{
+		sj_free(json);
+		return 0;
+	}
+
+	ent = entity_new();
+	if (!ent)
+	{
+		sj_free(json);
+		return 0;
+	}
+
+	ent->isClimbing = 42; // flag meaning that this entity is a reference entity
+
+	sj_object_get_uint8(config, "team", &(ent->team));
+	sj_object_get_uint8(config, "gravity", &(ent->gravity));
+	sj_object_get_float(config, "impulse", &(ent->impulse));
+	sj_object_get_float(config, "topSpeed", &(ent->topSpeed));
+	arr = sj_object_get_value(config, "scale");
+	if (arr)
+	{
+		elem = sj_array_get_nth(arr, 0);
+		sj_get_float_value(elem, &x);
+		elem = sj_array_get_nth(arr, 1);
+		sj_get_float_value(elem, &y);
+		ent->scale = gfc_vector2d(x, y);
+		x = 0;
+		y = 0;
+	}
+	arr = sj_object_get_value(config, "rotationCenter");
+	if (arr)
+	{
+		elem = sj_array_get_nth(arr, 0);
+		sj_get_float_value(elem, &x);
+		elem = sj_array_get_nth(arr, 1);
+		sj_get_float_value(elem, &y);
+		ent->rotationCenter = gfc_vector2d(x, y);
+		x = 0;
+		y = 0;
+	}
+	sj_object_get_int32(config, "maxHealth", &(ent->maxHealth));
+	sj_object_get_uint8(config, "maxIFrames", &(ent->maxIFrames));
+	sj_object_get_uint8(config, "attack", &(ent->attack));
+	sj_object_get_int32(config, "maxCooldown", &(ent->maxCooldown));
+	arr = sj_object_get_value(config, "bounds");
+	if (arr)
+	{
+		elem = sj_array_get_nth(arr, 0);
+		sj_get_float_value(elem, &x);
+		elem = sj_array_get_nth(arr, 1);
+		sj_get_float_value(elem, &y);
+		elem = sj_array_get_nth(arr, 2);
+		sj_get_float_value(elem, &w);
+		elem = sj_array_get_nth(arr, 3);
+		sj_get_float_value(elem, &h);
+		ent->bounds = gfc_rect(x, y, w, h);
+	}
+	ent->animDataFilePath = _strdup(sj_object_get_string(config, "animDataFilePath"));
+	entity_load(ent, _strdup(sj_object_get_string(config, "defaultState")));
+	sj_object_get_uint8(config, "frameRow", &(ent->animationData->FrameRow));
+
+	gfc_hashmap_insert(entityManager.name_to_id, filepath, (void*)(ent));
+
+	sj_free(json);
+	return 1;
+}
+
+int populate_entity(Entity* self, const char* filepath)
+{
+	Entity* ent;
+	ent = (Entity*)(gfc_hashmap_get(entityManager.name_to_id, filepath));
+	if (!ent)
+	{
+		if (!load_reference_ent(filepath)) return 0;
+		ent = (Entity*)gfc_hashmap_get(entityManager.name_to_id, filepath);
+		if (!ent)
+		{
+			return 0;
+		}
+	}
+	self->team = ent->team;
+	self->gravity = ent->gravity;
+	self->impulse = ent->impulse;
+	self->topSpeed = ent->topSpeed;
+	self->scale = ent->scale;
+	self->rotationCenter = ent->rotationCenter;
+	self->maxHealth = ent->maxHealth;
+	self->maxIFrames = ent->maxIFrames;
+	self->attack = ent->attack;
+	self->maxCooldown = ent->maxCooldown;
+	self->bounds = ent->bounds;
+	self->animDataFilePath = ent->animDataFilePath;
+	entity_load(self, ent->animationData->Name);
+	self->animationData->FrameRow = ent->animationData->FrameRow;
+	return 1;
 }

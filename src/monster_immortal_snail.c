@@ -63,14 +63,7 @@ Uint8 monster_immortalsnail_touch(Entity* self, Entity* other)
 void monster_immortalsnail_populate(Entity *self)
 {
 	if (!self) return;
-	self->animDataFilePath = "images/0423/0423AnimData.json";
-	self->bounds = gfc_rect(-28, -40, 56, 56); // change these values later
-	self->scale = gfc_vector2d(2, 2);
-	self->rotationCenter = gfc_vector2d(16, 20);
-	self->gravity = 0;
-	self->topSpeed = 0.1;
-	self->maxHealth = 0x7FFFFFFF; // good luck killing this thing lol
-	self->attack = 255;
+	populate_entity(self, "def/monster_immortalsnail.def");
 	self->think = monster_immortalsnail_think;
 	self->update = monster_immortalsnail_update;
 	self->touch = monster_immortalsnail_touch;

@@ -81,14 +81,7 @@ Uint8 monster_seeker_touch(Entity* self, Entity* other)
 void monster_seeker_populate(Entity *self)
 {
 	if (!self) return;
-	self->animDataFilePath = "images/0403/0403AnimData.json";
-	self->bounds = gfc_rect(-37, -31, 66, 56); // change these values later
-	self->scale = gfc_vector2d(2, 2);
-	self->rotationCenter = gfc_vector2d(20, 18);
-	self->impulse = -10;
-	self->topSpeed = 1.5;
-	self->maxHealth = 6;
-	self->attack = 2;
+	populate_entity(self, "def/monster_seeker.def");
 	self->think = monster_seeker_think;
 	self->update = monster_seeker_update;
 	self->touch = monster_seeker_touch;

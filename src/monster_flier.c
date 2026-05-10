@@ -81,15 +81,7 @@ Uint8 monster_flier_touch(Entity* self, Entity* other)
 void monster_flier_populate(Entity *self)
 {
 	if (!self) return;
-	self->animDataFilePath = "images/0041/0041AnimData.json";
-	self->bounds = gfc_rect(-22, -32, 44, 64); // change these values later
-	self->scale = gfc_vector2d(2, 2);
-	self->rotationCenter = gfc_vector2d(16, 19);
-	self->gravity = 0;
-	self->topSpeed = 2;
-	self->maxHealth = 4;
-	self->attack = 1;
-	self->maxCooldown = 90;
+	populate_entity(self, "def/monster_flier.def");
 	self->cooldown = self->maxCooldown;
 	self->think = monster_flier_think;
 	self->update = monster_flier_update;

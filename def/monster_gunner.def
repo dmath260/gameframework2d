@@ -1,0 +1,27 @@
+{
+  "entityInfo": {
+    "id": 30,
+    "team": 1,
+    "scale": [
+      2,
+      2
+    ],
+    "rotationCenter": [
+      12,
+      17
+    ],
+    "maxHealth": 6,
+    "maxIFrames": 45,
+    "attack": 2,
+    "maxCooldown": 90,
+    "bounds": [
+      -16,
+      -29,
+      32,
+      42
+    ],
+    "animDataFilePath": "images/0069/0069AnimData.json",
+    "frameRow": 6,
+    "defaultState": "Idle"
+  }
+}

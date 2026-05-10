@@ -1,0 +1,29 @@
+{
+  "entityInfo": {
+    "id": 40,
+    "team": 1,
+    "gravity": 0,
+    "topSpeed": 2,
+    "scale": [
+      2,
+      2
+    ],
+    "rotationCenter": [
+      16,
+      19
+    ],
+    "maxHealth": 4,
+    "maxIFrames": 45,
+    "attack": 1,
+    "maxCooldown": 90,
+    "bounds": [
+      -22,
+      -32,
+      44,
+      64
+    ],
+    "animDataFilePath": "images/0041/0041AnimData.json",
+    "frameRow": 6,
+    "defaultState": "Shoot"
+  }
+}

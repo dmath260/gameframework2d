@@ -80,7 +80,6 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type, ItemTypes item)
 {
 	Entity* self;
 	MonsterData* data;
-	char* state;
 	self = entity_new();
 	if (!self) return NULL;
 	data = gfc_allocate_array(sizeof(MonsterData), 1);
@@ -91,12 +90,9 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type, ItemTypes item)
 	self->data = data;
 	self->position = position;
 	self->thinkPos = position;
-	self->team = 1; // team 1 for monsters
-	state = "Idle";
 	switch (type) {
 		case MT_Grunt:
 			monster_grunt_populate(self);
-			state = "Walk";
 			break;
 		case MT_Seeker:
 			monster_seeker_populate(self);
@@ -106,20 +102,15 @@ Entity* monster_new(GFC_Vector2D position, MonsterTypes type, ItemTypes item)
 			break;
 		case MT_Flier:
 			monster_flier_populate(self);
-			state = "Shoot";
 			break;
 		case MT_ImmortalSnail:
 			monster_immortalsnail_populate(self);
 			break;
 		default:
 			monster_grunt_populate(self);
-			state = "Walk";
 			break;
 	}
-	entity_load(self, state);
 	self->health = self->maxHealth;
-	self->maxIFrames = 45;
-	self->animationData->FrameRow = 6;
 	self->item = item;
 	return self;
 }

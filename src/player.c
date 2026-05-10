@@ -526,25 +526,16 @@ Entity* player_entity_new(GFC_Vector2D position)
 		data = gfc_allocate_array(sizeof(PlayerData), 1);
 	}
 	self->data = data;
-	self->animDataFilePath = "images/0258/0258AnimData.json";
+	populate_entity(self, "def/player.def");
 	set_player_state(self, PS_Idle);
-	self->animationData->FrameRow = 2;
-	self->rotationCenter = gfc_vector2d(12, 16);
-	self->bounds = gfc_rect(-18, -30, 52, 52); // change these values later AND move to set_player_state
-	self->impulse = -10;
-	self->topSpeed = 3;
 	self->speedMult = 1;
-	self->maxHealth = 10 * (1 + check_skill(self, SO_MaxHealth));
+	if (check_skill(self, SO_MaxHealth)) self->maxHealth *= 2;
 	self->health = self->maxHealth;
-	self->attack = 2;
-	self->maxIFrames = 90;
-	self->team = 0; // team 0 for player
 	self->position = position;
 	self->thinkPos = position;
 	self->think = player_entity_think;
 	self->update = player_entity_update;
 	self->touch = player_entity_touch;
-	self->scale = gfc_vector2d(2, 2);
 	self->free = player_free;
 	thePlayer = self;
 	return self;

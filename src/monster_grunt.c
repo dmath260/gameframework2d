@@ -64,14 +64,8 @@ Uint8 monster_grunt_touch(Entity* self, Entity* other)
 void monster_grunt_populate(Entity *self)
 {
 	if (!self) return;
-	self->animDataFilePath = "images/0399/0399AnimData.json";
-	self->bounds = gfc_rect(-26, -23, 52, 36); // change these values later
-	self->scale = gfc_vector2d(2, 2);
-	self->rotationCenter = gfc_vector2d(16, 16);
-	self->topSpeed = 1;
+	populate_entity(self, "def/monster_grunt.def");
 	self->velocity.x = self->topSpeed / -2;
-	self->maxHealth = 2;
-	self->attack = 1;
 	self->think = monster_grunt_think;
 	self->update = monster_grunt_update;
 	self->touch = monster_grunt_touch;

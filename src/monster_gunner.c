@@ -72,13 +72,7 @@ Uint8 monster_gunner_touch(Entity* self, Entity* other)
 void monster_gunner_populate(Entity *self)
 {
 	if (!self) return;
-	self->animDataFilePath = "images/0069/0069AnimData.json";
-	self->bounds = gfc_rect(-16, -29, 32, 42); // change these values later
-	self->scale = gfc_vector2d(2, 2);
-	self->rotationCenter = gfc_vector2d(12, 17);
-	self->maxHealth = 6;
-	self->attack = 2;
-	self->maxCooldown = 90;
+	populate_entity(self, "def/monster_gunner.def");
 	self->cooldown = self->maxCooldown;
 	self->think = monster_gunner_think;
 	self->update = monster_gunner_update;
