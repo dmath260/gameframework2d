@@ -3,7 +3,7 @@
 
 /**
 * @brief checks whether the editor window is open
-* @return 0 if not open, 1 if open
+* @return 0 if not open, 1 if only main window open, 2 if other windows open as well
 */
 Uint8 is_editor_open();
 

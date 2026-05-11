@@ -83,11 +83,26 @@ void give_skill_points(Entity* player, Uint8 points);
 void spend_skill_points(Entity* player, Uint8 points);
 
 /**
+* @brief returns the number of skill points the player has
+* @param player a pointer to the player
+* @return the current number of skill points owned or 0 on error
+*/
+Uint8 get_skill_points(Entity* player);
+
+/**
 * @brief sets the player's skill points
 * @param player a pointer to the player
 * @param points how many points the player will have
 */
 void set_skill_points(Entity* player, Uint8 points);
+
+/**
+* @brief checks if the player has a certain skill or skills
+* @param player a pointer to the player
+* @param skill the skill(s) to check
+* @return 1 if the player has the specified skill(s), 0 otherwise
+*/
+Uint8 check_skill(Entity* player, SkillsOwned skill);
 
 /**
 * @brief gives the player some skills

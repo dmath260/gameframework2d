@@ -1,5 +1,5 @@
-#ifndef __BOSS1_H__
-#define __BOSS1_H__
+#ifndef __BOSS2_H__
+#define __BOSS2_H__
 
 #include "entity.h"
 
@@ -8,6 +8,6 @@
 * @param position the spawn position of the boss
 * @return NULL if out of entities, a pointer to the newly-created boss otherwise
 */
-Entity* boss1_new(GFC_Vector2D position);
+Entity* boss2_new(GFC_Vector2D position);
 
 #endif

@@ -2,7 +2,7 @@
 
 #include "gf2d_windows.h"
 
-#include "boss1.h"
+#include "boss2.h"
 #include "door.h"
 #include "bullet.h"
 #include "player.h"
@@ -11,15 +11,15 @@ typedef struct
 {
 	Entity* player;
 	Uint8 phase;
-} Boss1Data;
+} Boss2Data;
 
-void boss1_think(Entity* self)
+void boss2_think(Entity* self)
 {
-	Boss1Data* data;
+	Boss2Data* data;
 	Uint8 i;
 
 	if ((!self) || (!self->data)) return;
-	data = (Boss1Data*)self->data;
+	data = (Boss2Data*)self->data;
 
 	switch (data->phase) {
 		case 0:
@@ -106,38 +106,38 @@ void boss1_think(Entity* self)
 	if (self) self->data = data;
 }
 
-void boss1_update(Entity* self)
+void boss2_update(Entity* self)
 {
 	return;
 }
 
-void boss1_free(Entity* self)
+void boss2_free(Entity* self)
 {
 	door_new(self->position);
 	if (self->health <= 0) gf2d_windows_play_sound("boss_ko");
 }
 
-Entity* boss1_new(GFC_Vector2D position)
+Entity* boss2_new(GFC_Vector2D position)
 {
 	Entity* self;
-	Boss1Data* data;
+	Boss2Data* data;
 	self = entity_new();
 	if (!self) return NULL;
-	data = gfc_allocate_array(sizeof(Boss1Data), 1);
+	data = gfc_allocate_array(sizeof(Boss2Data), 1);
 	if (data)
 	{
 		data->player = player_entity_get();
 	}
 	self->data = data;
-	populate_entity(self, "def/boss1.def");
+	populate_entity(self, "def/boss2.def");
 	self->health = self->maxHealth;
 	self->iFrames = 255;
 	self->color = GFC_COLOR_LIGHTGREY;
 	self->position = position;
 	self->thinkPos = position;
 	self->cooldown = self->maxCooldown;
-	self->think = boss1_think;
-	self->update = boss1_update;
-	self->free = boss1_free;
+	self->think = boss2_think;
+	self->update = boss2_update;
+	self->free = boss2_free;
 	return self;
 }

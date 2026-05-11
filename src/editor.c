@@ -17,7 +17,6 @@
 
 Window* _win;
 Window* _win2;
-Window* _win3;
 Uint8 _ent_id;
 Uint8 _tile_id;
 Uint8 _held_ent;
@@ -30,7 +29,6 @@ GFC_Vector2D _camera;
 Uint8 is_editor_open()
 {
     if (!_win) return 0;
-    if (_win3) return 3;
     if (_win2) return 2;
     return 1;
 }

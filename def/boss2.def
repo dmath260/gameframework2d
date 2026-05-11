@@ -1,27 +1,27 @@
 {
   "entityInfo": {
-    "id": 60,
+    "id": 70,
     "team": 1,
     "gravity": 0,
     "scale": [
-      3,
-      3
+      4,
+      4
     ],
     "rotationCenter": [
-      9,
-      12
+      12,
+      16
     ],
-    "maxHealth": 12,
+    "maxHealth": 60,
     "maxIFrames": 90,
-    "attack": 2,
+    "attack": 3,
     "maxCooldown": 180,
     "bounds": [
-      -30,
-      -53,
-      98,
-      113
+      -12,
+      -50,
+      110,
+      135
     ],
-    "animDataFilePath": "images/0386/0386AnimData.json",
+    "animDataFilePath": "images/0491/0491AnimData.json",
     "frameRow": 6,
     "defaultState": "Walk"
   }

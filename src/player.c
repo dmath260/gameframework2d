@@ -94,23 +94,23 @@ void player_give_item(Entity* player, ItemTypes type)
 
 	player->item = type;
 
-	// frames should be ~90 * # of seconds
+	// frames should be 108 * # of seconds
 	switch (type)
 	{
 		case IT_Power:
-			player->itemFrames = 90 * 60;
+			player->itemFrames = 108 * 60;
 			break;
 		case IT_Speed:
-			player->itemFrames = 90 * 60;
+			player->itemFrames = 108 * 60;
 			break;
 		case IT_DoubleJump:
-			player->itemFrames = 90 * 60;
+			player->itemFrames = 108 * 60;
 			break;
 		case IT_Hover:
-			player->itemFrames = 90 * 60;
+			player->itemFrames = 108 * 60;
 			break;
 		case IT_Invincible:
-			player->itemFrames = 90 * 10;
+			player->itemFrames = 108 * 10;
 			player->iFrames = player->itemFrames;
 			player->color = gfc_color_hsl(0, 1, 0.5, 1);
 			break;
@@ -143,6 +143,14 @@ void spend_skill_points(Entity* player, Uint8 points)
 		return NULL;
 	}
 	data->skillPoints -= points;
+}
+
+Uint8 get_skill_points(Entity* player)
+{
+	if (!player || !player->data) return 0;
+	PlayerData* data;
+	data = get_data(player);
+	return data->skillPoints;
 }
 
 void set_skill_points(Entity* player, Uint8 points)
@@ -313,85 +321,6 @@ void player_entity_think(Entity* self)
 	if (!self) return;
 
 	// Replace these with gfc_input_command_down if you can figure out how it works
-	if (gfc_input_key_pressed("UP"))
-	{
-		if (check_skill(self, SO_ALL))
-		{
-			set_skills(self, SO_NONE);
-		}
-		else if (check_skill(self, SO_MaxHealth))
-		{
-			set_skills(self, SO_ALL);
-		}
-		else if (check_skill(self, SO_Hover))
-		{
-			set_skills(self, SO_MaxHealth);
-		}
-		else if (check_skill(self, SO_DoubleJump))
-		{
-			set_skills(self, SO_Hover);
-		}
-		else if (check_skill(self, SO_SpeedMax))
-		{
-			set_skills(self, SO_DoubleJump);
-		}
-		else if (check_skill(self, SO_Speed1))
-		{
-			set_skills(self, SO_SpeedMax);
-		}
-		else if (check_skill(self, SO_PowerMax))
-		{
-			set_skills(self, SO_Speed1);
-		}
-		else if (check_skill(self, SO_Power1))
-		{
-			set_skills(self, SO_PowerMax);
-		}
-		else if (check_skill(self, SO_NONE))
-		{
-			set_skills(self, SO_Power1);
-		}
-	}
-	else if (gfc_input_key_pressed("DOWN"))
-	{
-		if (check_skill(self, SO_ALL))
-		{
-			set_skills(self, SO_MaxHealth);
-		}
-		else if (check_skill(self, SO_MaxHealth))
-		{
-			set_skills(self, SO_Hover);
-		}
-		else if (check_skill(self, SO_Hover))
-		{
-			set_skills(self, SO_DoubleJump);
-		}
-		else if (check_skill(self, SO_DoubleJump))
-		{
-			set_skills(self, SO_SpeedMax);
-		}
-		else if (check_skill(self, SO_SpeedMax))
-		{
-			set_skills(self, SO_Speed1);
-		}
-		else if (check_skill(self, SO_Speed1))
-		{
-			set_skills(self, SO_PowerMax);
-		}
-		else if (check_skill(self, SO_PowerMax))
-		{
-			set_skills(self, SO_Power1);
-		}
-		else if (check_skill(self, SO_Power1))
-		{
-			set_skills(self, SO_NONE);
-		}
-		else if (check_skill(self, SO_NONE))
-		{
-			set_skills(self, SO_ALL);
-		}
-	}
-	
 	if (gfc_input_key_down("d"))
 	{
 		move.x += 1;
@@ -444,14 +373,14 @@ void player_entity_think(Entity* self)
 	{
 		// Has to be grounded because sprinting in midair makes no sense
 		// Also makes no sense to start sprinting before moving (matters when jumping)
-		self->speedMult = 2.0 / 3.0 * (3 + (self->item == IT_Speed) +
+		self->speedMult = 2.0 / 5.0 * (5 + (self->item == IT_Speed) +
 			(data->skills & SO_Speed1) + (data->skills & SO_Speed2));
 	}
 	else if (!gfc_input_key_down("LSHIFT") && !gfc_input_key_down("RSHIFT") || !move.x)
 	{
 		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
 		// If the player stops moving horizontally, they have no momentum, so reduce their speed
-		self->speedMult = 1.0 / 3.0 * (3 + (self->item == IT_Speed) +
+		self->speedMult = 1.0 / 5.0 * (5 + (self->item == IT_Speed) +
 			(data->skills & SO_Speed1) + (data->skills & SO_Speed2));
 	}
 

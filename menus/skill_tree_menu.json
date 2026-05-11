@@ -1,0 +1,339 @@
+{
+  "window": {
+    "dimensions": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "no_draw_generic": 1,
+    "justify": "center",
+    "align": "middle",
+    "elements": [
+      {
+        "type": "list",
+        "bounds": [
+          0,
+          0.125,
+          1,
+          1
+        ],
+        "style": "vertical",
+        "item_size": [
+          0,
+          0
+        ],
+        "elements": [
+          {
+            "type": "label",
+            "name": "title",
+            "id": 0,
+            "bounds": [
+              10,
+              0,
+              1,
+              40
+            ],
+            "color": [
+              0,
+              0,
+              0,
+              255
+            ],
+            "text": "Skills",
+            "justify": "center",
+            "align": "middle",
+            "style": "title"
+          },
+          {
+            "type": "label",
+            "name": "sp_counter",
+            "id": 1,
+            "bounds": [
+              10,
+              64,
+              1,
+              20
+            ],
+            "color": [
+              0,
+              0,
+              0,
+              255
+            ],
+            "text": "[object Object]",
+            "justify": "center",
+            "align": "middle",
+            "style": "h6"
+          },
+          {
+            "type": "list",
+            "bounds": [
+              0,
+              124,
+              1,
+              1
+            ],
+            "style": "vertical",
+            "item_size": [
+              0,
+              0
+            ],
+            "elements": [
+              {
+                "type": "button",
+                "name": "power1_button",
+                "id": 10,
+                "canHasFocus": true,
+                "bounds": [
+                  430,
+                  0,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 20,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    255,
+                    0,
+                    0,
+                    255
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "name": "speed1_button",
+                "id": 12,
+                "canHasFocus": true,
+                "bounds": [
+                  670,
+                  0,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 22,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    0,
+                    128,
+                    255,
+                    255
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "name": "power2_button",
+                "id": 11,
+                "canHasFocus": true,
+                "bounds": [
+                  310,
+                  120,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 21,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    255,
+                    0,
+                    0,
+                    255
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "name": "speed2_button",
+                "id": 13,
+                "canHasFocus": true,
+                "bounds": [
+                  790,
+                  120,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 23,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    0,
+                    128,
+                    255,
+                    255
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "name": "health_boost_button",
+                "id": 16,
+                "canHasFocus": true,
+                "bounds": [
+                  550,
+                  120,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 26,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    128,
+                    0,
+                    204,
+                    255
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "name": "hover_button",
+                "id": 15,
+                "canHasFocus": true,
+                "bounds": [
+                  430,
+                  240,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 25,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    255,
+                    255,
+                    0,
+                    255
+                  ]
+                }
+              },
+              {
+                "type": "button",
+                "name": "double_jump_button",
+                "id": 14,
+                "canHasFocus": true,
+                "bounds": [
+                  670,
+                  240,
+                  100,
+                  100
+                ],
+                "sound": "confirm",
+                "actor": {
+                  "type": "actor",
+                  "id": 24,
+                  "bounds": [
+                    0,
+                    0,
+                    100,
+                    100
+                  ],
+                  "actor": "actors/skill_button.actor",
+                  "color": [
+                    0,
+                    204,
+                    0,
+                    255
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "quit",
+            "id": 2,
+            "canHasFocus": true,
+            "bounds": [
+              472,
+              0.7,
+              256,
+              64
+            ],
+            "sound": "confirm",
+            "justify": "center",
+            "label": {
+              "type": "label",
+              "name": "quit_l",
+              "id": 3,
+              "bounds": [
+                0,
+                0,
+                256,
+                64
+              ],
+              "text": "Quit",
+              "justify": "center",
+              "align": "middle",
+              "style": "small"
+            },
+            "actor": {
+              "type": "actor",
+              "bounds": [
+                0,
+                0,
+                256,
+                64
+              ],
+              "actor": "actors/unscaled_button.actor",
+              "justify": "center"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

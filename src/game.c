@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "audio.h"
 #include "editor.h"
+#include "skill_tree.h"
 #include "entity.h"
 #include "player.h"
 #include "monster.h"
@@ -32,7 +33,10 @@ void load_main_menu();
 
 void open_skills(void* data)
 {
-    return;
+    if (is_skill_tree_open()) return;
+    window_skill_tree();
+    gf2d_window_free(_menu);
+    _menu = NULL;
 }
 
 void on_exit(void* data)
@@ -194,6 +198,17 @@ void return_prompt(void* data)
     _ex = window_yes_no("Return to the menu?", "(Player data will be saved.)", return_to_menu, on_cancel, NULL);
 }
 
+void pause_menu(void* data)
+{
+    _menu = window_menu(
+        "Pause",
+        toggle_pause, "Continue",
+        open_skills, "View Skills",
+        return_prompt, "Return to Menu",
+        NULL
+    );
+}
+
 void toggle_pause(void* data)
 {
     if (_paused)
@@ -209,13 +224,7 @@ void toggle_pause(void* data)
     {
         if (_ex) return;
         _paused = 1;
-        _menu = window_menu(
-            "Pause",
-            toggle_pause, "Continue",
-            open_skills, "View Skills",
-            return_prompt, "Return to Menu",
-            NULL
-        );
+        pause_menu(data);
     }
     toggle_music();
 }
@@ -233,6 +242,7 @@ int main(int argc, char * argv[])
     GFC_Vector2D mouse_pos;
     GFC_Rect ed_tile;
     int e;
+    int s;
     
     /*program initialization*/
     init_logger("gf2d.log",0);
@@ -269,6 +279,7 @@ int main(int argc, char * argv[])
         gf2d_mouse_update();
         gf2d_windows_update_all();
         e = is_editor_open();
+        s = is_skill_tree_open();
 
         if (_level && !e)
         {
@@ -288,6 +299,10 @@ int main(int argc, char * argv[])
                     you_win(NULL);
                 }
                 music_update();
+            }
+            else
+            {
+                if (!s && !_menu) pause_menu(NULL);
             }
         }
         else

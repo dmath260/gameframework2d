@@ -10,7 +10,7 @@
 #include "path.h"
 #include "level.h"
 #include "camera.h"
-#include "boss1.h"
+#include "boss2.h"
 #include "monster.h"
 #include "player.h"
 
@@ -361,7 +361,8 @@ void level_load_entities(Level* level)
 			}
 			else if (entId >= 60 && entId < 90)
 			{
-				if (entId == 60) boss1_new(gfc_vector2d(x, y));
+				//if (entId == 60) boss1_new(gfc_vector2d(x, y));
+				if (entId == 70) boss2_new(gfc_vector2d(x, y));
 				// add boss2 and boss3 for 70 and 80 when applicable
 			}
 		}
