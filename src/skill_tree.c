@@ -78,13 +78,13 @@ void acquire_power2(void* data)
 
 void acquire_speed1(void* data)
 {
-    check_skill_owned(SO_Speed1, "Speed 1", "Increases your speed by 20%.", 1);
+    check_skill_owned(SO_Speed1, "Speed 1", "Increases your speed by 10%.", 1);
 }
 
 void acquire_speed2(void* data)
 {
     if (!check_skill(_player_st, SO_Speed1)) missing_prereq("Speed 2", "Speed 1");
-    else check_skill_owned(SO_Speed2, "Speed 2", "Further increases your speed by 20%.", 2);
+    else check_skill_owned(SO_Speed2, "Speed 2", "Further increases your speed by 10%.", 2);
 }
 
 void acquire_double_jump(void* data)

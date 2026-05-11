@@ -113,8 +113,9 @@ void boss2_update(Entity* self)
 
 void boss2_free(Entity* self)
 {
+	if (self->health > 0) return;
 	door_new(self->position);
-	if (self->health <= 0) gf2d_windows_play_sound("boss_ko");
+	gf2d_windows_play_sound("boss_ko");
 }
 
 Entity* boss2_new(GFC_Vector2D position)

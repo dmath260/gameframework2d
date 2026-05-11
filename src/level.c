@@ -361,9 +361,9 @@ void level_load_entities(Level* level)
 			}
 			else if (entId >= 60 && entId < 90)
 			{
-				//if (entId == 60) boss1_new(gfc_vector2d(x, y));
-				if (entId == 70) boss2_new(gfc_vector2d(x, y));
-				// add boss2 and boss3 for 70 and 80 when applicable
+				if (entId == 60) boss1_new(gfc_vector2d(x, y));
+				else if (entId == 70) boss2_new(gfc_vector2d(x, y));
+				// else if (entId == 80) boss3_new(gfc_vector2d(x, y));
 			}
 		}
 	}
@@ -508,6 +508,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	fclose(file);
 	set_current_level(level);
 	path_init();
+	level_save_bin(level, filename);
 	return level;
 }
 

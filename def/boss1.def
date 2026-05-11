@@ -3,23 +3,24 @@
     "id": 60,
     "team": 1,
     "gravity": 0,
+    "topSpeed": 1,
     "scale": [
-      3,
-      3
+      2,
+      2
     ],
     "rotationCenter": [
-      9,
-      12
+      12,
+      16
     ],
-    "maxHealth": 12,
+    "maxHealth": 16,
     "maxIFrames": 90,
     "attack": 2,
     "maxCooldown": 180,
     "bounds": [
-      -30,
-      -53,
-      98,
-      113
+      -20,
+      -35,
+      65,
+      75
     ],
     "animDataFilePath": "images/0386/0386AnimData.json",
     "frameRow": 6,

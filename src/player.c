@@ -373,14 +373,14 @@ void player_entity_think(Entity* self)
 	{
 		// Has to be grounded because sprinting in midair makes no sense
 		// Also makes no sense to start sprinting before moving (matters when jumping)
-		self->speedMult = 2.0 / 5.0 * (5 + (self->item == IT_Speed) +
+		self->speedMult = 2.0 / 10.0 * (10 + (self->item == IT_Speed) +
 			(data->skills & SO_Speed1) + (data->skills & SO_Speed2));
 	}
 	else if (!gfc_input_key_down("LSHIFT") && !gfc_input_key_down("RSHIFT") || !move.x)
 	{
 		// However, if the player was sprinting before jumping, don't kill their horizontal momentum
 		// If the player stops moving horizontally, they have no momentum, so reduce their speed
-		self->speedMult = 1.0 / 5.0 * (5 + (self->item == IT_Speed) +
+		self->speedMult = 1.0 / 10.0 * (10 + (self->item == IT_Speed) +
 			(data->skills & SO_Speed1) + (data->skills & SO_Speed2));
 	}
 
@@ -424,7 +424,7 @@ Uint8 player_entity_touch(Entity* self, Entity* other)
 {
 	if (!self || !other) return 0;
 	if (self->team == other->team || other->team == 2) return 1;
-	if (self->item == IT_Invincible && other->maxHealth <= 20)
+	if (self->item == IT_Invincible && other->maxCooldown <= 45)
 	{
 		entity_hurt(other, other->maxHealth);
 	}
