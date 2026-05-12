@@ -4,6 +4,7 @@
 
 #include "boss1.h"
 #include "door.h"
+#include "cutscene.h"
 #include "bullet.h"
 #include "player.h"
 
@@ -53,8 +54,6 @@ void boss1_think(Entity* self)
 	else if (self->thinkPos.y >= _edges.h) data->dir = 2;
 	else if (self->thinkPos.x + self->velocity.x <= _edges.x) data->dir = 3;
 	else if (self->thinkPos.y <= _edges.y) data->dir = 0;
-
-	//if (data->id == 1) slog("%f %f %f %f", self->position.x, self->position.y, self->thinkPos.x, self->thinkPos.y);
 }
 
 void boss1_update(Entity* self)
@@ -108,7 +107,6 @@ Entity* boss1_new(GFC_Vector2D position)
 			_edges.h = position.y; // bottom edge
 			self->cooldown = self->maxCooldown;
 			data->dir = 2; // up and left
-			//slog("%f %f %f %f", _edges.x, _edges.y, _edges.w, _edges.h);
 		}
 	}
 	self->data = data;
@@ -116,5 +114,6 @@ Entity* boss1_new(GFC_Vector2D position)
 	self->think = boss1_think;
 	self->update = boss1_update;
 	self->free = boss1_free;
+	cutscene_load("def/cutscenes/boss1.cut");
 	return self;
 }

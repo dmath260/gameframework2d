@@ -140,5 +140,6 @@ Entity* boss2_new(GFC_Vector2D position)
 	self->think = boss2_think;
 	self->update = boss2_update;
 	self->free = boss2_free;
+	cutscene_load("def/cutscenes/boss2.cut");
 	return self;
 }

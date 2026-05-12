@@ -73,17 +73,24 @@ int enqueue_music(char* filename, int loops);
 MusicData* pop_music();
 
 /**
+* @brief sets the next looping song (current if possible) to no longer loop
+*/
+void end_loop();
+
+/**
 * @brief loads music from a level (intro and loop)
 * @param level the level to load music from
+* @param 1 to replace current music, 0 to play it later
 */
-void load_level_music(Level* level);
+void load_level_music(Level* level, Uint8 replace);
 
 /**
 * @brief loads music from intro and loop filenames
 * @param intro the filename for the music intro
 * @param loop the filename for the music loop
+* @param 1 to replace current music, 0 to play it later
 */
-void load_music_pair(const char *intro, const char *loop);
+void load_music_pair(const char *intro, const char *loop, Uint8 replace);
 
 /**
 * @brief gets called every frame and updates any necessary music data

@@ -418,7 +418,7 @@ void next_level_prompt(void* data)
 void exit_editor(void* data)
 {
     _win2 = NULL;
-    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
+    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3", 1);
     if (_level) level_free(_level);
     _level = NULL;
     if (_level_name) free((void*)_level_name);
@@ -835,7 +835,7 @@ Window* window_editor()
     load(NULL);
     gf2d_element_actor_set_image(gf2d_window_get_element_by_id(_win, 22), _level->tileDef->sheet);
     _hotkey_mode = 0;
-    load_music_pair("audio/music/editor0_intro.mp3", "audio/music/editor0_loop.mp3");
+    load_music_pair("audio/music/editor0_intro.mp3", "audio/music/editor0_loop.mp3", 1);
     (gf2d_window_get_element_by_id(_win, 21))->color = GFC_COLOR_WHITE;
     return _win;
 }

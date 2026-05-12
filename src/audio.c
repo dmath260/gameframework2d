@@ -22,7 +22,7 @@ void music_queue_clear()
     gfc_list_clear(music_queue);
 }
 
-void music_queue_free()
+void music_queue_free(void)
 {
     music_queue_clear();
     gfc_list_delete(music_queue);
@@ -105,6 +105,7 @@ int enqueue_music(char* filename, int loops)
     Mix_Music* music;
     MusicData* music_data;
     void* music_void;
+    if (!strcmp(filename, "audio/music/silence.mp3")) return 0;
     music = Mix_LoadMUS(filename);
     if (!music) {
         return -1;
@@ -129,19 +130,27 @@ int enqueue_music(char* filename, int loops)
 MusicData* pop_music()
 {
     MusicData* music;
-    music = gfc_list_get_nth(music_queue, music_queue->count - 1);
+    music = (MusicData*)gfc_list_get_nth(music_queue, music_queue->count - 1);
     if (!music) return NULL;
     gfc_list_delete_last(music_queue);
     return music;
 }
 
-void load_level_music(Level *level)
+void end_loop()
 {
-    if (!level) return;
-    load_music_pair(level->music_intro, level->music_loop);
+    MusicData* loop;
+    if (current_music->loops != 0) loop = current_music;
+    else loop = (MusicData*)gfc_list_get_nth(music_queue, 0);
+    if (loop) loop->loops = 0;
 }
 
-void load_music_pair(const char* intro, const char* loop)
+void load_level_music(Level *level, Uint8 replace)
+{
+    if (!level) return;
+    load_music_pair(level->music_intro, level->music_loop, replace);
+}
+
+void load_music_pair(const char* intro, const char* loop, Uint8 replace)
 {
     const char* str;
     if (intro || loop)
@@ -150,14 +159,14 @@ void load_music_pair(const char* intro, const char* loop)
         // only replace the music if there is no song playing or the song is different
         if (
             !str ||
-            !(intro && !strcmp(intro, str)) &&
-            !(loop && !strcmp(loop, str))
+            (!(intro && !strcmp(intro, str)) &&
+            !(loop && !strcmp(loop, str)))
         )
         {
-            music_queue_clear();
+            if (replace) music_queue_clear();
             if (intro) enqueue_music(_strdup(intro), 0);
             if (loop) enqueue_music(_strdup(loop), -1);
-            if (str) play_music_first();
+            if (replace && str) play_music_first();
         }
     }
 }
@@ -166,7 +175,7 @@ void music_update()
 {
     double remTime;
     remTime = Mix_MusicDuration(NULL) - Mix_GetMusicPosition(NULL);
-    if (!Mix_PlayingMusic() || remTime < 1.0 / 120.0 ) {
-        if (gfc_list_get_count) play_music_first();
+    if (!Mix_PlayingMusic() || (remTime < 1.0 / 120.0 && !current_music->loops) ) {
+        if (gfc_list_get_count(music_queue)) play_music_first();
     }
 }

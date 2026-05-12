@@ -14,6 +14,7 @@
 #include "audio.h"
 #include "editor.h"
 #include "skill_tree.h"
+#include "cutscene.h"
 #include "entity.h"
 #include "player.h"
 #include "monster.h"
@@ -101,7 +102,7 @@ void open_select_window(void *data)
     levels_beaten = level_cleared(player, 1) + 2 * level_cleared(player, 2) + 4 * level_cleared(player, 3);
     entity_free(player);
     _menu = window_select(load_level1, load_level2, load_level3, load_main_menu, (void *)levels_beaten);
-    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
+    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3", 1);
 }
 
 void delete_data(void* data)
@@ -138,7 +139,7 @@ void load_main_menu()
         exit_window, "Quit Game",
         NULL
     );
-    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3");
+    load_music_pair("audio/music/title_intro.mp3", "audio/music/title_loop.mp3", 1);
 }
 
 void die(void* data)
@@ -151,7 +152,7 @@ void die(void* data)
     _paused = 0;
 
     on_cancel(data);
-    load_music_pair("audio/music/silence.mp3", "audio/music/silence.mp3");
+    load_music_pair("audio/music/stop.mp3", "audio/music/stop.mp3", 1);
     gf2d_windows_play_sound("death");
 
     _menu = window_alert("You died!", "Click to return to the menu.", load_main_menu, NULL);
@@ -174,7 +175,7 @@ void you_win(void* data)
     _paused = 0;
 
     on_cancel(data);
-    load_music_pair("audio/music/silence.mp3", "audio/music/silence.mp3");
+    load_music_pair("audio/music/stop.mp3", "audio/music/stop.mp3", 1);
     gf2d_windows_play_sound("win");
 
     _menu = window_alert("Level cleared!", message, open_select_window, (void *)(1));
@@ -188,6 +189,7 @@ void return_to_menu(void* data)
         _alive = 0;
         _level = NULL;
     }
+    if (is_cutscene()) cutscene_free();
     gf2d_window_free(_menu);
     on_cancel(data);
     load_main_menu();
@@ -241,8 +243,7 @@ int main(int argc, char * argv[])
     Sprite* menu_bg;
     GFC_Vector2D mouse_pos;
     GFC_Rect ed_tile;
-    int e;
-    int s;
+    int e, s, c;
     
     /*program initialization*/
     init_logger("gf2d.log",0);
@@ -280,6 +281,7 @@ int main(int argc, char * argv[])
         gf2d_windows_update_all();
         e = is_editor_open();
         s = is_skill_tree_open();
+        c = is_cutscene();
 
         if (_level && !e)
         {
@@ -297,6 +299,11 @@ int main(int argc, char * argv[])
                 if (!get_current_level() && _player && _player->health)
                 {
                     you_win(NULL);
+                }
+                if (c)
+                {
+                    camera_center_on(_player->position);
+                    cutscene_update();
                 }
                 music_update();
             }
@@ -356,6 +363,7 @@ int main(int argc, char * argv[])
             }
             if (e >= 2) redraw_win2();
         }
+        if (c) cutscene_draw_portrait();
 
         gf2d_mouse_draw();
 

@@ -1,0 +1,40 @@
+{
+  "cutsceneInfo": {
+    "music_intro": "audio/music/boss2_cutscene_intro.mp3",
+    "music_loop": "audio/music/boss2_cutscene_loop.mp3",
+    "player_portraits": "images/cutscenes/0258.png",
+    "boss_portraits": "images/cutscenes/0491.png",
+    "dialogue": [
+      {
+        "text": "Well, what do we have here?",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "Why don't you go back home to your mommy, little one?",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "Not happening! I'm here to take you down!",
+        "speaker": 0,
+        "frame": 1
+      },
+      {
+        "text": "Take me down? Ha! As if.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "I gave you the chance to leave, and you didn't take it.",
+        "speaker": 1,
+        "frame": 1
+      },
+      {
+        "text": "It's not my fault if you regret this after what happens next!",
+        "speaker": 1,
+        "frame": 2
+      }
+    ]
+  }
+}

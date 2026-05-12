@@ -1,0 +1,40 @@
+{
+  "cutsceneInfo": {
+    "music_intro": "audio/music/boss1_cutscene_intro.mp3",
+    "music_loop": "audio/music/boss1_cutscene_loop.mp3",
+    "player_portraits": "images/cutscenes/0258.png",
+    "boss_portraits": "images/cutscenes/0386.png",
+    "dialogue": [
+      {
+        "text": "What's this? A challenger?",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "How foolhardy, thinking you can defeat us.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "I don't care what you think. You're going down!",
+        "speaker": 0,
+        "frame": 1
+      },
+      {
+        "text": "Don't make us laugh. A pipsqueak like you, defeat us? Impossible.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "But we'll entertain your death wish.",
+        "speaker": 1,
+        "frame": 1
+      },
+      {
+        "text": "We'll make you regret challenging us!",
+        "speaker": 1,
+        "frame": 2
+      }
+    ]
+  }
+}

@@ -7,6 +7,7 @@
 
 #include "door.h"
 #include "audio.h"
+#include "cutscene.h"
 #include "path.h"
 #include "level.h"
 #include "camera.h"
@@ -77,10 +78,6 @@ Level* level_load(const char* filepath, Uint8 music)
 	{
 		level->background = gf2d_sprite_load_image(str);
 	}
-
-	level->music_intro = _strdup(sj_object_get_string(config, "music_intro"));
-	level->music_loop = _strdup(sj_object_get_string(config, "music_loop"));
-	if (music) load_level_music(level);
 
 	level->tileDef = tiledef_parse(sj_object_get_value(config, "tileDef"));
 	if (!level->tileDef)
@@ -169,6 +166,10 @@ Level* level_load(const char* filepath, Uint8 music)
 			sj_get_uint8_value(tile, &level->entityMap[index]);
 		}
 	}
+
+	level->music_intro = _strdup(sj_object_get_string(config, "music_intro"));
+	level->music_loop = _strdup(sj_object_get_string(config, "music_loop"));
+	if (music) load_level_music(level, !is_cutscene());
 
 	str = sj_object_get_string(config, "nextLevel");
 	if (str)
@@ -467,7 +468,6 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	level->music_intro = _strdup(buffer);
 	fread(buffer, sizeof(GFC_TextLine), 1, file);
 	level->music_loop = _strdup(buffer);
-	if (music) load_level_music(level);
 
 	fread(&level->width, sizeof(Uint32), 1, file);
 	fread(&level->height, sizeof(Uint32), 1, file);
@@ -509,6 +509,7 @@ Level *level_load_bin(const char* filename, Uint8 music)
 	set_current_level(level);
 	path_init();
 	level_save_bin(level, filename);
+	if (music) load_level_music(level, !is_cutscene());
 	return level;
 }
 

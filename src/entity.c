@@ -6,6 +6,7 @@
 #include "gf2d_draw.h"
 #include "gf2d_windows.h"
 
+#include "cutscene.h"
 #include "entity.h"
 #include "camera.h"
 #include "level.h"
@@ -612,9 +613,25 @@ Uint8 entity_collision_test_world(Entity* self)
 	return 0;
 }
 
+void entity_animate_think(Entity* self)
+{
+	if (!self->animationData) return;
+	AnimData* data;
+	data = self->animationData;
+	data->FrameCount += 0.5;
+	if (data->FrameCount >= data->AnimFrames[data->FrameCol + 1]) data->FrameCol++;
+	if (data->FrameCol == data->FramesPerRow) {
+		data->FrameCol = 0;
+		data->FrameCount = 0;
+	}
+}
+
 void entity_think(Entity* self) {
 	Uint8 wasGrounded;
 	if (!self) return;
+
+	entity_animate_think(self);
+	if (is_cutscene()) return;
 
 	wasGrounded = self->isGrounded;
 	self->isGrounded = 0;
@@ -673,17 +690,6 @@ void entity_think(Entity* self) {
 
 	self->thinkPos.x += self->velocity.x;
 	clip_to_bounds(self, 0);
-
-	// Animation stuff, might want to move this into the animation class
-	if (!self->animationData) return;
-	AnimData *data;
-	data = self->animationData;
-	data->FrameCount += 0.5;
-	if (data->FrameCount >= data->AnimFrames[data->FrameCol + 1]) data->FrameCol++;
-	if (data->FrameCol == data->FramesPerRow) {
-		data->FrameCol = 0;
-		data->FrameCount = 0;
-	}
 }
 
 void entity_manager_think_all()
@@ -700,10 +706,21 @@ void entity_manager_think_all()
 	}
 }
 
+void entity_animate_update(Entity* self)
+{
+	if (!self->animationData) return;
+	AnimData* data;
+	data = self->animationData;
+	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
+}
+
 void entity_update(Entity *self)
 {
 	Level* current_level;
 	if (!self) return;
+
+	entity_animate_update(self);
+	if (is_cutscene()) return;
 
 	self->position.x = self->thinkPos.x;
 	self->position.y = self->thinkPos.y;
@@ -760,12 +777,6 @@ void entity_update(Entity *self)
 			default: self->color = GFC_COLOR_WHITE;
 		}
 	}
-	
-	// Animation stuff, might want to move this into the animation class
-	if (!self->animationData) return;
-	AnimData* data;
-	data = self->animationData;
-	self->frame = (float)(data->FrameRow * data->FramesPerRow + data->FrameCol);
 
 	if (self->update) self->update(self);
 	if (!self) return;
