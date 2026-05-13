@@ -1,10 +1,10 @@
-#Unnamed platformer demo
+# Unnamed Platformer Demo
 
 This is an action platformer game largely inspired by Kirby and Mario. The game currently features three short levels, each with two stages, the second of which is a boss stage. Beating each level will give you skill points, which you can use to permanently upgrade your character's stats and abilities. I may add more to this someday if I get more inspiration.
 
 
 
-##Controls
+#### Controls
 
 W to jump
 
@@ -20,7 +20,7 @@ Use the mouse to select menu options
 
 
 
-##Credit for assets:
+#### \##Credit for assets:
 
 * Note: these are no longer on the GitHub as of 3/31/26 because almost all of my assets are copyrighted
 * All player, enemy, and boss sprites from the Pokémon Mystery Dungeon sprite repository (which took the sprites from the GBA/DS Pokémon Mystery Dungeon games)
