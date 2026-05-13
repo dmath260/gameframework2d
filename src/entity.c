@@ -215,7 +215,7 @@ void entity_draw(Entity *self)
 		(Uint32)self->frame);
 	bounds = self->bounds;
 	gfc_vector2d_add(bounds, bounds, position);
-	gf2d_draw_rect(bounds, gfc_color8(128, 0, 255, 255));
+	//gf2d_draw_rect(bounds, gfc_color8(128, 0, 255, 255));
 }
 
 void entity_manager_draw_all()
