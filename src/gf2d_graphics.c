@@ -55,7 +55,6 @@ void gf2d_graphics_initialize(
     Uint32 flags = 0;
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        slog("Unable to initilaize SDL system: %s",SDL_GetError());
         return;
     }
     atexit(SDL_Quit);
@@ -78,7 +77,6 @@ void gf2d_graphics_initialize(
 
     if (!gf2d_graphics.main_window)
     {
-        slog("failed to create main window: %s",SDL_GetError());
         gf2d_graphics_close();
         return;
     }
@@ -86,7 +84,6 @@ void gf2d_graphics_initialize(
     gf2d_graphics.renderer = SDL_CreateRenderer(gf2d_graphics.main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if (!gf2d_graphics.renderer)
     {
-        slog("failed to create renderer: %s",SDL_GetError());
         gf2d_graphics_close();
         return;
     }
@@ -104,7 +101,6 @@ void gf2d_graphics_initialize(
         renderWidth, renderHeight);
     if (!gf2d_graphics.texture)
     {
-        slog("failed to create screen texture: %s",SDL_GetError());
         gf2d_graphics_close();
         return;
     }
@@ -127,7 +123,6 @@ void gf2d_graphics_initialize(
     
     if (!gf2d_graphics.surface)
     {
-        slog("failed to create screen surface: %s",SDL_GetError());
         gf2d_graphics_close();
         return;
     }
@@ -155,7 +150,6 @@ void gf2d_graphics_initialize(
         SDL_BLENDOPERATION_SUBTRACT);
 
     atexit(gf2d_graphics_close);
-    slog("graphics initialized");
 }
 
 void gf2d_graphics_save_screenshot(const char *filename)
@@ -163,18 +157,15 @@ void gf2d_graphics_save_screenshot(const char *filename)
     SDL_Surface *surface;
     if (!filename)
     {
-        slog("no filename specified for screenshot");
         return;
     }
     surface = gf2d_graphics_get_render();
     if (surface == NULL)
     {
-        slog("failed to get surface of the render");
         return;
     }
     if (IMG_SavePNG(surface, filename))
     {
-        slog("screenshot failed to save: %s",SDL_GetError());
     }
     SDL_FreeSurface(surface);
 }
@@ -188,7 +179,6 @@ SDL_Surface *gf2d_graphics_get_render()
     texture = SDL_GetRenderTarget(gf2d_graphics_get_renderer());
     if (texture)
     {
-        slog("Taking screenshot from a texture target");
         SDL_QueryTexture(texture,
                         &format, NULL,
                         &w, &h);
@@ -263,8 +253,6 @@ void gf2d_graphics_close()
     gf2d_graphics.renderer = NULL;
     gf2d_graphics.texture = NULL;
     gf2d_graphics.temp_buffer = NULL;
-
-    slog("graphics closed");
 }
 
 SDL_Renderer *gf2d_graphics_get_renderer()
@@ -351,7 +339,6 @@ void gf2d_graphics_render_texture_to_screen(SDL_Texture *texture,const SDL_Rect 
     if (!texture)return;
     if (!gf2d_graphics.renderer)
     {
-        slog("no graphics rendering context");
         return;
     }
     if (SDL_RenderCopy(gf2d_graphics.renderer,
@@ -359,7 +346,6 @@ void gf2d_graphics_render_texture_to_screen(SDL_Texture *texture,const SDL_Rect 
                    srcRect,
                    dstRect))
     {
-        slog("failed to render:%s",SDL_GetError());
     }
 
 }
@@ -369,7 +355,6 @@ void gf2d_graphics_blit_surface_to_screen(SDL_Surface *surface,const SDL_Rect * 
     if (!surface)return;
     if (!gf2d_graphics.surface)
     {
-        slog("no screen surface loaded");
         return;
     }
     SDL_BlitSurface(surface,
@@ -383,12 +368,10 @@ SDL_Surface *gf2d_graphics_screen_convert(SDL_Surface **surface)
     SDL_Surface *convert;
     if (!(*surface))
     {
-        slog("surface provided was NULL");
         return NULL;
     }
     if (!gf2d_graphics.surface)
     {
-        slog("graphics not yet initialized");
         return NULL;
     }
     convert = SDL_ConvertSurface(*surface,
@@ -396,7 +379,6 @@ SDL_Surface *gf2d_graphics_screen_convert(SDL_Surface **surface)
                        0);
     if (!convert)
     {
-        slog("failed to convert surface: %s",SDL_GetError());
         return NULL;
     }
     SDL_FreeSurface(*surface);

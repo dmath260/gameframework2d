@@ -28,14 +28,12 @@ void gf2d_sprite_close()
     }
     sprite_manager.sprite_list = NULL;
     sprite_manager.max_sprites = 0;
-    slog("sprite system closed");
 }
 
 void gf2d_sprite_init(Uint32 max)
 {
     if (!max)
     {
-        slog("cannot intialize a sprite manager for Zero sprites!");
         return;
     }
     sprite_manager.max_sprites = max;
@@ -43,9 +41,8 @@ void gf2d_sprite_init(Uint32 max)
     memset (sprite_manager.sprite_list,0,sizeof(Sprite)*max);
     if (!(IMG_Init( IMG_INIT_PNG) & IMG_INIT_PNG))
     {
-        slog("failed to init image: %s",SDL_GetError());
+        
     }
-    slog("sprite system initialized");
     atexit(IMG_Quit);
     atexit(gf2d_sprite_close);
 }
@@ -102,7 +99,6 @@ Sprite *gf2d_sprite_new()
             return &sprite_manager.sprite_list[i];//return address of this array element
         }
     }
-    slog("error: out of sprite addresses");
     return NULL;
 }
 
@@ -111,7 +107,6 @@ Sprite *gf2d_sprite_get_by_filename(const char * filename)
     int i;
     if (!filename)
     {
-        slog("cannot find blank filename");
         return NULL;
     }
     for (i = 0;i < sprite_manager.max_sprites;i++)
@@ -141,7 +136,6 @@ Sprite* gf2d_sprite_load_all(
     Sprite* sprite = NULL;
     if (!filename)
     {
-        slog("cannot find blank filename");
         return NULL;
     }
 
@@ -155,7 +149,6 @@ Sprite* gf2d_sprite_load_all(
     surface = IMG_Load(filename);
     if (!surface)
     {
-        slog("failed to load sprite image %s", filename);
         return NULL;
     }
     sprite = gf2d_sprite_new();
@@ -167,7 +160,6 @@ Sprite* gf2d_sprite_load_all(
     surface = gf2d_graphics_screen_convert(&surface);
     if (!surface)
     {
-        slog("failed to load sprite image %s", filename);
         gf2d_sprite_free(sprite);
         return NULL;
     }
@@ -175,7 +167,6 @@ Sprite* gf2d_sprite_load_all(
     sprite->texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(), surface);
     if (!sprite->texture)
     {
-        slog("failed to load sprite image %s", filename);
         gf2d_sprite_free(sprite);
         SDL_FreeSurface(surface);
         return NULL;
@@ -220,7 +211,6 @@ Sprite *gf2d_sprite_from_surface(
     Sprite *sprite = NULL;
     if (!surface)
     {
-        slog("cannot convert nothing to a sprite surface");
         return NULL;
     }
 
@@ -294,17 +284,14 @@ void gf2d_sprite_draw_to_surface(
     GFC_Vector2D scaleOffset = {0,0};
     if (!sprite)
     {
-        slog("no sprite provided to draw");
         return;
     }
     if (!sprite->surface)
     {
-        slog("sprite does not contain surface to draw with");
         return;
     }
     if (!surface)
     {
-        slog("no surface provided to draw to");
         return;
     }
     if (scale)

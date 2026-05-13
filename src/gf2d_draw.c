@@ -372,7 +372,6 @@ void gf2d_draw_circle(GFC_Vector2D center, int radius, GFC_Color color)
     pointArray = (SDL_Point*)malloc(sizeof(SDL_Point)*radius*8);
     if (!pointArray)
     {
-        slog("gf2d_draw_circle: failed to allocate points for circle drawing");
         return;
     }
     i = gf2d_draw_circle_points(&pointArray[i],center, point);

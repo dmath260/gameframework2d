@@ -31,18 +31,15 @@ void gf2d_font_close()
         }
     }
     TTF_Quit();
-    slog("text system closed");
 }
 
 void gf2d_font_init(const char *configFile)
 {
     if (TTF_Init() == -1)
     {
-        slog("TTF_Init: %s\n", TTF_GetError());
         return;
     }
     gf2d_fonts_load_json(configFile);
-    slog("text system initialized");
     atexit(gf2d_font_close);
 }
 
@@ -155,14 +152,12 @@ void gf2d_fonts_load_json(const char *filename)
     fonts = sj_object_get_value(file,"fonts");
     if (!fonts)
     {
-        slog("font config %s does not contain fonts list",filename);
         sj_free(file);
         return;
     }
     count = sj_array_get_count(fonts);
     if (!count)
     {
-        slog("font config has no fonts");
         sj_free(file);
         return;
     }
@@ -198,20 +193,17 @@ void gf2d_fonts_load(const char *filename)
     file = fopen(filename,"r");
     if (!file)
     {
-        slog("failed to open font config file %s",filename);
         return;
     }
     count = gf2d_fonts_get_count(file);
     if (!count)
     {
-        slog("font config file %s contained no font information",filename);
         fclose(file);
         return;
     }
     font_manager.font_list = (GFC_Font*)gfc_allocate_array(sizeof(GFC_Font),count);
     if (!font_manager.font_list)
     {
-        slog("failed to allocate memory for %i fonts",count);
         fclose(file);
         return;
     }
@@ -226,11 +218,9 @@ void gf2d_fonts_load(const char *filename)
         font_manager.font_list[i].font = TTF_OpenFont(font_manager.font_list[i].filename, font_manager.font_list[i].pointSize);
         if (!font_manager.font_list[i].font)
         {
-            slog("failed to load font: %s\n", TTF_GetError());
         }
     }
     font_manager.font_max = count;
-    slog("font library loaded with %i fonts",count);
     fclose(file);
 }
 
@@ -252,7 +242,6 @@ GFC_Font *gf2d_font_get_by_tag(GFC_FontTypes tag)
 {
     if ((tag < 0) ||(tag >= FT_MAX))
     {
-        slog("bad font tag: %i",tag);
         return NULL;
     }
     return font_manager.font_tags[tag];
@@ -275,37 +264,31 @@ void gf2d_font_draw_line(char *text, GFC_Font *font, GFC_Color color, GFC_Vector
     SDL_Rect dst = {0};
     if ((!text)||(!strlen(text)))
     {
-        slog("cannot draw text, none provided");
         return;
     }
     if (!font)
     {
-        slog("cannot draw text, no font provided");
         return;
     }
     if (!font->font)
     {
-        slog("cannot draw text, font %s is bad",font->filename);
         return;
     }
     
     surface = TTF_RenderUTF8_Blended(font->font, text, gfc_color_to_sdl(color));
     if (!surface)
     {
-        slog("failed to render text %s with font %s, re: %s",text,font->filename,SDL_GetError());
         return;
     }
     surface = gf2d_graphics_screen_convert(&surface);
     if (!surface)
     {
-        slog("failed to convert text surface to screen format");
         return;
     }
     
     texture = SDL_CreateTextureFromSurface(gf2d_graphics_get_renderer(),surface);
     if (!texture)
     {
-        slog("failed to convert text surface to texture");
         SDL_FreeSurface(surface);
         return;
     }
@@ -336,12 +319,10 @@ GFC_Vector2D gf2d_font_get_bounds(char *text, GFC_Font *font)
     int x = -1,y = -1;
     if (!text)
     {
-        slog("cannot size text, none provided");
         return gfc_vector2d(-1,-1);
     }
     if (!font)
     {
-        slog("cannot size text, no font provided");
         return gfc_vector2d(-1,-1);
     }
     
@@ -402,7 +383,6 @@ GFC_Rect gf2d_font_get_text_wrap_bounds(
     }
     if (font == NULL)
     {
-        slog("no font provided for draw.");
         return r;
     }
     
@@ -494,17 +474,14 @@ void gf2d_font_draw_text_wrap(
     int lindex = 0;
     if ((thetext == NULL)||(thetext[0] == '\0'))
     {
-        slog("no text provided for draw.");
         return;
     }
     if (font == NULL)
     {
-        slog("no font provided for draw.");
         return;
     }
     if (font->font == NULL)
     {
-        slog("bad Font provided for draw.");
         return;
     }
 

@@ -20,13 +20,11 @@ GFC_String *gfc_string_new_size(Uint32 size)
     string = gfc_allocate_array(sizeof(GFC_String),1);
     if (!string)
     {
-        slog("failed to allocate memory for a new GFC_String");
         return NULL;
     }
     string->buffer = gfc_allocate_array(sizeof(char),size);
     if (!string->buffer)
     {
-        slog("failed to allocate memory for new GFC_String buffer");
         gfc_string_free(string);
         return NULL;
     }
@@ -108,7 +106,6 @@ GFC_String *gfc_stringf(const char * text,...)
     string = gfc_allocate_array(sizeof(GFC_String),1);
     if (!string)
     {
-        slog("failed to allocated memory for GFC_String");
         free(buffer);
         return NULL;
     }

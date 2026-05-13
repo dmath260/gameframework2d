@@ -290,7 +290,6 @@ ListElement *gf2d_element_list_new()
     list = (ListElement *)malloc(sizeof(ListElement));
     if (!list)
     {
-        slog("failed to allocate memory for list");
         return NULL;
     }
     memset(list,0,sizeof(ListElement));
@@ -379,7 +378,6 @@ void gf2d_element_load_list_from_config(Element *e,SJson *json,Window *win)
     short int packed = 0,cropped = 0;
     if ((!e) || (!json))
     {
-        slog("call missing parameters");
         return;
     }
         

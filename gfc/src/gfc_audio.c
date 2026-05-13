@@ -32,7 +32,6 @@ void gfc_audio_init(
 
     if(Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2, 64)==-1)
     {
-        slog("Failed to open audio: %s\n", SDL_GetError());
         return;
     }
     
@@ -46,7 +45,6 @@ void gfc_audio_init(
     }
     if (!(Mix_Init(flags) & flags))
     {
-        slog("failed to initialize some audio support: %s",SDL_GetError());
     }
     atexit(Mix_Quit);
     atexit(gfc_audio_close);
@@ -72,7 +70,6 @@ void gfc_sound_init(Uint32 max)
 {
     if (!max)
     {
-        slog("cannot intialize a sound manager for Zero sounds!");
         return;
     }
     sound_manager.max_sounds = max;
@@ -129,7 +126,6 @@ GFC_Sound *gfc_sound_new()
             return &sound_manager.sound_list[i];//return address of this array element
         }
     }
-    slog("error: out of sound addresses");
     return NULL;
 }
 
@@ -165,7 +161,6 @@ GFC_Sound *gfc_sound_load(const char *filename,float volume,int defaultChannel)
     sound->sound = Mix_LoadWAV(filename);
     if (!sound->sound)
     {
-        slog("failed to load sound file %s",filename);
         gfc_sound_free(sound);
         return NULL;
     }
@@ -242,7 +237,6 @@ GFC_HashMap *gfc_sound_pack_parse_file(const char *filename)
     sounds = sj_object_get_value(file,"sounds");
     if (!sounds)
     {
-        slog("failed to parse sound pack file, no 'sounds' object");
         sj_free(file);
         return NULL;
     }

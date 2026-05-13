@@ -20,15 +20,25 @@ typedef struct
 
 void boss1_think(Entity* self)
 {
+	GFC_Vector2D toPlayer = { 0 }, playerCenter = { 0 }, selfCenter = { 0 };
 	Boss1Data* data;
 	GFC_Vector2D direction;
+	Uint8 dir;
 
 	if ((!self) || (!self->data)) return;
 	data = (Boss1Data*)self->data;
+	if (!data->player) return;
+	gfc_vector2d_add(playerCenter, data->player->position, data->player->rotationCenter);
+	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
+	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);
+	gfc_vector2d_normalize(&toPlayer);
+	if (toPlayer.x >= 0) self->animationData->FrameRow = 2;
+	else self->animationData->FrameRow = 6;
 
 	self->cooldown--;
 	if (!self->cooldown)
 	{
+		dir = (self->animationData->FrameRow - 2) / 4;
 		self->cooldown = self->maxCooldown;
 		bullet_new(
 			gfc_vector2d(
@@ -37,7 +47,7 @@ void boss1_think(Entity* self)
 			),
 			GFC_COLOR_RED,
 			self->team,
-			1,
+			dir,
 			self->attack
 		);
 	}

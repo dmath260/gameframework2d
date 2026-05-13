@@ -415,7 +415,6 @@ int sj_value_as_vector4d(SJson *json,GFC_Vector4D *output)
         count = sj_array_get_count(json);
         if (count < 4)
         {
-            slog("not enough elements in the array (%i) for a GFC_Vector4D",count);
             return 0;
         }
         if (count > 4)count = 4;
@@ -449,7 +448,6 @@ int sj_value_as_vector4d(SJson *json,GFC_Vector4D *output)
         }
         return 1;
     }
-    slog("json is not an array or string");
     sj_echo(json);
     return 0;
 }

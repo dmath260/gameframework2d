@@ -564,7 +564,6 @@ GFC_Primitive gfc_primitive_offset(GFC_Primitive primitive,GFC_Vector3D offset)
             gfc_vector3d_add(p.s.e.b,p.s.e.b,offset);
             break;
         case GPT_PLANE:
-            slog("not yet supported");
             break;
         case GPT_TRIANGLE:
             gfc_vector3d_add(p.s.t.a,p.s.t.a,offset);
@@ -595,10 +594,8 @@ Uint8 gfc_point3d_in_primitive(GFC_Vector3D point, GFC_Primitive primitive)
                 NULL,
                 NULL);
         case GPT_PLANE:
-            slog("not yet supported");
             break;
         case GPT_TRIANGLE:
-            slog("not yet supported");
             break;
         case GPT_BOX:
             return gfc_point_in_box(point,primitive.s.b);

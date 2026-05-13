@@ -16,13 +16,11 @@ SJson *gfc_decode_json_file(const char *filename)
     file = fopen(filename,"r");
     if (!file)
     {
-        slog("failed to open file %s",filename);
         return NULL;
     }
     size = get_file_Size(file);
     if (size <= 0)
     {
-        slog("error getting file size for %s",filename);
         fclose(file);
         return NULL;
     }
@@ -30,21 +28,18 @@ SJson *gfc_decode_json_file(const char *filename)
     
     if (buffer == NULL)
     {
-        slog("failed to allocate character buffer for json file %s",filename);
         fclose(file);
         return NULL;
     }
     
     if ((read = fread(buffer, sizeof(char), size, file)) != size)
     {
-        slog("expected to read %li characters, but read %li instead\n for file %s",size,read,filename);
     }
     fclose(file);
     
     decodedBuffer = gfc_base64_decode (buffer, size, &decodedBufferSize);
     if (!decodedBuffer)
     {
-        slog("failed to decode json from base64 file %s",filename);
         free(buffer);
         return NULL;
     }
@@ -53,7 +48,6 @@ SJson *gfc_decode_json_file(const char *filename)
     json = sj_parse_buffer(decodedBuffer,read);
     if (!json)
     {
-        slog("file %s failed to parse\n",filename);
     }
     free(decodedBuffer);
     return json;
@@ -67,7 +61,6 @@ void gfc_encode_json_to_file(SJson *json, const char *filename)
     size_t bufferSize = 0;
     if ((!json)||(!filename))
     {
-        slog("failed to convert json to base64 file, missing parameters");
         return;
     }
     if ((!json) || (!json->get_string))return;
@@ -77,14 +70,12 @@ void gfc_encode_json_to_file(SJson *json, const char *filename)
     if (!file)
     {
         sj_string_free(string);
-        slog("failed to open %s for writing",filename);
         return;
     }
     buffer = gfc_base64_encode(string->text, strlen(string->text), &bufferSize);
     if (!buffer)
     {
         sj_string_free(string);
-        slog("failed to encode json file to base64 for %s",filename);
         fclose(file);
         return;
     }
@@ -99,7 +90,6 @@ void gfc_decode_convert_json_file(const char *inFilename, const char *outFilenam
     SJson *json;
     if ((!inFilename)||(!outFilename))
     {
-        slog("gfc_decode_convert_json_file: missing parameters");
         return;
     }
     json = sj_load(inFilename);
@@ -113,7 +103,6 @@ void gfc_decode_extract_json_file(const char *inFilename, const char *outFilenam
     SJson *json;
     if ((!inFilename)||(!outFilename))
     {
-        slog("gfc_decode_convert_json_file: missing parameters");
         return;
     }
     json = gfc_decode_json_file(inFilename);
@@ -263,12 +252,10 @@ char *gfc_base64_decode (const char *in, size_t inLen, size_t *outLen)
     
     if (!in)
     {
-        slog("no input data provided for decoding");
         return NULL;
     }
     if (!inLen)
     {
-        slog("input length is zero, cannot decode");
         return NULL;
     }
     
@@ -276,14 +263,12 @@ char *gfc_base64_decode (const char *in, size_t inLen, size_t *outLen)
     
     if (!allocateSize)
     {
-        slog("output length is zero, cannot decode");
         return NULL;
     }
     out = gfc_allocate_array(sizeof(char),allocateSize);
     
     if (!out)
     {
-        slog("failed to allocated output for decoding");
         return NULL;
     }
     outIt = out;
@@ -297,7 +282,6 @@ char *gfc_base64_decode (const char *in, size_t inLen, size_t *outLen)
             case WHITESPACE: 
                 continue;   /* skip whitespace */
             case INVALID:
-                slog("invalid character in base64 data, aborting");
                 free(out);
                 return NULL;   /* invalid input, return error */
             case EQUALS:    /* pad character, end of data */
@@ -327,7 +311,6 @@ char *gfc_base64_decode (const char *in, size_t inLen, size_t *outLen)
     {
         if ((len += 2) > allocateSize)
         {
-            slog("buffer overflow detected");
             free(out);
             return NULL; /* buffer overflow */
         }

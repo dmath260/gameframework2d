@@ -32,7 +32,7 @@ void monster_seeker_think(Entity* self)
 	if (!data->player) return;
 
 	self_pos = gfc_vector2d(32 * roundf(self->position.x / 32), 32 * roundf(self->position.y / 32));
-	next_pos = find_next(self->position, data->player->position, 0, 18, 0, 0);
+	next_pos = find_next(self->position, data->player->position, 0, 18, 15, 0);
 	if (gfc_vector2d_compare(next_pos, self_pos))
 	{
 		return;

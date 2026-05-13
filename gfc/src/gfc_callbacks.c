@@ -10,7 +10,6 @@ GFC_Callback *gfc_callback_new(void (*callback)(void *data),void *data)
     c = (GFC_Callback *)malloc(sizeof(GFC_Callback));
     if (!c)
     {
-        slog("failed to allocate callback");
         return NULL;
     }
     memset(c,0,sizeof(GFC_Callback));

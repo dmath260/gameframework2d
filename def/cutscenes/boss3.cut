@@ -1,0 +1,50 @@
+{
+  "cutsceneInfo": {
+    "music_intro": "audio/music/boss3_intro.mp3",
+    "music_loop": "audio/music/boss3_cutscene.mp3",
+    "player_portraits": "images/cutscenes/0258.png",
+    "boss_portraits": "images/cutscenes/0150.png",
+    "dialogue": [
+      {
+        "text": "So you're the one I've heard so much about.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "I'm impressed you managed to defeat the others so easily.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "However, you shouldn't underestimate me just because you beat them, young one.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "I am far more powerful than they are. Do you still wish to face me?",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "Yes, I am! Nothing you say can convince me otherwise!",
+        "speaker": 0,
+        "frame": 1
+      },
+      {
+        "text": "Such conviction. Your fighting spirit speaks for itself.",
+        "speaker": 1,
+        "frame": 0
+      },
+      {
+        "text": "If it's a battle you want, it's a battle you'll get.",
+        "speaker": 1,
+        "frame": 1
+      },
+      {
+        "text": "SHOW ME YOUR STRENGTH!",
+        "speaker": 1,
+        "frame": 2
+      }
+    ]
+  }
+}

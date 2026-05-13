@@ -16,7 +16,6 @@ GFC_Vector3D gfc_unproject(GFC_Vector3D in,GFC_Matrix4 view, GFC_Matrix4 proj,GF
     
     if ((!viewport.x)||(!viewport.y))
     {
-        slog("cannot unproject into a view of zero width or height");
         return out;
     }
     
@@ -41,7 +40,6 @@ GFC_Vector3D gfc_unproject(GFC_Vector3D in,GFC_Matrix4 view, GFC_Matrix4 proj,GF
     
     if (!obj.w)
     {
-        slog("bad unprojection");
         return out;
     }
     out.x = obj.x/obj.w;
@@ -639,17 +637,14 @@ void gfc_matrix4_perspective(
 
     if (aspect == 0)
     {
-        slog("gfc_matrix4_perspective: aspect ratio cannot be zero");
         return;
     }
     if (halftanfov == 0)
     {
-        slog("gfc_matrix4_perspective: bad fov");
         return;
     }
     if (near == far)
     {
-        slog("gfc_matrix4_perspective: near plane and far plane cannot be the same");
         return;
     }
 

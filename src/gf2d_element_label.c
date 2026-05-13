@@ -98,7 +98,6 @@ LabelElement *gf2d_element_label_new()
     label = (LabelElement *)malloc(sizeof(LabelElement));
     if (!label)
     {
-        slog("failed to allocate memory for label");
         return NULL;
     }
     memset(label,0,sizeof(LabelElement));
@@ -174,7 +173,6 @@ void gf2d_element_load_label_from_config(Element *e,SJson *json)
     int wraps = 0;
     if ((!e) || (!json))
     {
-        slog("call missing parameters");
         return;
     }
     value = sj_object_get_value(json,"style");

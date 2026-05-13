@@ -39,7 +39,6 @@ void gfc_config_def_load(const char *filename)
     json = gfc_pak_load_json(filename);
     if (!json)
     {
-        slog("failed to load config def file %s",filename);
         return;
     }
     gfc_list_append(config_manager.defs,json);
@@ -75,7 +74,6 @@ SJson *gfc_config_def_get_by_index(const char *resource,Uint8 index)
     SJson *list;
     if (!config_manager.defs)
     {
-        slog("config def file not loaded");
         return NULL;
     }
     if (!resource)return NULL;
@@ -120,7 +118,6 @@ const char *gfc_config_def_get_name_by_index(const char *resource,Uint32 index)
     SJson *def;
     if (!config_manager.defs)
     {
-        slog("config def file not loaded");
         return NULL;
     }
     if (!resource)return NULL;
@@ -159,7 +156,6 @@ SJson *gfc_config_def_get_by_parameter(const char *resource,const char *paramete
         if (strlen(str) != strlen(name))continue;
         if (strcmp(name,str)==0)return item;
     }
-    slog("no resource of %s found by parameter of %s and name of %s",resource,parameter,name);
     return NULL;
 }
 
@@ -181,7 +177,6 @@ SJson *gfc_config_def_get_by_name(const char *resource,const char *name)
         if (strlen(str) != strlen(name))continue;
         if (strcmp(name,str)==0)return item;
     }
-    slog("no resource of %s found by name of %s",resource,name);
     return NULL;
 }
 

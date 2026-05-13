@@ -75,7 +75,6 @@ void gfc_input_controller_load_mappings(const char *config)
     file = gfc_pak_load_json(config);
     if (!file)
     {
-        slog("failed to load input config");
         return;
     }
     mappings = sj_object_get_value(file,"controller_map");
@@ -96,7 +95,6 @@ void gfc_input_init(char *configFile)
     int i;
     if (gfc_input_data.input_list != NULL)
     {
-        slog("gfc_input_init: error, gfc_input_data.input_list not NULL");
         return;
     }
     gfc_input_data.input_list = gfc_list_new();
@@ -105,7 +103,6 @@ void gfc_input_init(char *configFile)
     gfc_input_data.input_keys = SDL_GetKeyboardState(&gfc_input_data.input_key_count);
     if (!gfc_input_data.input_key_count)
     {
-        slog("failed to get keyboard count!");
     }
     else
     {
@@ -230,12 +227,10 @@ float gfc_input_controller_axis_state_by_index(Uint32 controllerId, Uint32 axis,
     }
     if (!controller)
     {
-        slog("no controller found with index %i",controllerId);
         return 0;
     }
     if (axis >= controller->num_axis)
     {
-        slog("controller %i has no axis indexed %i",controllerId,axis);
         return 0;
     }
     if (((max < 0)&&(controller->axis[axis] > 0))||
@@ -258,7 +253,6 @@ float gfc_input_controller_get_axis_state(Uint8 controllerId, const char *axis)
     int max = gfc_input_controller_get_axis_max(axis);
     if (index <= -1)
     {
-        slog("no controller axis found by name %s",axis);
         return 0;
     }
     return gfc_input_controller_axis_state_by_index(controllerId, index,max);
@@ -948,7 +942,6 @@ SDL_Scancode gfc_input_key_to_scancode(const char * buffer)
     }
     if (kc == -1)
     {
-        slog("no input mapping available for %s",buffer);
     }
     return kc;
 }
@@ -1003,7 +996,6 @@ void gfc_input_parse_command_json(SJson *command)
     value = sj_object_get_value(command,"command");
     if (!value)
     {
-        slog("input command missing 'command' key");
         return;
     }
     in = gfc_input_new();
@@ -1019,7 +1011,6 @@ void gfc_input_parse_command_json(SJson *command)
         buffer = sj_get_string_value(value);
         if (strlen(buffer) == 0)
         {
-            slog("error in key list, empty value");
             continue;   //error
         }
         kc =  gfc_input_key_mod_check(buffer);
@@ -1087,7 +1078,6 @@ void gfc_input_commands_load(char *configFile)
     commands = sj_object_get_value(json,"commands");
     if (!commands)
     {
-        slog("config file %s does not contain 'commands' object",configFile);
         sj_free(json);
         return;
     }

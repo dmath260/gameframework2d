@@ -316,6 +316,7 @@ void player_entity_think(Entity* self)
 	PlayerData* data;
 	if (!self || !self->data) return;
 	data = get_data(self);
+	Uint8 dir;
 
 	GFC_Vector2D move = {0};
 	if (!self) return;
@@ -386,11 +387,12 @@ void player_entity_think(Entity* self)
 
 	if (gfc_input_key_pressed(" "))
 	{
+		dir = (self->animationData->FrameRow - 2) / 4;
 		bullet_new(
-			gfc_vector2d(self->position.x + 25, self->position.y),
+			gfc_vector2d(self->position.x + 25 * (1 - 2 * dir), self->position.y),
 			gfc_color8(0, 204, 255, 255),
 			self->team,
-			(self->animationData->FrameRow - 2) / 4,
+			dir,
 			self->attack * (1 + (self->item == IT_Power) + (data->skills & SO_Power1) + (data->skills & SO_Power2))
 		);
 	}
@@ -424,7 +426,7 @@ Uint8 player_entity_touch(Entity* self, Entity* other)
 {
 	if (!self || !other) return 0;
 	if (self->team == other->team || other->team == 2) return 1;
-	if (self->item == IT_Invincible && other->maxCooldown <= 45)
+	if (self->item == IT_Invincible && other->maxIFrames <= 45)
 	{
 		entity_hurt(other, other->maxHealth);
 	}

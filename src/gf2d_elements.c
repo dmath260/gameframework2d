@@ -21,7 +21,6 @@ Element *gf2d_element_new()
     e = (Element *)malloc(sizeof(Element));
     if (!e)
     {
-        slog("failed to allocate a new window element");
         return NULL;
     }
     memset(e,0,sizeof(Element));
@@ -120,7 +119,6 @@ void gf2d_element_calibrate(Element *e,Element *parent, Window *win)
     }
     else
     {
-        slog("error: need a parent element or a window");
         return;
     }
     if (e->bounds.x < 0)
@@ -224,7 +222,6 @@ Element *gf2d_element_load_from_config(SJson *json,Element *parent,Window *win)
     }
     else
     {
-        slog("element definition missing type!");
     }
     return e;
 }

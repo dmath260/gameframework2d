@@ -60,7 +60,6 @@ GFC_List *gf2d_element_entry_update(Element *element, GFC_Vector2D offset)
     // check for keyboard input
     if (entry->text == NULL)
     {
-        slog("no text buffer provided for entry");
         return NULL;
     }
     if (element->hasFocus)
@@ -301,7 +300,6 @@ EntryElement *gf2d_element_entry_new()
     entry = (EntryElement *)malloc(sizeof(EntryElement));
     if (!entry)
     {
-        slog("failed to allocate memory for entry");
         return NULL;
     }
     memset(entry,0,sizeof(EntryElement));
@@ -339,7 +337,6 @@ void gf2d_element_load_entry_from_config(Element *e,SJson *json,Window *win)
     
     if ((!e) || (!json))
     {
-        slog("call missing parameters");
         return;
     }
     

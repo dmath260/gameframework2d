@@ -23,6 +23,7 @@ void monster_flier_think(Entity* self)
 	monster_think(self);
 
 	if (!data->player) return;
+	if (abs(data->player->position.y - self->position.y) >= 320) return; // 10 tiles
 	gfc_vector2d_add(playerCenter, data->player->position, data->player->rotationCenter);
 	gfc_vector2d_add(selfCenter, self->position, self->rotationCenter);
 	gfc_vector2d_sub(toPlayer, playerCenter, selfCenter);

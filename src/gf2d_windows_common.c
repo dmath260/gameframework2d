@@ -107,7 +107,6 @@ Window *window_yes_no(char *text,char *text2,void(*onYes)(void *),void(*onNo)(vo
     else win = gf2d_window_load("menus/yes_no_window.json");
     if (!win)
     {
-        slog("failed to load yes/no window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win,1),text);
@@ -136,7 +135,6 @@ Window* window_a_b(char* text, char* text2, char* textA, char* textB, void(*onA)
     else win = gf2d_window_load("menus/yes_no_window.json");
     if (!win)
     {
-        slog("failed to load yes/no window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), text);
@@ -254,7 +252,6 @@ Window* window_menu(
     win = gf2d_window_load("menus/main_pause_menu.json");
     if (!win)
     {
-        slog("failed to load main/pause menu");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), title);
@@ -381,7 +378,6 @@ Window* window_select(
     win = gf2d_window_load("menus/level_select_menu.json");
     if (!win)
     {
-        slog("failed to load level select menu");
         return NULL;
     }
 
@@ -494,7 +490,6 @@ Window *window_alert(char *title, char *text, void(*onOK)(void *),void *okData)
     win = gf2d_window_load("menus/alert_menu.json");
     if (!win)
     {
-        slog("failed to load alert window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_name(win,"title"),title);
@@ -517,7 +512,6 @@ Window *window_dialog(char *title, char *text, void(*onOK)(void *),void *okData)
     win = gf2d_window_load("menus/dialog.json");
     if (!win)
     {
-        slog("failed to load alert window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win,1),title);
@@ -541,7 +535,6 @@ Window *window_text_entry(char *question, char *defaultText,void *callbackData, 
     win = gf2d_window_load("menus/text_entry_window.json");
     if (!win)
     {
-        slog("failed to load text entry window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win,1),question);
@@ -569,7 +562,6 @@ Window *window_key_value(char *question, char *defaultKey,char *defaultValue,voi
     win = gf2d_window_load("menus/key_value.json");
     if (!win)
     {
-        slog("failed to load key_value window");
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win,1),question);

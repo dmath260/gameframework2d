@@ -196,7 +196,6 @@ ButtonElement *gf2d_element_button_new()
     button = (ButtonElement *)malloc(sizeof(ButtonElement));
     if (!button)
     {
-        slog("failed to allocate memory for button");
         return NULL;
     }
     memset(button,0,sizeof(ButtonElement));
@@ -241,7 +240,6 @@ void gf2d_element_load_button_from_config(Element *e,SJson *json,Window *win)
     
     if ((!e) || (!json))
     {
-        slog("call missing parameters");
         return;
     }
     

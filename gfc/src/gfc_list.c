@@ -36,14 +36,12 @@ GFC_List *gfc_list_new_size(Uint32 count)
     GFC_List *l;
     if (!count)
     {
-        slog("cannot make a list of size zero");
         return NULL;
     }
     if (count < 8)count = 8;
     l = (GFC_List *)malloc(sizeof(GFC_List));
     if (!l)
     {
-        slog("failed to allocate space for the list");
         return NULL;
     }
     memset(l,0,sizeof(GFC_List));
@@ -51,7 +49,6 @@ GFC_List *gfc_list_new_size(Uint32 count)
     l->elements = gfc_allocate_array(sizeof(GFC_ListElementData),count);
     if (!l->elements)
     {
-        slog("failed to allocate space for list elements");
         free(l);
         return NULL;
     }
@@ -92,7 +89,6 @@ int gfc_list_expand(GFC_List *list)
     GFC_List *l;
     if (!list)
     {
-        slog("no list provided");
         return 0;
     }
     if (!list->size)list->size = 8;
@@ -118,7 +114,6 @@ void gfc_list_append(GFC_List *list,void *data)
     {
         if (!gfc_list_expand(list))
         {
-            slog("append failed due to lack of memory");
             return;
         }
     }
@@ -132,7 +127,6 @@ GFC_List *gfc_list_concat(GFC_List *a,GFC_List *b)
     void *data;
     if ((!a) || (!b))
     {
-        slog("missing list data");
         return NULL;
     }
     count = gfc_list_get_count(b);
@@ -162,12 +156,10 @@ void gfc_list_insert(GFC_List *list,void *data,Uint32 n)
 {
     if (!list)
     {
-        slog("no list provided");
         return;
     }
     if (n > list->size + 1)
     {
-        slog("attempting to insert element beyond length of list");
         return;
     }
     if (list->count >= list->size)
@@ -191,7 +183,6 @@ int gfc_list_delete_last(GFC_List *list)
 {
     if (!list)
     {
-        slog("no list provided");
         return -1;
     }
     return gfc_list_delete_nth(list,list->count-1);
@@ -202,7 +193,6 @@ int gfc_list_get_item_index(GFC_List *list,void *data)
     int i;
     if (!list)
     {
-        slog("no list provided");
         return -1;
     }
     if (!data)return 0;
@@ -222,7 +212,6 @@ int gfc_list_delete_data(GFC_List *list,void *data)
     int i;
     if (!list)
     {
-        slog("no list provided");
         return -1;
     }
     if (!data)return 0;
@@ -250,12 +239,10 @@ int gfc_list_delete_nth(GFC_List *list,Uint32 n)
     int i;
     if (!list)
     {
-        slog("no list provided");
         return -1;
     }
     if (n >= list->count)
     {
-        slog("attempting to delete beyond the length of the list");
         return -1;
     }
     if (n == (list->count - 1))
@@ -372,7 +359,6 @@ void gfc_list_foreach(GFC_List *list,void (*function)(void *data))
     }
     if (!function)
     {
-        slog("no function provided");
     }
     for (i = 0;i < list->count;i++)
     {
@@ -385,12 +371,10 @@ void gfc_list_foreach_context(GFC_List *list,void (*function)(void *data,void *c
     int i;
     if (!list)
     {
-        slog("no list provided");
         return;
     }
     if (!function)
     {
-        slog("no function provided");
     }
     for (i = 0;i < list->count;i++)
     {

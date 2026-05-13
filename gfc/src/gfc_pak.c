@@ -60,7 +60,6 @@ void gfc_pak_manager_add(const char *filename)
     if (!filename)return;
     if (!pak_manager.pak_files)
     {
-        slog("pak manager not initialized");
         return;
     }
     pakFile = gfc_pak_manager_get_by_filename(filename);
@@ -68,12 +67,10 @@ void gfc_pak_manager_add(const char *filename)
     pakFile = gfc_pak_file_new();
     if (!pakFile)
     {
-        slog("failed to allocate data for pak file");
         return;
     }
     if (!mz_zip_reader_init_file(&pakFile->zipFile, filename, 0))
     {
-        slog("loading of archive file %s failed.",filename);
         gfc_pak_file_free(pakFile);
         return;
     }
@@ -103,7 +100,6 @@ void *gfc_pak_load_file_from_disk(const char *filename,size_t *fileSize)
     size = get_file_Size(file);
     if (!size)
     {
-        slog("file %s is empty",filename);
         fclose(file);
         return NULL;
     }
@@ -155,18 +151,15 @@ void *gfc_pak_file_extract(const char *filename,size_t *fileSize)
         if (index == -1)continue;// not in this file
         if (!mz_zip_reader_file_stat(&pakFile->zipFile, index, &pStat))
         {
-            slog("failed to read archive for file %f",filename);
             return NULL;
         }
         fileData = gfc_allocate_array(pStat.m_uncomp_size,1);
         if (!fileData)
         {
-            slog("failed to allocate data to extract file %f",filename);
             return NULL;
         }
         if (!mz_zip_reader_extract_to_mem(&pakFile->zipFile, index, fileData, pStat.m_uncomp_size, 0))
         {
-            slog("failed to extract file %f",filename);
             free(fileData);
             return NULL;
         }

@@ -121,7 +121,6 @@ GFC_Vector2D gfc_circle_get_normal_for_rect(GFC_Circle c, GFC_Rect r)
     GFC_Vector2D poc = {0};
     if (!gfc_circle_rect_overlap_poc(c, r,&poc,NULL))
     {
-        slog("can't calculate normal, no collision!");
         return out;
     }
     gfc_vector2d_sub(out,poc,c);
@@ -1230,17 +1229,14 @@ Uint8 gfc_edge_circle_intersection(GFC_Edge2D e,GFC_Circle c)
 
 void gfc_edge_slog(GFC_Edge2D e)
 {
-    slog("GFC_Edge2D: (%f,%f),(%f,%f)",e.x1,e.y1,e.x2,e.y2);
 }
 
 void gfc_rect_slog(GFC_Rect r)
 {
-    slog("GFC_Rect: (%f,%f,%f,%f)",r.x,r.y,r.w,r.h);
 }
 
 void gfc_circle_slog(GFC_Circle c)
 {
-    slog("GFC_Circle: (%f,%f) radius (%f)",c.x,c.y,c.r);
 }
 
 void gfc_shape_slog(GFC_Shape shape)
@@ -1361,7 +1357,6 @@ int gfc_shape_from_json(SJson *json,GFC_Shape *shape)
     type = sj_get_string_value(sj_object_get_value(json,"type"));
     if (!type)
     {
-        slog("gfc_shape_from_json: json missing type specifier, expect [edge,rect,circle]");
         return 0;
     }
     if (strcmp(type,"circle")== 0)

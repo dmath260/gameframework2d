@@ -87,6 +87,7 @@ void load_level2(void* data)
 void load_level3(void* data)
 {
     load_level((void*)("level/level3.bin"));
+    //load_level((void*)("level/boss3.bin"));
     _l = 3;
 }
 
@@ -247,7 +248,6 @@ int main(int argc, char * argv[])
     
     /*program initialization*/
     init_logger("gf2d.log",0);
-    slog("---==== BEGIN ====---");
     gf2d_graphics_initialize(
         "gf2d",
         1200,
@@ -286,7 +286,7 @@ int main(int argc, char * argv[])
         if (_level && !e)
         {
             // pausing
-            if (gfc_input_key_pressed("q") && !_paused && !_ex)
+            if (gfc_input_key_pressed("q") && !_paused && !_ex && !c)
             {
                 toggle_pause(NULL);
                 gf2d_windows_play_sound("cancel");
@@ -382,7 +382,6 @@ int main(int argc, char * argv[])
             }
         }
     }
-    slog("---==== END ====---");
     gf2d_sprite_free(menu_bg);
     return 0;
 }

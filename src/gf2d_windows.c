@@ -331,7 +331,6 @@ void gf2d_windows_close()
         }
     }
     gfc_list_delete(window_manager.window_deque);
-    slog("window system closed");
 }
 
 void gf2d_windows_init(int max_windows,const char *config)
@@ -343,13 +342,11 @@ void gf2d_windows_init(int max_windows,const char *config)
     SJson *file,*window,*sounds;
     if (max_windows <= 0)
     {
-        slog("cannot initilize window system for 0 windows");
         return;
     }
     window_manager.window_list = (Window*)malloc(sizeof(Window)*max_windows);
     if(window_manager.window_list == NULL)
     {
-        slog("failed to allocate memory for window system");
         return;
     }
     memset(window_manager.window_list,0,sizeof(Window)*max_windows);
@@ -392,7 +389,6 @@ void gf2d_windows_init(int max_windows,const char *config)
     window_manager.generic_background = gf2d_sprite_load_image(background);
     window_manager.generic_border = gf2d_sprite_load_all(border,borderSize.x,borderSize.y,borderFPL,false);
     window_manager.drawbounds = 0;
-    slog("window system initilized");
     atexit(gf2d_windows_close);
 }
 
@@ -797,19 +793,16 @@ Window *gf2d_window_load_from_json(SJson *json)
     const char *buffer;
     if (!json)
     {
-        slog("json not provided");
         return NULL;
     }
     json = sj_object_get_value(json,"window");
     if (!json)
     {
-        slog("json does not contain window definition");
         return NULL;
     }
     win = gf2d_window_new();
     if (!win)
     {
-        slog("failed to create new window");
         return NULL;
     }
     

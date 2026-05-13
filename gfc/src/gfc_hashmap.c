@@ -88,7 +88,6 @@ void gfc_hashmap_insert(GFC_HashMap *map,const char *key,void *data)
     if (!map)return;
     if (!key)
     {
-        slog("cannot insert into hashmap, no key provided");
         return;
     }
     element = gfc_allocate_array(sizeof(GFC_HashElement),1);
@@ -131,7 +130,6 @@ Sint64 gfc_hashmap_get_index(GFC_HashMap *map,const char *key)
     if (!map)return -1;
     if (!map->map)
     {
-        slog("hashmap missing map of values");
         return -1;
     }
     if (!key)return -1;
@@ -171,12 +169,10 @@ void gfc_hashmap_slog(GFC_HashMap *map)
     int i;
     GFC_HashElement *element;
     if ((!map) || (!map->map))return;
-    slog("GFC_Hashmap:");
     for (i = 0; i < map->map->size; i++)
     {
         if (map->map->elements[i].data == NULL)continue;
         element = (GFC_HashElement*)map->map->elements[i].data;
-        slog("GFC_Hash key: '%s' hashValue: %i, hashIndex: %i",element->key,element->hashValue,i);
     }
 }
 

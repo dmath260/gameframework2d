@@ -74,7 +74,6 @@ ActorElement *gf2d_element_actor_new()
     actor = (ActorElement *)malloc(sizeof(ActorElement));
     if (!actor)
     {
-        slog("failed to allocate memory for actor");
         return NULL;
     }
     memset(actor,0,sizeof(ActorElement));
@@ -234,7 +233,6 @@ void gf2d_element_load_actor_from_config(Element *e,SJson *json)
     GFC_Vector2D scale;
     if ((!e) || (!json))
     {
-        slog("call missing parameters");
         return;
     }
     value = sj_object_get_value(json,"actor");

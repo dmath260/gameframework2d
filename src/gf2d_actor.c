@@ -35,19 +35,16 @@ void gf2d_actor_close()
     }
     actor_manager.actorList = NULL;
     actor_manager.maxActors = 0;
-    slog("actor system closed");
 }
 
 void gf2d_actor_init(Uint32 max)
 {
     if (!max)
     {
-        slog("cannot intialize actor manager for Zero actors!");
         return;
     }
     actor_manager.maxActors = max;
     actor_manager.actorList = (GFC_Actor *)gfc_allocate_array(sizeof(GFC_Actor),max);
-    slog("actor system initialized");
     atexit(gf2d_actor_close);
 }
 
@@ -113,7 +110,6 @@ GFC_Actor *gf2d_actor_new()
             return &actor_manager.actorList[i];//return address of this array element
         }
     }
-    slog("error: out of actor addresses");
     return NULL;
 }
 
@@ -293,7 +289,6 @@ GFC_Actor *gf2d_actor_load_json(
     actorJS = sj_object_get_value(json,"actor");
     if (!actorJS)
     {
-        slog("missing actor object in actor file");
         return NULL;
     }
 
@@ -333,12 +328,10 @@ GFC_Action *gf2d_action_list_get_action(GFC_List *al, const char *name)
     int i,c;
     if (!al)
     {
-        slog("no action list provided");
         return NULL;
     }
     if (!name)
     {
-        slog("no filename provided");
         return NULL;
     }
     c = gfc_list_get_count(al);
