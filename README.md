@@ -6,17 +6,12 @@ This is an action platformer game largely inspired by Kirby and Mario. The game 
 
 #### Controls
 
-W to jump
-
-A/S to move left/right
-
-Hold shift to sprint
-
-Space bar to shoot bullets
-
-Q to pause
-
-Use the mouse to select menu options
+* W to jump
+* A/S to move left/right
+* Hold shift to sprint
+* Space bar to shoot bullets
+* Q to pause
+* Use the mouse to select menu options
 
 
 
