@@ -20,7 +20,7 @@ Use the mouse to select menu options
 
 
 
-#### \##Credit for assets:
+#### Credit for assets:
 
 * Note: these are no longer on the GitHub as of 3/31/26 because almost all of my assets are copyrighted
 * All player, enemy, and boss sprites from the Pokémon Mystery Dungeon sprite repository (which took the sprites from the GBA/DS Pokémon Mystery Dungeon games)
