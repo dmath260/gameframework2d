@@ -87,7 +87,6 @@ void load_level2(void* data)
 void load_level3(void* data)
 {
     load_level((void*)("level/level3.bin"));
-    //load_level((void*)("level/boss3.bin"));
     _l = 3;
 }
 
